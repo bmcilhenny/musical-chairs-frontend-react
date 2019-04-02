@@ -110,10 +110,12 @@ class Playlist extends Component {
           <Card>
             <Card.Content>
               <Image src={playlist.imageUrl} />
+              <br />
+              <br />
               <Card.Header textAlign='center'>{playlist.name}</Card.Header>
-              <Card.Meta>{playlist.songs.length} songs</Card.Meta>
+              <Card.Meta>{playlist.total} songs</Card.Meta>
               <Feed>
-              {playlist.songs.map(song => {
+              {/* {playlist.songs.map(song => {
                 let songLength = `${(song.duration/60).toFixed(2)}`
                 return (
                   <Feed.Event>
@@ -125,7 +127,7 @@ class Playlist extends Component {
                     </Feed.Content>
                   </Feed.Event>
                 )
-              })}
+              })} */}
               </Feed>
             </Card.Content>
           </Card>
@@ -188,18 +190,31 @@ export default class App extends Component {
    componentDidMount() {
       setTimeout(() => {
         spotify.getMe().then(resp => {
-          debugger;
           this.setState({
             user: resp
           })
         });
         spotify.getUserPlaylists().then(resp => {
+          let playlists = resp.items;
+          let playlistTracksPromise = playlists.map(playlist => spotify.getPlaylistTracks(playlist.id))
+          let allPlaylistTracksPromises = Promise.all(playlistTracksPromise)
+          let playlistPromises = allPlaylistTracksPromises.then(tracksData => {
+            tracksData.forEach((tracksData, i) => {
+              playlists[i].songs = tracksData.items
+            })
+            return playlists;
+          })
+          return playlistPromises;
+        })
+        .then(resp => {
+          debugger;
           this.setState({
-            playlists: resp.items.map(playlist => (
+            playlists: resp.map(playlist => (
               {
                 name: playlist.name, 
                 imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f', 
-                songs: []
+                songs: playlist.songs,
+                total: playlist.tracks.total
               }
             ))
           })
