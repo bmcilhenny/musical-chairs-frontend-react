@@ -1,7 +1,7 @@
 import Cookies from 'universal-cookie';
 import QueryString from 'querystring';
 
-const setupSpotify = spotify => {
+export const setupSpotify = spotify => {
   const cookies = new Cookies();
 
   // Get access token from Spotify implicit grant flow redirect callback, and set cookie
@@ -20,15 +20,31 @@ const setupSpotify = spotify => {
   if (spotifyAccessToken) {
     spotify.setAccessToken(spotifyAccessToken);
   } else {
-    const client_id = process.env.SPOTIFY_CLIENT_ID;
+    const client_id = process.env.SPOTIFY_CLIENT_ID || '5f8edf6fa5254fb8ae8f9ff4839e8d4c';
     const scopes = encodeURIComponent(
       'user-read-playback-state user-modify-playback-state'
     );
     const redirect_uri = window.location.href;
-    debugger;
     const url = `https://accounts.spotify.com/authorize?response_type=token&client_id=${client_id}&scope=${scopes}&redirect_uri=${redirect_uri}`;
     window.location = url;
   }
 };
 
-export default { setupSpotify };
+
+export const getPlaylists = (spotifyAPICall, playlists, resolve, reject, limit=50, offset=0) => {
+  spotifyAPICall({limit: limit, offset: offset})
+    .then(resp => {
+      const retrievedPlaylists = playlists.concat(resp.items)
+      if (resp.next !== null) {
+        const url = new URL(resp.next);
+        offset = parseInt(url.searchParams.get('offset')); 
+        getPlaylists(spotifyAPICall, retrievedPlaylists, resolve, reject, limit, offset)
+      } else {
+        resolve(retrievedPlaylists)
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      reject('Something wrong. Please refresh the page and try again.')
+    })
+}

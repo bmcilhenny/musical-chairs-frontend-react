@@ -1,62 +1,34 @@
 import React, {Component, Fragment} from 'react';
-import { Icon, Input, Card, Image, Feed, Header, Divider, Container, Grid, Placeholder } from 'semantic-ui-react';
+import { Modal, Button, Icon, Input, Card, Image, Header, Divider, Container, Grid, Placeholder, Segment, Dropdown } from 'semantic-ui-react';
 import Spotify from 'spotify-web-api-js';
-import Util from './util/spotify';
+import * as Util from './util/spotify';
+import { times } from 'lodash';
 
 const spotify = new Spotify();
 Util.setupSpotify(spotify);
 
-
-// const fakeServerData = {
-//    user: {
-//       name: 'Brendan',
-//       profile_img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Circle-icons-brush-pencil.svg/2000px-Circle-icons-brush-pencil.svg.png',
-//       playlists: [
-//          {
-//             name: "Brendan's aweosome playlist",
-//             songs: [
-//                {name: "Beat it", duration: 1345}, 
-//                {name: "Numb", duration: 3456},
-//                {name: "Pass the peas", duration: 2344}
-//             ]
-//          },
-//          {
-//             name: "Bathroom splosions",
-//             songs: [
-//                {name: "Stanky leg", duration: 1345}, 
-//                {name: "Sweat and fear", duration: 3456},
-//                {name: "Pass the peas", duration: 2344}
-//             ]
-//          },
-//          {
-//             name: "Menash's weird playlist",
-//             songs: [
-//                {name: "Beat it", duration: 1345}, 
-//                {name: "Numb", duration: 3456},
-//                {name: "Pass the peas", duration: 2344}
-//             ]
-//          },
-//          {
-//             name: "Movie score tunes",
-//             songs: [
-//                {name: "Beat it", duration: 1345}, 
-//                {name: "Numb", duration: 3456},
-//                {name: "Pass the peas", duration: 2344}
-//             ]
-//          }
-//       ]
-//    }
-// }
-
-
 class Loading extends Component {
   render() {
-    return (
-      <Fragment>
-          <br/>
-          <br/>
-          <br/>
+    let cards = times(18, () => {
+      return (
+        <Card >
+        <Card.Content>
           <Placeholder>
+            <Placeholder.Image rectangular />
+            <Placeholder.Line />
+            <Placeholder.Line />
+            <Placeholder.Line />
+          </Placeholder>
+        </Card.Content>
+      </Card>
+      )
+    });
+    return (
+      <Segment inverted>
+          <br/>
+          <br/>
+          <br/>
+          <Placeholder inverted>
             <Placeholder.Image  circular />
             <Placeholder.Paragraph>
               <Placeholder.Line />
@@ -65,74 +37,59 @@ class Loading extends Component {
             </Placeholder.Paragraph>
           </Placeholder>
           <br />
-          <Divider />
-          <Card.Group itemsPerRow={4}>
-            <Card>
-              <Card.Content>
-                <Placeholder>
-                  <Placeholder.Image rectangular />
-                </Placeholder>
-              </Card.Content>
-            </Card>
-            <Card>
-              <Card.Content>
-                <Placeholder>
-                  <Placeholder.Image rectangular />
-                </Placeholder>
-              </Card.Content>
-            </Card>
-            <Card>
-              <Card.Content>
-                <Placeholder>
-                  <Placeholder.Image rectangular />
-                </Placeholder>
-              </Card.Content>
-            </Card>
-            <Card>
-              <Card.Content>
-                <Placeholder>
-                  <Placeholder.Image rectangular />
-                </Placeholder>
-              </Card.Content>
-            </Card>
+          <Divider inverted />
+          <Card.Group itemsPerRow={6}>
+            { cards }
           </Card.Group>
-      </Fragment>
+      </Segment>
+    )
+  }
+}
+
+class StartGameModal extends Component {
+  numPlayerOptions = () => times(15, (i) => ({ key: i, text: `${i + 1} guzzlers`, value: i  }))
+  deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
+  render() {
+    const {playlist, modalTrigger} = this.props;
+    return (
+      <Modal trigger={modalTrigger} size='mini'>
+        <Modal.Header h2>Set up your game</Modal.Header>
+        <Modal.Content>
+          <Container textAlign='center'>
+            <Image src={playlist.imageUrl} />
+            <h4>You've selected '{playlist.name}'</h4>
+            <DropdownWithOptions options={this.numPlayerOptions()} placeholder='How many guzzlers will be guzzling this eve?'/>
+            <DropdownWithOptions options={this.deviceOptions()} placeholder='Select which device to stream music from'/>
+          </Container>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button negative>Cancel</Button>
+          <Button positive icon='checkmark' labelPosition='right' content='Yes' />
+        </Modal.Actions>
+      </Modal>
     )
   }
 }
 
 class Playlist extends Component {
    render() {
-      let playlist = this.props.playlist;
-      debugger;
-      return (
-        <Grid.Column>
-          <Card>
+      const {playlist, devices} = this.props;
+      const selected = this.props.selected;
+      const modalTrigger =
+        (<Grid.Column>
+          <Card onClick={() => this.props.handlePlaylistSelect(playlist.id)}>
             <Card.Content>
               <Image src={playlist.imageUrl} />
               <br />
               <br />
               <Card.Header textAlign='center'>{playlist.name}</Card.Header>
               <Card.Meta>{playlist.total} songs</Card.Meta>
-              <Feed>
-              {/* {playlist.songs.map(song => {
-                let songLength = `${(song.duration/60).toFixed(2)}`
-                return (
-                  <Feed.Event>
-                    <Feed.Content>
-                      <Feed.Date content={songLength} />
-                      <Feed.Summary>
-                        {song.name}
-                      </Feed.Summary>
-                    </Feed.Content>
-                  </Feed.Event>
-                )
-              })} */}
-              </Feed>
             </Card.Content>
+            {selected ?  <Button attached='bottom' color='green'>Selected</Button> : <Button attached='bottom'>Select</Button>}
+            
           </Card>
-        </Grid.Column>
-      )
+        </Grid.Column>);
+        return <StartGameModal modalTrigger={modalTrigger} playlist={playlist} devices={devices}/>
    }
 }
 
@@ -163,6 +120,16 @@ class HoursCounter extends Component {
    }
 }
 
+class DropdownWithOptions extends Component {
+  render() {
+    return (
+      <Fragment>
+        <Dropdown  placeholder={this.props.placeholder} fluid selection options={this.props.options} />
+      </Fragment>
+    )
+  }
+}
+
 class Filter extends Component {
    render() {
       return (
@@ -179,13 +146,17 @@ class Filter extends Component {
 }
 
 export default class App extends Component {
-   state = { 
-      numPlayers: 3,
-      playlist: "Pick a playlist bro",
-      user: {},
-      playlists: [],
-      filterString: ''
-   }
+  constructor(props) {
+    super(props);
+    this.state = { 
+       user: {},
+       playlists: [],
+       filterString: '',
+       selectedPlaylist: '',
+       players: '',
+       devices: []
+    }
+  }
 
    componentDidMount() {
       setTimeout(() => {
@@ -194,17 +165,8 @@ export default class App extends Component {
             user: resp
           })
         });
-        spotify.getUserPlaylists().then(resp => {
-          let playlists = resp.items;
-          let playlistTracksPromise = playlists.map(playlist => spotify.getPlaylistTracks(playlist.id))
-          let allPlaylistTracksPromises = Promise.all(playlistTracksPromise)
-          let playlistPromises = allPlaylistTracksPromises.then(tracksData => {
-            tracksData.forEach((tracksData, i) => {
-              playlists[i].songs = tracksData.items
-            })
-            return playlists;
-          })
-          return playlistPromises;
+        new Promise((resolve, reject) => {
+          Util.getPlaylists(spotify.getUserPlaylists, [], resolve, reject)
         })
         .then(resp => {
           debugger;
@@ -213,46 +175,95 @@ export default class App extends Component {
               {
                 name: playlist.name, 
                 imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f', 
-                songs: playlist.songs,
-                total: playlist.tracks.total
+                total: playlist.tracks.total,
+                id: playlist.id
               }
-            ))
+            )),
+            user: {
+              ...this.state.user, 
+              totalPlaylists: resp.total,
+              nextPlaylists: resp.next
+            }
+          })
+        });
+        spotify.getMyDevices().then(resp => {
+          debugger;
+          this.setState({
+            devices: resp.devices
           })
         })
       }, 2000); 
    }
+   componentDidUpdate() {
+     if (!this.state.players && this.state.selectedPlaylist) {
+      this.scrollToBottom();
+     }
+  }
+
+  handlePlayers = (players) => {
+    this.setState({
+      players: players
+    })
+  }
+  
+  scrollToBottom = () => {
+    // this.refs[i].scrollIntoView({block: 'end', behavior: 'smooth'});
+    // let node = ReactDOM.findDOMNode(this.refs.bottom);
+    // this.bottom.current.scrollIntoView({block: 'end', behavior: 'smooth'});
+    // debugger;
+    // node.scrollIntoView({block: 'end', behavior: 'smooth'})
+    this.refs.bottom.scrollIntoView({block: 'end', behavior: 'smooth'});
+  }
+
+
+   handlePlaylistSelect = (playlistId) => {
+     this.setState({
+       selectedPlaylist: playlistId
+     })
+   }
 
    render() {
       let playlistsToRender = this.state.user && 
-      this.state.playlists ? 
+      this.state.playlists &&
+      this.state.devices ? 
         this.state.playlists.filter(playlist => 
          playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())) : [];
-      
+      console.log(this.state.players)
       return (
-         <div className="App" >
+         <Segment inverted>
             {this.state.user.display_name ? 
               <Fragment>
                 <br /> 
-                <Header as='h2' icon textAlign='center'>
+                <Header as='h2' icon textAlign='center' >
                   <Image src={this.state.user.images[0].url} size='huge' circular />
                   <Header.Content>{this.state.user.display_name}'s Playlists</Header.Content>
                 </Header>
                 <Container textAlign='center'>
                   <PlaylistCounter playlists={playlistsToRender} />
-                  <HoursCounter playlists={playlistsToRender} />
+                  {/* <HoursCounter playlists={playlistsToRender} /> */}
                 </Container>
+                <br />
+                <div class="ui labeled ticked slider"></div>
+
                 <Container textAlign='center'>
                   <Filter handleChange={e => this.setState({filterString: e.target.value})} filterString={this.state.filterString} />
                 </Container>
-              <Divider />
-              <Grid stackable columns={4}>
-                {playlistsToRender.map((playlist, i) => <Playlist playlist={playlist} key={`${playlist.name}_${i}xx`} />
-                )}
-              </Grid>
+                <Divider />
+                <Grid stackable columns={6} style={{width: '80%'}} container>
+                  {playlistsToRender.map((playlist, i) => <Playlist playlist={playlist} key={`${playlist.name}_${i}xx`} selected={this.state.selectedPlaylist === playlist.id} handlePlaylistSelect={this.handlePlaylistSelect} devices={this.state.devices} />
+                  )}
+                </Grid>
+                <br />
+                <Divider />
+                <div ref='bottom'>
+                  <DropdownWithOptions selectedPlaylist={this.props.selectedPlaylist} ref={this.bottom} />
+                </div>
+                <br />
+                <br />
               </Fragment>
                 : <Loading/>
             }
-         </div>
+         </Segment>
       )
    }
 }
