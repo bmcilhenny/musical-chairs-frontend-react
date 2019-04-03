@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import { Menu, Modal, Button, Icon, Input, Card, Image, Header, Divider, Container, Grid, Placeholder, Segment, Dropdown } from 'semantic-ui-react';
+import { Label, Transition, Menu, Modal, Button, Icon, Input, Card, Image, Header, Divider, Container, Grid, Placeholder, Segment, Dropdown } from 'semantic-ui-react';
 import Spotify from 'spotify-web-api-js';
 import * as Util from './util/spotify';
 import { times } from 'lodash';
@@ -29,7 +29,7 @@ class Loading extends Component {
           <br/>
           <Placeholder inverted>
             <Placeholder.Line />
-            <Placeholder.Image  circular />
+            <Placeholder.Image   />
             <Placeholder.Paragraph>
               <Placeholder.Line />
               <Placeholder.Line />
@@ -47,21 +47,120 @@ class Loading extends Component {
 }
 
 class StartGameModal extends Component {
+  state = { 
+    modalOpen: false,
+    loadingGame: false,
+    duration: 2000,
+    modalMessage: 'Set up your game',
+    shuffleAnimation: true,
+    playing: false 
+  }
+
+  handleOpen = () => this.setState({ modalOpen: true })
+  handleClose = () => this.setState({ 
+    modalOpen: false,
+    playing: false 
+  })
   numPlayerOptions = () => times(15, (i) => ({ key: i, text: `${i + 1} guzzlers`, value: i + 1  }))
   deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
+  handleShuffle = (err, success) => {
+    if (err) {
+      console.log('ERR', err)
+      this.setState({ 
+        loadingGame: false,
+        modalMessage: 'There was an error, try again'
+      })
+    } else {
+      this.setState({
+        shuffleAnimation: false,
+        modalMessage:  'Shuffling...'
+      })
+      setTimeout(() => {
+        spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlay);
+        this.setState({
+          shuffleAnimation: true
+        })
+      }, 2000)
+      console.log('It\'s shuffled', success)
+    }
+  }
+
+  handlePlay = (err, success) => {
+    if (err) {
+      console.log('ERR', err)
+      this.setState({ 
+        loadingGame: false,
+        modalMessage: 'There was an error, try again'
+      })
+    } else {
+      setTimeout(() => {
+        spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}).then(resp => {
+          const artists = resp.item.artists;
+          const artistsNames = artists.reduce((string, artist, i ) => {
+            return string += (i === (artists.length - 1) || artists.length === 1 ? artist.name : `, ${artist.name}`) 
+          }, '')
+          this.setState({
+            modalMessage: `Now playing ${resp.item.name} by ${artistsNames}`,
+            loadingGame: false,
+            playing: true
+          })
+        })
+      }, 500)
+      // need this timeout because of the async between playing and getting current track
+    }
+  }
+
+  handleStartGameClick = () => {
+    this.setState({
+      loadingGame: true
+    })
+    setTimeout(() => {
+      spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffle)
+    }, 2000); 
+  }
+
+  componentDidUpdate() {
+
+  }
+
   render() {
-    const {playlist, modalTrigger, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
-    console.log("Is it disabled?", numPlayers && selectedDevice ? false : true);
-    console.log("# players", numPlayers );
-    console.log("selected device", selectedDevice );
+    const {playlist, index, selected, devices, handlePlaylistSelect, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
     return (
-      <Modal trigger={modalTrigger} size='mini'>
-        <Modal.Header h2>Set up your game</Modal.Header>
+      <Modal 
+        size='mini'
+        open={this.state.modalOpen}
+        onClose={this.handleClose}
+        trigger={<PlaylistCard
+                    handleOpen={this.handleOpen}      
+                    key={`${playlist.name}_${index}xx`} 
+                    playlist={playlist} 
+                    selected={selected} 
+                    devices={devices}  
+                    handlePlaylistSelect={handlePlaylistSelect} 
+                    handlePlayersChange={handlePlayersChange}
+                    handleDeviceChange={handleDeviceChange}
+                    numPlayers={numPlayers} 
+                    selectedDevice={selectedDevice}
+                  />} 
+      >
+        <Modal.Header h2>{this.state.modalMessage}</Modal.Header>
         <Modal.Content>
           <Container textAlign='center'>
-            <Image src={playlist.imageUrl} />
-            <h4>You've selected '{playlist.name}'</h4>
+            <Transition animation='shake' duration={this.state.duration} visible={this.state.shuffleAnimation}>
+              <Image 
+                centered 
+                size='small' 
+                src={playlist.imageUrl} 
+                label={this.state.playing ? { as: 'a', color: 'green', corner: 'left', icon: 'save' } : null}
+              />
+            </Transition>
+            <Header as='h3'>
+              <Header.Content>
+                {playlist.name}
+                <Header.Subheader>Your selected Playlist</Header.Subheader>
+              </Header.Content>
+            </Header>
             <DropdownWithOptions 
               options={this.numPlayerOptions()} 
               placeholder='How many guzzlers will be guzzling this eve?'
@@ -77,12 +176,14 @@ class StartGameModal extends Component {
           </Container>
         </Modal.Content>
         <Modal.Actions>
-          <Button negative>Cancel</Button>
+          <Button negative onClick={this.handleClose}>Cancel</Button>
           <Button 
             positive icon='checkmark' 
             labelPosition='right' 
             content='Start Game' 
             disabled={numPlayers && selectedDevice ? false : true}
+            onClick={this.handleStartGameClick}
+            loading={this.state.loadingGame}
           />
         </Modal.Actions>
       </Modal>
@@ -90,12 +191,15 @@ class StartGameModal extends Component {
   }
 }
 
-class Playlist extends Component {
+class PlaylistCard extends Component {
    render() {
-      const {playlist, devices, handleDeviceChange, handlePlayersChange, selectedDevice, numPlayers, selected, handlePlaylistSelect} = this.props;
-      const modalTrigger =
-        (<Grid.Column>
-          <Card onClick={() => handlePlaylistSelect(playlist.id)}>
+      const {playlist, selected, handlePlaylistSelect, handleOpen} = this.props;
+      return (
+        <Grid.Column>
+          <Card onClick={() => {
+            handlePlaylistSelect(playlist.id);
+            handleOpen();
+          }}>
             <Card.Content>
               <Image src={playlist.imageUrl} />
               <br />
@@ -106,16 +210,8 @@ class Playlist extends Component {
             {selected ?  
               <Button attached='bottom' color='green'>Selected</Button> : <Button attached='bottom'>Select</Button>}
           </Card>
-        </Grid.Column>);
-        return <StartGameModal 
-                  modalTrigger={modalTrigger} 
-                  playlist={playlist} 
-                  devices={devices}
-                  selectedDevice={selectedDevice}
-                  numPlayers={numPlayers}
-                  handleDeviceChange={handleDeviceChange}
-                  handlePlayersChange={handlePlayersChange}
-                />
+        </Grid.Column>
+      )
    }
 }
 
@@ -166,7 +262,6 @@ class Filter extends Component {
    render() {
       return (
          <Fragment>
-            <img />
             <Input 
               icon={<Icon name='search' />} 
               placeholder="Search for a playlist"
@@ -208,7 +303,8 @@ export default class App extends Component {
                 name: playlist.name, 
                 imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f', 
                 total: playlist.tracks.total,
-                id: playlist.id
+                id: playlist.id,
+                uri: playlist.uri
               }
             )),
             user: {
@@ -219,7 +315,6 @@ export default class App extends Component {
           })
         });
         spotify.getMyDevices().then(resp => {
-          debugger;
           this.setState({
             devices: resp.devices
           })
@@ -279,9 +374,10 @@ export default class App extends Component {
                     <Button color='green'>Log Out</Button>
                   </Menu.Menu>
                 </Menu>
-                <br /> 
                 <Header as='h2' icon textAlign='center' >
                   <Image src={this.state.user.images[0].url} size='huge' circular />
+                  <br />
+                  <br />
                   <Header.Content>{this.state.user.display_name}'s Playlists</Header.Content>
                 </Header>
                 <Container textAlign='center'>
@@ -298,7 +394,7 @@ export default class App extends Component {
                 <Divider />
                 <Grid stackable columns={6} style={{width: '80%'}} container>
                   {playlistsToRender.map((playlist, i) => 
-                    <Playlist 
+                    <StartGameModal 
                       playlist={playlist} 
                       key={`${playlist.name}_${i}xx`} 
                       selected={this.state.selectedPlaylist === playlist.id} 
