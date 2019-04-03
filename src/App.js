@@ -38,7 +38,7 @@ class Loading extends Component {
           </Placeholder>
           <br />
           <Divider inverted />
-          <Card.Group itemsPerRow={6}>
+          <Card.Group itemsPerRow={6} style={{width: '80%'}}>
             { cards }
           </Card.Group>
       </Segment>
@@ -47,10 +47,14 @@ class Loading extends Component {
 }
 
 class StartGameModal extends Component {
-  numPlayerOptions = () => times(15, (i) => ({ key: i, text: `${i + 1} guzzlers`, value: i  }))
+  numPlayerOptions = () => times(15, (i) => ({ key: i, text: `${i + 1} guzzlers`, value: i + 1  }))
   deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
+
   render() {
-    const {playlist, modalTrigger} = this.props;
+    const {playlist, modalTrigger, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
+    console.log("Is it disabled?", numPlayers && selectedDevice ? false : true);
+    console.log("# players", numPlayers );
+    console.log("selected device", selectedDevice );
     return (
       <Modal trigger={modalTrigger} size='mini'>
         <Modal.Header h2>Set up your game</Modal.Header>
@@ -61,18 +65,25 @@ class StartGameModal extends Component {
             <DropdownWithOptions 
               options={this.numPlayerOptions()} 
               placeholder='How many guzzlers will be guzzling this eve?'
-              handleChange={this.props.handlePlayersChange}
+              handleChange={handlePlayersChange}
+              value={numPlayers}
             />
             <DropdownWithOptions 
               options={this.deviceOptions()} 
               placeholder='Select which device to stream music from'
-              handleChange={this.props.handleDeviceChange}
+              handleChange={handleDeviceChange}
+              value={selectedDevice}
             />
           </Container>
         </Modal.Content>
         <Modal.Actions>
           <Button negative>Cancel</Button>
-          <Button positive icon='checkmark' labelPosition='right' content='Yes' />
+          <Button 
+            positive icon='checkmark' 
+            labelPosition='right' 
+            content='Start Game' 
+            disabled={numPlayers && selectedDevice ? false : true}
+          />
         </Modal.Actions>
       </Modal>
     )
@@ -81,7 +92,7 @@ class StartGameModal extends Component {
 
 class Playlist extends Component {
    render() {
-      const {playlist, devices, handleDeviceChange, handlePlayersChange, selected, handlePlaylistSelect} = this.props;
+      const {playlist, devices, handleDeviceChange, handlePlayersChange, selectedDevice, numPlayers, selected, handlePlaylistSelect} = this.props;
       const modalTrigger =
         (<Grid.Column>
           <Card onClick={() => handlePlaylistSelect(playlist.id)}>
@@ -100,6 +111,8 @@ class Playlist extends Component {
                   modalTrigger={modalTrigger} 
                   playlist={playlist} 
                   devices={devices}
+                  selectedDevice={selectedDevice}
+                  numPlayers={numPlayers}
                   handleDeviceChange={handleDeviceChange}
                   handlePlayersChange={handlePlayersChange}
                 />
@@ -117,7 +130,6 @@ class PlaylistCounter extends Component {
    }
 }
 
-
 class HoursCounter extends Component {
    render() {
       let allSongs = this.props.playlists.reduce((songs, playlist)=> {
@@ -134,9 +146,7 @@ class HoursCounter extends Component {
 }
 
 class DropdownWithOptions extends Component {
-
   render() {
-    const { value } = this.state
     return (
       <Fragment>
         <Dropdown  
@@ -145,7 +155,7 @@ class DropdownWithOptions extends Component {
           fluid 
           selection 
           options={this.props.options}
-          value={value}
+          value={this.props.value}
         />
       </Fragment>
     )
@@ -175,7 +185,7 @@ export default class App extends Component {
        playlists: [],
        filterString: '',
        selectedPlaylist: '',
-       players: 3,
+       numPlayers: '',
        devices: [],
        selectedDevice: ''
     }
@@ -192,7 +202,6 @@ export default class App extends Component {
           Util.getPlaylists(spotify.getUserPlaylists, [], resolve, reject)
         })
         .then(resp => {
-          debugger;
           this.setState({
             playlists: resp.map(playlist => (
               {
@@ -218,7 +227,7 @@ export default class App extends Component {
       }, 2000); 
    }
    componentDidUpdate() {
-     if (!this.state.players && this.state.selectedPlaylist) {
+     if (!this.state.numPlayers && this.state.selectedPlaylist) {
       this.scrollToBottom();
      }
   }
@@ -234,15 +243,15 @@ export default class App extends Component {
      })
    }
 
-   handleDeviceChange = (deviceId) => {
+   handleDeviceChange = (nothing, {value}) => {
      this.setState({
-      selectedDevice: deviceId
+      selectedDevice: value 
      })
    }
    
-   handlePlayersChange = (players) => {
+   handlePlayersChange = (nothing, {value}) => {
     this.setState({
-      players: players
+      numPlayers: value
     })
   }
 
@@ -252,7 +261,6 @@ export default class App extends Component {
       this.state.devices ? 
         this.state.playlists.filter(playlist => 
          playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())) : [];
-      console.log(this.state.players)
       return (
          <Segment inverted>
             {this.state.user.display_name ? 
@@ -267,8 +275,6 @@ export default class App extends Component {
                   {/* <HoursCounter playlists={playlistsToRender} /> */}
                 </Container>
                 <br />
-                <div class="ui labeled ticked slider"></div>
-
                 <Container textAlign='center'>
                   <Filter 
                     handleChange={e => this.setState({filterString: e.target.value})} 
@@ -283,17 +289,17 @@ export default class App extends Component {
                       key={`${playlist.name}_${i}xx`} 
                       selected={this.state.selectedPlaylist === playlist.id} 
                       handlePlaylistSelect={this.handlePlaylistSelect} 
-                      devices={this.state.devices}
+                      devices={this.state.devices}  
                       handleDeviceChange={this.handleDeviceChange}
-                      handlePlayersChange={this.handlePlayersChange}   
+                      handlePlayersChange={this.handlePlayersChange}
+                      selectedDevice={this.state.selectedDevice}
+                      numPlayers={this.state.numPlayers} 
                     />
                   )}
                 </Grid>
                 <br />
                 <Divider />
-                <div ref='bottom'>
-                  <DropdownWithOptions selectedPlaylist={this.props.selectedPlaylist} ref={this.bottom} />
-                </div>
+                <div ref='bottom'></div>
                 <br />
                 <br />
               </Fragment>
