@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import { Modal, Button, Icon, Input, Card, Image, Header, Divider, Container, Grid, Placeholder, Segment, Dropdown } from 'semantic-ui-react';
+import { Menu, Modal, Button, Icon, Input, Card, Image, Header, Divider, Container, Grid, Placeholder, Segment, Dropdown } from 'semantic-ui-react';
 import Spotify from 'spotify-web-api-js';
 import * as Util from './util/spotify';
 import { times } from 'lodash';
@@ -27,8 +27,8 @@ class Loading extends Component {
       <Segment inverted>
           <br/>
           <br/>
-          <br/>
           <Placeholder inverted>
+            <Placeholder.Line />
             <Placeholder.Image  circular />
             <Placeholder.Paragraph>
               <Placeholder.Line />
@@ -265,6 +265,20 @@ export default class App extends Component {
          <Segment inverted>
             {this.state.user.display_name ? 
               <Fragment>
+                <Menu inverted pointing secondary>
+                  <Menu.Item 
+                    name='home' 
+                     />
+                  <Menu.Item
+                    name='docs'
+                  />
+                  <Menu.Item
+                    name='github'
+                  />
+                  <Menu.Menu position='right'>
+                    <Button color='green'>Log Out</Button>
+                  </Menu.Menu>
+                </Menu>
                 <br /> 
                 <Header as='h2' icon textAlign='center' >
                   <Image src={this.state.user.images[0].url} size='huge' circular />
