@@ -69,19 +69,18 @@ class StartGameModal extends Component {
       console.log('ERR', err)
       this.setState({ 
         loadingGame: false,
-        modalMessage: 'There was an error, try again'
+        modalMessage: 'There was an error, try again',
+        playing: false 
       })
     } else {
       this.setState({
-        shuffleAnimation: false,
-        modalMessage:  'Shuffling...'
+        shuffleAnimation: !this.state.shuffleAnimation,
+        modalMessage:  'Shuffling...',
+        playing: false 
       })
       setTimeout(() => {
         spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlay);
-        this.setState({
-          shuffleAnimation: true
-        })
-      }, 2000)
+      }, this.state.duration)
       console.log('It\'s shuffled', success)
     }
   }
@@ -113,7 +112,8 @@ class StartGameModal extends Component {
 
   handleStartGameClick = () => {
     this.setState({
-      loadingGame: true
+      loadingGame: true,
+      playing: false
     })
     setTimeout(() => {
       spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffle)
@@ -152,7 +152,7 @@ class StartGameModal extends Component {
                 centered 
                 size='small' 
                 src={playlist.imageUrl} 
-                label={this.state.playing ? { as: 'a', color: 'green', corner: 'left', icon: 'save' } : null}
+                label={this.state.playing ? { as: 'a', color: 'green', corner: 'left', icon: 'music' } : null}
               />
             </Transition>
             <Header as='h3'>
