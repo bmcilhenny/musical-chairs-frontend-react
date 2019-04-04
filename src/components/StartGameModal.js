@@ -111,7 +111,6 @@ class StartGameModal extends Component {
         countdown: ''
       })
       setTimeout(() => {
-        debugger;
         this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffle)
       }, 2000); 
     }
@@ -119,17 +118,32 @@ class StartGameModal extends Component {
     runRound = () => {
       let roundDuration = Math.floor(Math.random() * ((50-10)+1) + 10) * 1000;
       setTimeout(() => {
-        this.props.spotify.pause();
         this.props.spotify.getMyCurrentPlaybackState().then(resp => {
-          this.setState({
-            gameStatus: null
-          })
+            if (resp.is_playing) {
+                this.handlePause();
+            }
         });
       }, roundDuration)
     }
   
     handleSkip = () => {
+        // check to see if song that was playing is different than song that is playing
       console.log('SKIP SONG')
+    }
+
+    handlePause = () => {
+        this.props.spotify.pause().catch((err) => {
+            console.log('ERROR PAUSING', err)
+        });
+        this.setState({
+            gameStatus: 'paused'
+        });
+        this.props.spotify.getMyCurrentPlaybackState().then(resp => {
+            if (resp.is_playing) {
+                this.handlePause();
+            } 
+        }).catch(err => console.log('ERROR GETTING CURRENT PLAYBACK STATE IN HANDLE PAUSE', err));
+
     }
   
     componentDidUpdate() {
@@ -147,12 +161,12 @@ class StartGameModal extends Component {
             return (
               <Modal.Actions>
                 <Button negative onClick={this.handleClose}>Cancel</Button>
-                <Button icon >
+                <Button icon onClick={this.handlePause}>
                   <Icon name='pause' />
                   Pause
                 </Button>
                 <Button
-                  color='blue' 
+                  positive
                   icon 
                   labelPosition='right'
                   disabled={numPlayers && selectedDevice ? false : true}
@@ -173,11 +187,12 @@ class StartGameModal extends Component {
                   Play
                 </Button>
                 <Button 
-                  icon 
-                  labelPosition='right'
-                  disabled={numPlayers && selectedDevice ? false : true}
-                  onClick={this.handleSkip}
-                  loading={this.state.loadingGame}
+                    positive
+                    icon 
+                    labelPosition='right'
+                    disabled={numPlayers && selectedDevice ? false : true}
+                    onClick={this.handleSkip}
+                    loading={this.state.loadingGame}
                 >
                   Skip
                   <Icon name='angle double right' />

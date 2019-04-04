@@ -1,4 +1,4 @@
-import React, {Fragment, Component } from 'react';
+import React, {Fragment } from 'react';
 import {Dropdown} from 'semantic-ui-react';
 
 const DropdownWithOptions = (props) => {
