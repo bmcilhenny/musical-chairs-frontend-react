@@ -19,12 +19,21 @@ class StartGameModal extends Component {
             counterInterval: ''
         }
     }
+
+    defaultState = () => ({
+        modalOpen: false,
+        loadingGame: false,
+        duration: 6000,
+        countdown: '',
+        modalMessage: 'Set up your game',
+        shuffleAnimation: true,
+        playing: false,
+        gameStatus: null,
+        counterInterval: ''
+    })
     
     handleOpen = () => this.setState({ modalOpen: true })
-    handleClose = () => this.setState({ 
-      modalOpen: false,
-      playing: false 
-    })
+    handleClose = () => this.setState(this.defaultState())
     numPlayerOptions = () => times(15, (i) => ({ key: i, text: `${i + 1} guzzlers`, value: i + 1  }))
     deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
   
@@ -82,8 +91,7 @@ class StartGameModal extends Component {
   
     tick = () => {
       const countdown = this.state.countdown;
-      console.log('STATE COUNTDOWN', countdown);
-      console.log('STATE COUNTER INTERVAL', this.state.counterInterval);
+    //   console.log('STATE COUNTDOWN', countdown);
       if (countdown === 0) {
         clearInterval(this.state.counterInterval)
       } else {
@@ -120,7 +128,7 @@ class StartGameModal extends Component {
       setTimeout(() => {
         this.props.spotify.getMyCurrentPlaybackState().then(resp => {
             if (resp.is_playing) {
-                this.handlePause();
+                this.handlePause(true);
             }
         });
       }, roundDuration)
@@ -131,19 +139,20 @@ class StartGameModal extends Component {
       console.log('SKIP SONG')
     }
 
-    handlePause = () => {
+    handlePause = (shouldDrink) => {
+        console.log('SHOULD WE DRINK?', shouldDrink);
         this.props.spotify.pause().catch((err) => {
             console.log('ERROR PAUSING', err)
         });
         this.setState({
-            gameStatus: 'paused'
+            gameStatus: 'paused',
+            countdown: shouldDrink ? 'DRINK' : 'PAUSED'
         });
         this.props.spotify.getMyCurrentPlaybackState().then(resp => {
             if (resp.is_playing) {
-                this.handlePause();
+                this.handlePause(shouldDrink);
             } 
         }).catch(err => console.log('ERROR GETTING CURRENT PLAYBACK STATE IN HANDLE PAUSE', err));
-
     }
   
     componentDidUpdate() {
@@ -155,13 +164,13 @@ class StartGameModal extends Component {
     render() {
       const {playlist, index, selected, devices, handlePlaylistSelect, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
       let renderModalActions = () => {
-        console.log('GAME STATUS', this.state.gameStatus)
+        // console.log('GAME STATUS', this.state.gameStatus)
         switch (this.state.gameStatus) {
           case 'play':
             return (
               <Modal.Actions>
                 <Button negative onClick={this.handleClose}>Cancel</Button>
-                <Button icon onClick={this.handlePause}>
+                <Button icon onClick={() => this.handlePause(false)}>
                   <Icon name='pause' />
                   Pause
                 </Button>
