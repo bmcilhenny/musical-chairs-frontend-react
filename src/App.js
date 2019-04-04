@@ -50,10 +50,12 @@ class StartGameModal extends Component {
   state = { 
     modalOpen: false,
     loadingGame: false,
-    duration: 2000,
+    duration: 6000,
+    countdown: '',
     modalMessage: 'Set up your game',
     shuffleAnimation: true,
-    playing: false 
+    playing: false,
+    counterInterval: '' 
   }
 
   handleOpen = () => this.setState({ modalOpen: true })
@@ -73,15 +75,15 @@ class StartGameModal extends Component {
         playing: false 
       })
     } else {
+      this.startCountDown();
       this.setState({
         shuffleAnimation: !this.state.shuffleAnimation,
         modalMessage:  'Shuffling...',
-        playing: false 
+        playing: false
       })
       setTimeout(() => {
         spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlay);
       }, this.state.duration)
-      console.log('It\'s shuffled', success)
     }
   }
 
@@ -93,6 +95,8 @@ class StartGameModal extends Component {
         modalMessage: 'There was an error, try again'
       })
     } else {
+      console.log('WHAT IS THE STATE', this.state.countdown)
+      
       setTimeout(() => {
         spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}).then(resp => {
           const artists = resp.item.artists;
@@ -102,7 +106,8 @@ class StartGameModal extends Component {
           this.setState({
             modalMessage: `Now playing ${resp.item.name} by ${artistsNames}`,
             loadingGame: false,
-            playing: true
+            playing: true,
+            countdown: 'GO!'
           })
         })
       }, 500)
@@ -110,18 +115,40 @@ class StartGameModal extends Component {
     }
   }
 
+  tick = () => {
+    const countdown = this.state.countdown;
+    console.log('STATE COUNTDOWN', countdown);
+    console.log('STATE COUNTER INTERVAL', this.state.counterInterval);
+    if (countdown === 0) {
+      clearInterval(this.state.counterInterval)
+    } else {
+      this.setState({
+        countdown: (countdown - 1)
+      })
+    }
+  }
+
+  startCountDown = () => {
+    let counterInterval = setInterval(this.tick, 1000);
+    this.setState({
+      countdown: 5,
+      counterInterval: counterInterval
+    })
+  }
+
+
   handleStartGameClick = () => {
+    if (this.state.counterInterval) {
+      clearInterval(this.state.counterInterval)
+    }
     this.setState({
       loadingGame: true,
-      playing: false
+      playing: false,
+      countdown: ''
     })
     setTimeout(() => {
       spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffle)
     }, 2000); 
-  }
-
-  componentDidUpdate() {
-
   }
 
   render() {
@@ -145,6 +172,7 @@ class StartGameModal extends Component {
                   />} 
       >
         <Modal.Header h2>{this.state.modalMessage}</Modal.Header>
+        {this.state.countdown ? <Label circular color='green' size='massive' floating>{this.state.countdown}</Label> : null}
         <Modal.Content>
           <Container textAlign='center'>
             <Transition animation='shake' duration={this.state.duration} visible={this.state.shuffleAnimation}>
@@ -222,21 +250,6 @@ class PlaylistCounter extends Component {
            {this.props.playlists.length} total playlists
            <Icon name='bolt' />
          </div>
-      )
-   }
-}
-
-class HoursCounter extends Component {
-   render() {
-      let allSongs = this.props.playlists.reduce((songs, playlist)=> {
-         return songs.concat(playlist.songs)
-      }, [])
-      let totalDuration = Math.round(allSongs.reduce((sum, song) => sum + song.duration, 0)/3600)
-      return (
-        <div style={{display: 'inline-block'}}>
-          {totalDuration} hours
-          <Icon name='time' />
-        </div>
       )
    }
 }
