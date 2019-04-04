@@ -20,7 +20,7 @@ export const setupSpotify = spotify => {
   if (spotifyAccessToken) {
     spotify.setAccessToken(spotifyAccessToken);
   } else {
-    const client_id = process.env.SPOTIFY_CLIENT_ID || '5f8edf6fa5254fb8ae8f9ff4839e8d4c';
+    const client_id = process.env.SPOTIFY_CLIENT_ID;
     const scopes = encodeURIComponent('user-read-playback-state user-modify-playback-state');
     const redirect_uri = window.location.href;
     const url = `https://accounts.spotify.com/authorize?response_type=token&client_id=${client_id}&scope=${scopes}&redirect_uri=${redirect_uri}`;
