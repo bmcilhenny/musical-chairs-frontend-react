@@ -95,13 +95,13 @@ class StartGameModal extends Component {
         modalMessage: 'There was an error, try again'
       })
     } else {
-      console.log('WHAT IS THE STATE', this.state.countdown)
-      
+      // generate random amount of secs between 5 and 45 seconds
+      let roundDuration = Math.floor(Math.random() * ((45-5)+1) + 5) * 1000; 
       setTimeout(() => {
         spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}).then(resp => {
           const artists = resp.item.artists;
           const artistsNames = artists.reduce((string, artist, i ) => {
-            return string += (i === (artists.length - 1) || artists.length === 1 ? artist.name : `, ${artist.name}`) 
+            return string += artist.name + (artists.length !== 1 && (artist.length - 1) !== i ? ', ' : '')
           }, '')
           this.setState({
             modalMessage: `Now playing ${resp.item.name} by ${artistsNames}`,
@@ -110,8 +110,11 @@ class StartGameModal extends Component {
             countdown: 'GO!'
           })
         })
-      }, 500)
+      }, 500);
       // need this timeout because of the async between playing and getting current track
+      setTimeout(() => {
+        
+      })
     }
   }
 
