@@ -21,14 +21,24 @@ export const setupSpotify = spotify => {
     spotify.setAccessToken(spotifyAccessToken);
   } else {
     const client_id = process.env.SPOTIFY_CLIENT_ID || '5f8edf6fa5254fb8ae8f9ff4839e8d4c';
-    const scopes = encodeURIComponent(
-      'user-read-playback-state user-modify-playback-state'
-    );
+    const scopes = encodeURIComponent('user-read-playback-state user-modify-playback-state');
     const redirect_uri = window.location.href;
     const url = `https://accounts.spotify.com/authorize?response_type=token&client_id=${client_id}&scope=${scopes}&redirect_uri=${redirect_uri}`;
     window.location = url;
   }
 };
+
+export const getNewToken = () => {
+  const cookies = new Cookies();
+  cookies.remove('spotify-access-token');
+  const client_id = process.env.SPOTIFY_CLIENT_ID || '5f8edf6fa5254fb8ae8f9ff4839e8d4c';
+  const scopes = encodeURIComponent('user-read-playback-state user-modify-playback-state');
+  const redirect_uri = window.location.href;
+  const url = `https://accounts.spotify.com/authorize?response_type=token&client_id=${client_id}&scope=${scopes}&redirect_uri=${redirect_uri}`;
+  window.location = url;
+}
+
+    
 
 
 export const getPlaylists = (spotifyAPICall, playlists, resolve, reject, limit=50, offset=0) => {

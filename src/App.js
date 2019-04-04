@@ -55,6 +55,7 @@ class StartGameModal extends Component {
     modalMessage: 'Set up your game',
     shuffleAnimation: true,
     playing: false,
+    gameStatus: null,
     counterInterval: '' 
   }
 
@@ -95,8 +96,7 @@ class StartGameModal extends Component {
         modalMessage: 'There was an error, try again'
       })
     } else {
-      // generate random amount of secs between 5 and 45 seconds
-      let roundDuration = Math.floor(Math.random() * ((45-5)+1) + 5) * 1000; 
+      // generate random amount of secs between 5 and 45 seconds 
       setTimeout(() => {
         spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}).then(resp => {
           const artists = resp.item.artists;
@@ -107,7 +107,8 @@ class StartGameModal extends Component {
             modalMessage: `Now playing ${resp.item.name} by ${artistsNames}`,
             loadingGame: false,
             playing: true,
-            countdown: 'GO!'
+            countdown: 'GO!',
+            gameStatus: 'play'
           })
         })
       }, 500);
@@ -139,7 +140,6 @@ class StartGameModal extends Component {
     })
   }
 
-
   handleStartGameClick = () => {
     if (this.state.counterInterval) {
       clearInterval(this.state.counterInterval)
@@ -154,8 +154,105 @@ class StartGameModal extends Component {
     }, 2000); 
   }
 
+  runRound = () => {
+    let roundDuration = Math.floor(Math.random() * ((50-10)+1) + 10) * 1000;
+    setTimeout(() => {
+      spotify.pause();
+      spotify.getMyCurrentPlaybackState().then(resp => {
+        this.setState({
+          gameStatus: null
+        })
+      });
+    }, roundDuration)
+  }
+
+  handleSkip = () => {
+    console.log('SKIP SONG')
+  }
+
+  componentDidUpdate() {
+    if (this.state.gameStatus === 'play') {
+      this.runRound();
+    }
+  }
+
   render() {
     const {playlist, index, selected, devices, handlePlaylistSelect, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
+    let renderModalActions = () => {
+      console.log('GAME STATUS', this.state.gameStatus)
+      switch (this.state.gameStatus) {
+        case 'play':
+          return (
+            <Modal.Actions>
+              <Button negative onClick={this.handleClose}>Cancel</Button>
+              <Button icon >
+                <Icon name='pause' />
+                Pause
+              </Button>
+              <Button
+                positive 
+                icon 
+                labelPosition='right'
+                disabled={numPlayers && selectedDevice ? false : true}
+                onClick={this.handleSkip}
+                loading={this.state.loadingGame}
+              >
+                Skip
+                <Icon name='angle double right' />
+              </Button>
+            </Modal.Actions>
+          )
+        case 'paused': 
+        return (
+          <Modal.Actions>
+            <Button negative onClick={this.handleClose}>Cancel</Button>
+              <Button icon >
+                <Icon name='play' />
+                Play
+              </Button>
+              <Button 
+                icon 
+                labelPosition='right'
+                disabled={numPlayers && selectedDevice ? false : true}
+                onClick={this.handleSkip}
+                loading={this.state.loadingGame}
+              >
+                Skip
+                <Icon name='angle double right' />
+              </Button>
+          </Modal.Actions>
+        )
+        case 'gameOver':
+          return (
+            <Modal.Actions>
+              <Button negative onClick={this.handleClose}>Cancel</Button>
+              <Button 
+                positive icon='question' 
+                labelPosition='right' 
+                content='Play Again' 
+                disabled={numPlayers && selectedDevice ? false : true}
+                onClick={this.handleStartGameClick}
+                loading={this.state.loadingGame}
+              />
+            </Modal.Actions>
+          )
+        default: 
+        return (
+          <Modal.Actions>
+            <Button negative onClick={this.handleClose}>Cancel</Button>
+            <Button 
+              positive icon='checkmark' 
+              labelPosition='right' 
+              content='Start Game' 
+              disabled={numPlayers && selectedDevice ? false : true}
+              onClick={this.handleStartGameClick}
+              loading={this.state.loadingGame}
+            />
+          </Modal.Actions>
+        )
+      }
+    }
+
     return (
       <Modal 
         size='mini'
@@ -206,17 +303,7 @@ class StartGameModal extends Component {
             />
           </Container>
         </Modal.Content>
-        <Modal.Actions>
-          <Button negative onClick={this.handleClose}>Cancel</Button>
-          <Button 
-            positive icon='checkmark' 
-            labelPosition='right' 
-            content='Start Game' 
-            disabled={numPlayers && selectedDevice ? false : true}
-            onClick={this.handleStartGameClick}
-            loading={this.state.loadingGame}
-          />
-        </Modal.Actions>
+        {renderModalActions()}
       </Modal>
     )
   }
@@ -308,6 +395,8 @@ export default class App extends Component {
           this.setState({
             user: resp
           })
+        }).catch((err) => {
+          Util.getNewToken();
         });
         new Promise((resolve, reject) => {
           Util.getPlaylists(spotify.getUserPlaylists, [], resolve, reject)
