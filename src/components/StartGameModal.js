@@ -42,7 +42,7 @@ class StartGameModal extends Component {
   
     handleShuffle = (err, success) => {
       if (err) {
-        console.log('ERR', err)
+        console.log('Shuffle error', err)
         this.setState({ 
           loadingGame: false,
           modalMessage: 'There was an error, try again',
@@ -147,6 +147,7 @@ class StartGameModal extends Component {
         this.props.spotify.pause().catch((err) => {
             console.log('ERROR PAUSING', err)
         });
+        debugger;
         this.setState({
             gameStatus: 'paused',
             countdown: shouldDrink ? 'DRINK' : 'PAUSED'
