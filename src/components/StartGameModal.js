@@ -33,7 +33,10 @@ class StartGameModal extends Component {
     })
     
     handleOpen = () => this.setState({ modalOpen: true })
-    handleClose = () => this.setState(this.defaultState())
+    handleClose = () => {
+        clearInterval(this.state.counterInterval);
+        this.setState(this.defaultState())
+    }
     numPlayerOptions = () => times(15, (i) => ({ key: i, text: `${i + 1} guzzlers`, value: i + 1  }))
     deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
   
