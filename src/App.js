@@ -6,10 +6,10 @@ import Loading from './components/Loading';
 import PlaylistCounter from './components/PlaylistCounter';
 import PlaylistFilter from './components/PlaylistFilter';
 import StartGameModal from './components/StartGameModal';
+import Navbar from './components/Navbar';
 
 const spotify = new Spotify();
 Util.setupSpotify(spotify);
-
 
 export default class App extends Component {
   constructor(props) {
@@ -38,6 +38,7 @@ export default class App extends Component {
           Util.getPlaylists(spotify.getUserPlaylists, [], resolve, reject)
         })
         .then(resp => {
+          debugger;
           this.setState({
             playlists: resp.map(playlist => (
               {
@@ -50,8 +51,7 @@ export default class App extends Component {
             )),
             user: {
               ...this.state.user, 
-              totalPlaylists: resp.total,
-              nextPlaylists: resp.next
+              totalPlaylists: resp.total
             }
           })
         });
@@ -101,20 +101,7 @@ export default class App extends Component {
          <Segment inverted>
             {this.state.user.display_name ? 
               <Fragment>
-                <Menu inverted pointing secondary>
-                  <Menu.Item 
-                    name='home' 
-                     />
-                  <Menu.Item
-                    name='docs'
-                  />
-                  <Menu.Item
-                    name='github'
-                  />
-                  <Menu.Menu position='right'>
-                    <Button color='green'>Log Out</Button>
-                  </Menu.Menu>
-                </Menu>
+                <Navbar />
                 <Header as='h2' icon textAlign='center' >
                   <Image src={this.state.user.images[0].url} size='huge' circular />
                   <br />
