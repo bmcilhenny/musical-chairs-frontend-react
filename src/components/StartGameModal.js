@@ -16,7 +16,8 @@ class StartGameModal extends Component {
             shuffleAnimation: true,
             playing: false,
             gameStatus: null,
-            counterInterval: ''
+            counterInterval: '',
+            roundsLeft: this.props.numPlayers
         }
     }
 
@@ -29,7 +30,8 @@ class StartGameModal extends Component {
         shuffleAnimation: true,
         playing: false,
         gameStatus: null,
-        counterInterval: ''
+        counterInterval: '',
+        roundsLeft: this.props.numPlayers
     })
     
     handleOpen = () => this.setState({ modalOpen: true })
@@ -53,7 +55,8 @@ class StartGameModal extends Component {
         this.setState({
           shuffleAnimation: !this.state.shuffleAnimation,
           modalMessage:  'Shuffling...',
-          playing: false
+          playing: false,
+          gameStatus: 'shuffling'
         })
         setTimeout(() => {
           this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlay);
@@ -66,6 +69,7 @@ class StartGameModal extends Component {
         console.log('ERR', err)
         this.setState({ 
           loadingGame: false,
+          gameStatus: play,
           modalMessage: 'There was an error, try again'
         })
       } else {
@@ -134,6 +138,9 @@ class StartGameModal extends Component {
                 this.handlePause(true);
             }
         });
+        this.setState({
+            roundsLeft: this.state.roundsLeft - 1
+        })
       }, roundDuration)
     }
   
@@ -147,7 +154,6 @@ class StartGameModal extends Component {
         this.props.spotify.pause().catch((err) => {
             console.log('ERROR PAUSING', err)
         });
-        debugger;
         this.setState({
             gameStatus: 'paused',
             countdown: shouldDrink ? 'DRINK' : 'PAUSED'
@@ -158,15 +164,41 @@ class StartGameModal extends Component {
             } 
         }).catch(err => console.log('ERROR GETTING CURRENT PLAYBACK STATE IN HANDLE PAUSE', err));
     }
+
+    renderDropdowns = (gameStatus) => {
+        switch (gameStatus) {
+            case 'play':
+                return (
+                    <Fragment>
+                        <Label circular color='green'>{this.state.roundsLeft}</Label>
+                        <span>rounds remaining</span>
+                    </Fragment>
+                )
+
+            default:
+                <DropdownWithOptions 
+                    options={this.numPlayerOptions()} 
+                    placeholder='How many guzzlers will be guzzling this eve?'
+                    handleChange={handlePlayersChange}
+                    value={numPlayers}
+                />
+                <DropdownWithOptions 
+                    options={this.deviceOptions()} 
+                    placeholder='Select which device to stream music from'
+                    handleChange={handleDeviceChange}
+                    value={selectedDevice}
+                />
+        }
+    }
   
     componentDidUpdate() {
-      if (this.state.gameStatus === 'play') {
-        this.runRound();
-      }
+    //   if (this.state.gameStatus === 'play') {
+    //     this.runRound();
+    //   }
     }
   
     render() {
-      const {playlist, index, selected, devices, handlePlaylistSelect, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
+      const {playlist, index, selected, devices, handlePlaylistSelect, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice, gameStatus} = this.props;
       let renderModalActions = () => {
         // console.log('GAME STATUS', this.state.gameStatus)
         switch (this.state.gameStatus) {
@@ -191,6 +223,7 @@ class StartGameModal extends Component {
                 </Button>
               </Modal.Actions>
             )
+        
           case 'paused': 
           return (
             <Modal.Actions>
@@ -279,18 +312,7 @@ class StartGameModal extends Component {
                   <Header.Subheader>Your selected Playlist</Header.Subheader>
                 </Header.Content>
               </Header>
-              <DropdownWithOptions 
-                options={this.numPlayerOptions()} 
-                placeholder='How many guzzlers will be guzzling this eve?'
-                handleChange={handlePlayersChange}
-                value={numPlayers}
-              />
-              <DropdownWithOptions 
-                options={this.deviceOptions()} 
-                placeholder='Select which device to stream music from'
-                handleChange={handleDeviceChange}
-                value={selectedDevice}
-              />
+              {renderDropdowns(this.state.gameStatus)}
             </Container>
           </Modal.Content>
           {renderModalActions()}
