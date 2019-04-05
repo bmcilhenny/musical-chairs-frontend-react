@@ -4,7 +4,8 @@ import {Dropdown} from 'semantic-ui-react';
 const DropdownWithOptions = (props) => {
     return (
       <Fragment>
-        <Dropdown  
+        <Dropdown
+          disabled={props.disabled}  
           onChange={props.handleChange}
           placeholder={props.placeholder} 
           fluid 
