@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import { Menu, Button, Image, Header, Divider, Container, Grid, Segment } from 'semantic-ui-react';
+import { Image, Header, Divider, Container, Grid, Segment } from 'semantic-ui-react';
 import Spotify from 'spotify-web-api-js';
 import * as Util from './util/spotify';
 import Loading from './components/Loading';
@@ -62,11 +62,12 @@ export default class App extends Component {
         })
       }, 2000); 
    }
+
    componentDidUpdate() {
      if (!this.state.numPlayers && this.state.selectedPlaylist) {
       this.scrollToBottom();
      }
-  }
+    }
   
   scrollToBottom = () => {
     this.refs.bottom.scrollIntoView({block: 'end', behavior: 'smooth'});
