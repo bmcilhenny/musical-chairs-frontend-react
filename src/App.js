@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import { Image, Header, Divider, Container, Grid, Segment } from 'semantic-ui-react';
 import Spotify from 'spotify-web-api-js';
-import * as Util from './util/spotify';
+import * as Util from './util/Spotify';
 import Loading from './components/Loading';
 import PlaylistCounter from './components/PlaylistCounter';
 import PlaylistFilter from './components/PlaylistFilter';
@@ -21,7 +21,9 @@ export default class App extends Component {
        selectedPlaylist: '',
        numPlayers: '',
        devices: [],
-       selectedDevice: ''
+       selectedDevice: '',
+       loading: false,
+       error: ''
     }
   }
 
@@ -37,7 +39,6 @@ export default class App extends Component {
          Util.getPlaylists(spotify, []),
          spotify.getMyDevices()
     ]);
-    debugger;
     this.setState({ 
       user: user, 
       playlists: playlists.map(playlist => (
@@ -55,33 +56,36 @@ export default class App extends Component {
     setInterval(() => this.getDevices(), 5000);
 
       // setTimeout(() => {
-        spotify.getMe().then(resp => {
-          this.setState({
-            user: resp
-          })
-        }).catch((err) => {
-          Util.getNewToken();
-        });
-        new Promise((resolve, reject) => {
-          Util.getPlaylists(spotify, [], resolve, reject)
-        })
-        .then(resp => {
-          this.setState({
-            playlists: resp.map(playlist => (
-              {
-                name: playlist.name, 
-                imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f',
-                id: playlist.id,
-                uri: playlist.uri
-              }
-            ))
-          })
-        });
-        spotify.getMyDevices().then(resp => {
-          this.setState({
-            devices: resp.devices
-          })
-        })
+        // spotify.getMe().then(resp => {
+          // if (resp.ok) {
+            // Throw new Error()
+          // }
+        //   this.setState({
+        //     user: resp
+        //   })
+        // }).catch((err) => {
+        //   Util.getNewToken();
+        // });
+        // new Promise((resolve, reject) => {
+        //   Util.getPlaylists(spotify, [], resolve, reject)
+        // })
+        // .then(resp => {
+        //   this.setState({
+        //     playlists: resp.map(playlist => (
+        //       {
+        //         name: playlist.name, 
+        //         imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f',
+        //         id: playlist.id,
+        //         uri: playlist.uri
+        //       }
+        //     ))
+        //   })
+        // });
+        // spotify.getMyDevices().then(resp => {
+        //   this.setState({
+        //     devices: resp.devices
+        //   })
+        // })
       // }, 2000); 
    }
 
