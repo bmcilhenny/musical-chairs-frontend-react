@@ -41,20 +41,36 @@ export const getNewToken = () => {
     
 
 
-export const getPlaylists = (spotifyAPICall, playlists, resolve, reject, limit=50, offset=0) => {
-  spotifyAPICall({limit: limit, offset: offset})
-    .then(resp => {
-      const retrievedPlaylists = playlists.concat(resp.items)
-      if (resp.next !== null) {
-        const url = new URL(resp.next);
-        offset = parseInt(url.searchParams.get('offset')); 
-        getPlaylists(spotifyAPICall, retrievedPlaylists, resolve, reject, limit, offset)
-      } else {
-        resolve(retrievedPlaylists)
-      }
-    })
-    .catch(error => {
-      console.log(error)
-      reject('Something wrong. Please refresh the page and try again.')
-    })
+// export const getPlaylists = (spotify, playlists, resolve, reject, limit=50, offset=0) => {
+//   spotify.getPlaylists({limit: limit, offset: offset})
+//     .then(resp => {
+//       const retrievedPlaylists = playlists.concat(resp.items)
+//       if (resp.next !== null) {
+//         const url = new URL(resp.next);
+//         offset = parseInt(url.searchParams.get('offset')); 
+//         getPlaylists(spotify.getPlaylists, retrievedPlaylists, resolve, reject, limit, offset)
+//       } else {
+//         resolve(retrievedPlaylists)
+//       }
+//     })
+//     .catch(error => {
+//       console.log(error)
+//       reject('Something wrong. Please refresh the page and try again.')
+//     })
+// }
+
+export const getPlaylists = async (spotify, playlists, limit=50, offset=0) => {
+  try {
+    const resp = await spotify.getUserPlaylists({limit: limit, offset: offset})
+    const retrievedPlaylists = playlists.concat(resp.items)
+    if (resp.next !== null) {
+      const url = new URL(resp.next);
+      offset = parseInt(url.searchParams.get('offset')); 
+      return getPlaylists(spotify, retrievedPlaylists, limit, offset)
+    } else {
+      return retrievedPlaylists;
+    }
+  } catch (err) {
+    console.log(err)
+  }
 }

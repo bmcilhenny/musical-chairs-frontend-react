@@ -25,8 +25,36 @@ export default class App extends Component {
     }
   }
 
-   componentDidMount() {
-      setTimeout(() => {
+  getDevices = async () => {
+    const { devices } = await spotify.getMyDevices();
+    this.setState({ devices });
+  };
+
+  
+   componentDidMount = async () => {
+     const [user, playlists, {devices}] = await Promise.all([
+         spotify.getMe(),
+         Util.getPlaylists(spotify, []),
+         spotify.getMyDevices()
+    ]);
+    debugger;
+    this.setState({ 
+      user: user, 
+      playlists: playlists.map(playlist => (
+        {
+          name: playlist.name, 
+          imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f', 
+          total: playlist.tracks.total,
+          id: playlist.id,
+          uri: playlist.uri
+        }
+      )),
+      devices: devices
+    });
+    
+    setInterval(() => this.getDevices(), 5000);
+
+      // setTimeout(() => {
         spotify.getMe().then(resp => {
           this.setState({
             user: resp
@@ -35,24 +63,18 @@ export default class App extends Component {
           Util.getNewToken();
         });
         new Promise((resolve, reject) => {
-          Util.getPlaylists(spotify.getUserPlaylists, [], resolve, reject)
+          Util.getPlaylists(spotify, [], resolve, reject)
         })
         .then(resp => {
-          debugger;
           this.setState({
             playlists: resp.map(playlist => (
               {
                 name: playlist.name, 
-                imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f', 
-                total: playlist.tracks.total,
+                imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f',
                 id: playlist.id,
                 uri: playlist.uri
               }
-            )),
-            user: {
-              ...this.state.user, 
-              totalPlaylists: resp.total
-            }
+            ))
           })
         });
         spotify.getMyDevices().then(resp => {
@@ -60,7 +82,7 @@ export default class App extends Component {
             devices: resp.devices
           })
         })
-      }, 2000); 
+      // }, 2000); 
    }
 
    componentDidUpdate() {
