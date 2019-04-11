@@ -19,10 +19,10 @@ class Loading extends Component {
         )
       });
       return (
-        <Segment inverted>
+        <Segment inverted >
             <br/>
             <br/>
-            <Placeholder inverted>
+            <Placeholder inverted >
               <Placeholder.Line />
               <Placeholder.Image   />
               <Placeholder.Paragraph>
@@ -33,7 +33,7 @@ class Loading extends Component {
             </Placeholder>
             <br />
             <Divider inverted />
-            <Card.Group itemsPerRow={6} style={{width: '80%'}}>
+            <Card.Group itemsPerRow={6} style={{width: '80%'}} stackable container>
               { cards }
             </Card.Group>
         </Segment>

@@ -50,6 +50,7 @@ export default class App extends Component {
    componentDidMount() {
     this.makeInitialFetch(spotify)
      .then(resp => {
+       debugger;
       const [user, playlists, {devices}] = resp;
       this.setState({user, playlists, devices}) 
      })
