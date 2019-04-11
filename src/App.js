@@ -1,12 +1,13 @@
 import React, {Component, Fragment} from 'react';
 import { Image, Header, Divider, Container, Grid, Segment } from 'semantic-ui-react';
 import Spotify from 'spotify-web-api-js';
-import * as Util from './util/Spotify';
 import Loading from './components/Loading';
 import PlaylistCounter from './components/PlaylistCounter';
 import PlaylistFilter from './components/PlaylistFilter';
 import StartGameModal from './components/StartGameModal';
 import Navbar from './components/Navbar';
+import ErrorMessage from './components/ErrorMessage';
+import * as Util from './util/Spotify';
 
 const spotify = new Spotify();
 Util.setupSpotify(spotify);
@@ -32,61 +33,32 @@ export default class App extends Component {
     this.setState({ devices });
   };
 
-  
-   componentDidMount = async () => {
-     const [user, playlists, {devices}] = await Promise.all([
-         spotify.getMe(),
-         Util.getPlaylists(spotify, []),
-         spotify.getMyDevices()
-    ]);
-    this.setState({ 
-      user: user, 
-      playlists: playlists.map(playlist => (
-        {
-          name: playlist.name, 
-          imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f', 
-          total: playlist.tracks.total,
-          id: playlist.id,
-          uri: playlist.uri
-        }
-      )),
-      devices: devices
-    });
-    
-    setInterval(() => this.getDevices(), 5000);
+  handleInitialFetchSpotifyDataErrors = (error) => {
+    if (error.status === 402) {
+      Util.getNewToken()
+    } else {
+      this.setState({
+        error: error
+      })
+    }
+  }
 
-      // setTimeout(() => {
-        // spotify.getMe().then(resp => {
-          // if (resp.ok) {
-            // Throw new Error()
-          // }
-        //   this.setState({
-        //     user: resp
-        //   })
-        // }).catch((err) => {
-        //   Util.getNewToken();
-        // });
-        // new Promise((resolve, reject) => {
-        //   Util.getPlaylists(spotify, [], resolve, reject)
-        // })
-        // .then(resp => {
-        //   this.setState({
-        //     playlists: resp.map(playlist => (
-        //       {
-        //         name: playlist.name, 
-        //         imageUrl: playlist.images.length ? playlist.images[0].url : 'https://profile-images.scdn.co/images/userprofile/default/466b0f566b616665e15b15eac8685e4e29e2291f',
-        //         id: playlist.id,
-        //         uri: playlist.uri
-        //       }
-        //     ))
-        //   })
-        // });
-        // spotify.getMyDevices().then(resp => {
-        //   this.setState({
-        //     devices: resp.devices
-        //   })
-        // })
-      // }, 2000); 
+  makeInitialFetch = (spotify) => {
+    return Promise.all([
+      spotify.getMe(), 
+      Util.getPaginatedPlaylists(spotify, []), 
+      spotify.getMyDevices()
+   ])
+  }
+  
+   componentDidMount() {
+    this.makeInitialFetch(spotify)
+     .then(resp => {
+      const [user, playlists, {devices}] = resp;
+      this.setState({user, playlists, devices}) 
+     })
+     .catch(this.handleInitialFetchSpotifyDataErrors)
+    setInterval(() => this.getDevices(), 5000);
    }
 
    componentDidUpdate() {
@@ -94,10 +66,16 @@ export default class App extends Component {
       this.scrollToBottom();
      }
     }
-  
-  scrollToBottom = () => {
-    this.refs.bottom.scrollIntoView({block: 'end', behavior: 'smooth'});
-  }
+
+    renderErrorMessage() {
+      if (this.state.error) {
+        return <ErrorMessage error={this.state.error}/>
+      }
+    }
+    
+    scrollToBottom = () => {
+      this.refs.bottom.scrollIntoView({block: 'end', behavior: 'smooth'});
+    }
 
 
    handlePlaylistSelect = (playlistId) => {
@@ -129,6 +107,7 @@ export default class App extends Component {
             {this.state.user.display_name ? 
               <Fragment>
                 <Navbar />
+                {this.renderErrorMessage()}
                 <Header as='h2' icon textAlign='center' >
                   <Image src={this.state.user.images[0].url} size='huge' circular />
                   <br />
