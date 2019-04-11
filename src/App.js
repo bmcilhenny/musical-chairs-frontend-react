@@ -48,15 +48,16 @@ export default class App extends Component {
   }
   
    componentDidMount() {
-    this.makeInitialFetch(spotify)
-     .then(resp => {
-       debugger;
-      const [user, playlists, {devices}] = resp;
-      this.setState({user, playlists, devices}) 
-     })
-     .catch(this.handleInitialFetchSpotifyDataErrors)
-    
-     setInterval(() => this.getDevices(), 5000);
+     setTimeout(() => {
+       this.makeInitialFetch(spotify)
+        .then(resp => {
+         const [user, playlists, {devices}] = resp;
+         this.setState({user, playlists, devices}) 
+        })
+        .catch(this.handleInitialFetchSpotifyDataErrors)
+       
+        setInterval(() => this.getDevices(), 5000);
+     }, 1000)
    }
 
    componentDidUpdate() {

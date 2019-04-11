@@ -39,27 +39,6 @@ export const getNewToken = () => {
   window.location = url;
 }
 
-    
-
-
-// export const getPlaylists = (spotify, playlists, resolve, reject, limit=50, offset=0) => {
-//   spotify.getPlaylists({limit: limit, offset: offset})
-//     .then(resp => {
-//       const retrievedPlaylists = playlists.concat(resp.items)
-//       if (resp.next !== null) {
-//         const url = new URL(resp.next);
-//         offset = parseInt(url.searchParams.get('offset')); 
-//         getPlaylists(spotify.getPlaylists, retrievedPlaylists, resolve, reject, limit, offset)
-//       } else {
-//         resolve(retrievedPlaylists)
-//       }
-//     })
-//     .catch(error => {
-//       console.log(error)
-//       reject('Something wrong. Please refresh the page and try again.')
-//     })
-// }
-
 export const getPaginatedPlaylists = async (spotify, playlists, limit=50, offset=0) => {
   try {
     const resp = await spotify.getUserPlaylists({limit: limit, offset: offset})

@@ -1,42 +1,57 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { times } from 'lodash';
-import { Card, Divider, Placeholder, Segment } from 'semantic-ui-react';
+import Navbar from './Navbar';
+import { Card, Divider, Placeholder, Button, Icon, Input, Container, Grid } from 'semantic-ui-react';
 
 class Loading extends Component {
     render() {
       const cards = times(18, () => {
         return (
-          <Card >
-          <Card.Content>
-            <Placeholder>
-              <Placeholder.Image rectangular />
-              <Placeholder.Line />
-              <Placeholder.Line />
-              <Placeholder.Line />
-            </Placeholder>
-          </Card.Content>
-        </Card>
+          <Grid.Column>
+            <Card >
+              <Card.Content>
+                <Placeholder>
+                  <Placeholder.Image rectangular />
+                  <br/>
+                  <br/>
+                  <Placeholder.Line />
+                  <Placeholder.Line />
+                </Placeholder>
+              </Card.Content>
+              <Button attached='bottom' disabled>Select</Button>
+            </Card>
+          </Grid.Column>
         )
       });
       return (
-        <Segment inverted >
+        <Fragment>
+            <Navbar />
             <br/>
-            <br/>
-            <Placeholder inverted >
-              <Placeholder.Line />
-              <Placeholder.Image   />
-              <Placeholder.Paragraph>
-                <Placeholder.Line />
-                <Placeholder.Line />
-                <Placeholder.Line />
-              </Placeholder.Paragraph>
-            </Placeholder>
-            <br />
+            <Grid centered columns={1}>
+              <Grid.Row>
+                <Placeholder inverted >
+                  <Placeholder.Image  style={{ height: 50, width: 50}} />
+                  <Placeholder.Paragraph>
+                    <Placeholder.Line />
+                    <Placeholder.Line />
+                  </Placeholder.Paragraph>
+                </Placeholder>
+              </Grid.Row>
+              <Grid.Row>
+                <br />
+                <br />
+                <Input 
+                      icon={<Icon name='search' />} 
+                      placeholder="Search for a playlist"
+                      disabled
+                />
+              </Grid.Row>
+            </Grid>
             <Divider inverted />
-            <Card.Group itemsPerRow={6} style={{width: '80%'}} stackable container>
+            <Grid stackable columns={6} style={{width: '80%'}} container>
               { cards }
-            </Card.Group>
-        </Segment>
+            </Grid>
+        </Fragment>
       )
     }
   }
