@@ -30,9 +30,10 @@ class Loading extends Component {
             <Grid centered columns={1}>
               <Grid.Row>
                 <Placeholder inverted >
-                  <Placeholder.Image  style={{ height: 50, width: 50}} />
+                  <Placeholder.Image  style={{ height: 50, width: 150}} />
+                  <br />
                   <Placeholder.Paragraph>
-                    <Placeholder.Line />
+                    <Placeholder.Line length='very long'/>
                     <Placeholder.Line />
                   </Placeholder.Paragraph>
                 </Placeholder>

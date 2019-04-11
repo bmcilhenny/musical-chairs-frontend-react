@@ -14,7 +14,7 @@ const PlaylistCard = (props) => {
                 <br />
                 <br />
                 <Card.Header textAlign='center'>{playlist.name}</Card.Header>
-                <Card.Meta>{playlist.total} songs</Card.Meta>
+                <Card.Meta textAlign='center'>{playlist.total} songs</Card.Meta>
                 </Card.Content>
                 {selected ?  
                 <Button attached='bottom' color='green'>Selected</Button> : <Button attached='bottom'>Select</Button>}
