@@ -28,7 +28,7 @@ class Loading extends Component {
             <Navbar />
             <br/>
             <Grid centered columns={1}>
-              <Grid.Row>
+              <Grid.Row >
                 <Placeholder inverted >
                   <Placeholder.Image  style={{ height: 50, width: 150}} />
                   <br />
