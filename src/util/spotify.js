@@ -63,13 +63,17 @@ export const getNewToken = () => {
 export const getPaginatedPlaylists = async (spotify, playlists, limit=50, offset=0) => {
   try {
     const resp = await spotify.getUserPlaylists({limit: limit, offset: offset})
-    const retrievedPlaylists = playlists.concat(resp.items)
-    if (resp.next !== null) {
-      const url = new URL(resp.next);
-      offset = parseInt(url.searchParams.get('offset')); 
-      return getPaginatedPlaylists(spotify, retrievedPlaylists, limit, offset)
+    if (resp.ok) {
+      const retrievedPlaylists = playlists.concat(resp.items)
+      if (resp.next !== null) {
+        const url = new URL(resp.next);
+        offset = parseInt(url.searchParams.get('offset')); 
+        return getPaginatedPlaylists(spotify, retrievedPlaylists, limit, offset)
+      } else {
+        return cleanPlaylistData(retrievedPlaylists);
+      }
     } else {
-      return cleanPlaylistData(retrievedPlaylists);
+      throw new Error('There was an error fetching playlist data.', err)
     }
   } catch (err) {
     throw new Error('There was an error fetching playlist data.', err)

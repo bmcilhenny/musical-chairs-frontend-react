@@ -34,13 +34,9 @@ export default class App extends Component {
   };
 
   handleInitialFetchSpotifyDataErrors = (error) => {
-    if (error.status === 402) {
-      Util.getNewToken()
-    } else {
-      this.setState({
-        error: error
-      })
-    }
+    this.setState({
+      error: error
+    })
   }
 
   makeInitialFetch = (spotify) => {
@@ -58,7 +54,8 @@ export default class App extends Component {
       this.setState({user, playlists, devices}) 
      })
      .catch(this.handleInitialFetchSpotifyDataErrors)
-    setInterval(() => this.getDevices(), 5000);
+    
+     setInterval(() => this.getDevices(), 5000);
    }
 
    componentDidUpdate() {
