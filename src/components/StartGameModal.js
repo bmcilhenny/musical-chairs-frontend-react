@@ -52,16 +52,17 @@ class StartGameModal extends Component {
     deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
     handleStartGameClick = async () => {
-      let totalRounds = this.props.numPlayers;
+      let roundsLeft = this.props.numPlayers - 1;
       if (this.state.counterInterval) {
         clearInterval(this.state.counterInterval)
       }
       this.setState({
         loadingGame: true,
         playing: false,
-        countdown: ''
+        countdown: '',
+        roundsLeft: roundsLeft
       });
-      while (totalRounds > 0) {
+      while (roundsLeft > 0) {
         try {
             await this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri})
             this.startCountDown();
@@ -96,7 +97,7 @@ class StartGameModal extends Component {
             this.setState({
               roundsLeft: this.state.roundsLeft ? this.state.roundsLeft - 1 : this.props.numPlayers - 1
             })
-            totalRounds--;
+            roundsLeft--;
         }
         catch (e) {
           debugger;
