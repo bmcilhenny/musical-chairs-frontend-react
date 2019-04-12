@@ -21,7 +21,9 @@ class StartGameModal extends Component {
             roundsLeft: props.numPlayers,
             error: '',
             max: 50,
-            min: 15
+            min: 15,
+            randNum: 0,
+            counter: 0
         }
     }
 
@@ -38,7 +40,9 @@ class StartGameModal extends Component {
         roundsLeft: this.props.numPlayers,
         error: '',
         max: 50,
-        min: 15
+        min: 15,
+        randNum: 0,
+        counter: 0
     })
     
     handleOpen = () => this.setState({ modalOpen: true })
@@ -90,10 +94,8 @@ class StartGameModal extends Component {
             await Helper.sleep(Helper.genRandomNumber(this.state.max, this.state.min))
             await this.handlePause(true)
             await Helper.sleep(15000)
-            debugger;
             await this.props.spotify.play({device_id: this.props.selectedDevice, uris: ['spotify:track:1Yp50bPPjK0VIAI2mKK5TG']})
             await Helper.sleep(11000)
-            debugger;
             this.setState({
               roundsLeft: this.state.roundsLeft ? this.state.roundsLeft - 1 : this.props.numPlayers - 1
             })
@@ -101,13 +103,20 @@ class StartGameModal extends Component {
         }
         catch (e) {
           debugger;
-          // do stuff with errors
+          alert(e)
         }
         this.setState({
-          gameStatus: 'game over'
+          gameStatus: 'gameOver'
         })
 
       }
+    }
+
+    handleGamePlaying = () => {
+      const randNum = Helper.genRandomNumber(this.state.max, this.state.min)
+      this.setState({
+        randNum: randNum
+      })
     }
   
     handleShuffle = (err, success) => {
