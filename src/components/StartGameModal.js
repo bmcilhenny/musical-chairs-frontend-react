@@ -55,9 +55,7 @@ class StartGameModal extends Component {
     numPlayerOptions = () => times(15, (i) => ({ key: i, text: `${i + 1} guzzlers`, value: i + 1  }))
     deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
-    playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye = async () => {
-      let song = await this.props.spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice})
-      debugger;
+    playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye = () => {
       this.props.spotify.play({device_id: this.props.selectedDevice, uris: ['spotify:track:1Yp50bPPjK0VIAI2mKK5TG']})
     }
 
@@ -114,7 +112,6 @@ class StartGameModal extends Component {
         this.setState({
           gameStatus: 'gameOver'
         })
-
       }
     }
 
