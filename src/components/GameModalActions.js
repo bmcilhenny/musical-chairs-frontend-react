@@ -38,17 +38,50 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
                 </Button>
             </Modal.Actions>
         )
+        case 'drink': 
+        return (
+            <Modal.Actions>
+            <Button negative onClick={handleClose}>Cancel</Button>
+            <Button icon >
+            <Icon name='play' />
+            Play
+            </Button>
+            <Button 
+                positive
+                icon 
+                labelPosition='right'
+                disabled={numPlayers && selectedDevice ? false : true}
+                onClick={handleSkip}
+                loading={loadingGame}
+            >
+            Skip
+            <Icon name='angle double right' />
+            </Button>
+            </Modal.Actions>
+        )
         case 'gameOver':
             return (
             <Modal.Actions>
                 <Button negative onClick={handleClose}>Cancel</Button>
                 <Button 
-                positive icon='question' 
-                labelPosition='right' 
-                content='Play Again' 
-                disabled={numPlayers && selectedDevice ? false : true}
-                onClick={handleStartGame}
-                loading={loadingGame}
+                    positive icon='question' 
+                    labelPosition='right' 
+                    content='Play Again' 
+                    disabled={numPlayers && selectedDevice ? false : true}
+                    onClick={handleStartGame}
+                    loading={loadingGame}
+                />
+            </Modal.Actions>
+            )
+        case 'shuffle':
+            return (
+            <Modal.Actions>
+                <Button negative onClick={handleClose}>Cancel</Button>
+                <Button 
+                    positive icon='random'
+                    labelPosition='right' 
+                    content='Shuffling' 
+                    disabled={true}
                 />
             </Modal.Actions>
             )

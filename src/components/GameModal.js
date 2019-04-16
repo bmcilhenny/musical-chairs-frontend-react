@@ -76,6 +76,7 @@ class GameModal extends Component {
     handlePlay = async (succes) => {
       try {
         await this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri})
+        await Helper.sleep(500)
         let currentTrack = await this.props.spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice})
         const artists = currentTrack.item.artists;
         const artistsNames = artists.reduce((string, artist, i ) => {
@@ -84,19 +85,20 @@ class GameModal extends Component {
         this.setPlayState(currentTrack, artistsNames);
       } catch (err) {
         debugger;
+        alert(err)
       }
     }
 
-    numPlayerOptions = () => times(15, (i) => ({ key: i, text: `${i + 1} guzzlers`, value: i + 1  }))
+    numPlayerOptions = () => times(14, (i) => ({ key: i + 2, text: `${i + 2} guzzlers`, value: i + 2  }))
     deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
     playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye = () => {
       this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]})
       .then(resp => {
-        debugger;
       })
       .catch(err => {
         debugger;
+        alert(err)
       })
     }
 
@@ -106,26 +108,32 @@ class GameModal extends Component {
         clearInterval(this.state.counterInterval)
       }
       try {
-          await this.setShuffleState()
-          await this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri})
+          await this.setShuffleState();
+          await this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri});
           this.startCountDown();
+          await Helper.sleep(6000)
           await this.handlePlay()
-          // await Helper.sleep(1500)
+          await this.setState({
+            roundsLeft: this.props.numPlayers - 1
+          })
           await Helper.sleep(Helper.genRandomNumber(this.state.max, this.state.min))
           await this.handlePause(true)
+          
           await Helper.sleep(15000)
           this.playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye()
           await Helper.sleep(11000)
           this.setState({
-            roundsLeft: this.state.roundsLeft ? this.state.roundsLeft - 1 : this.props.numPlayers - 1
+            roundsLeft: this.props.numPlayers - 1
           })
-          roundsLeft--;
-      } catch (e) {
+      } catch (err) {
           debugger;
-          alert(e)
+          alert(err)
       }
       this.setState({
-        gameStatus: 'gameOver'
+        gameStatus: 'gameOver',
+        modalMessage: 'Game Over',
+        countdown: null
+
       })
     }
 
@@ -181,7 +189,7 @@ class GameModal extends Component {
     //       //     countdown: 'GO!',
     //       //     gameStatus: 'play'
     //       //   })
-    //       // }).catch(handleShuffleError)
+    //       // }).catch(this.handleShuffleError)
     //     }, 500);
     //     // need this timeout because of the async between playing and getting current track
     //     setTimeout(() => {
@@ -235,7 +243,7 @@ class GameModal extends Component {
             console.log('ERROR PAUSING', err)
         });
         this.setState({
-            gameStatus: 'paused',
+            gameStatus: shouldDrink ? 'DRINK' : 'PAUSED',
             countdown: shouldDrink ? 'DRINK' : 'PAUSED'
         });
         let resp = await this.props.spotify.getMyCurrentPlaybackState();

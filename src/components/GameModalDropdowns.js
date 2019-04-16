@@ -11,10 +11,21 @@ const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice,
                     <span>rounds remaining</span>
                 </Fragment>
             )
-        case 'play':
+        case 'drink':
         return (
             <Fragment>
-                <span>Game over</span>
+                <DropdownWithOptions
+                    disabled={true} 
+                    options={numPlayerOptions} 
+                    placeholder='How many guzzlers will be guzzling this eve?'
+                    value={numPlayers}
+                />
+                <DropdownWithOptions
+                    disabled={true} 
+                    options={deviceOptions} 
+                    placeholder='Select which device to stream music from'
+                    value={selectedDevice}
+                />
             </Fragment>
         )
         case 'shuffle':
