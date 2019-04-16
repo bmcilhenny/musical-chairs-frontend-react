@@ -8,23 +8,15 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
             <Modal.Actions>
                 <Button negative onClick={handleClose}>Cancel</Button>
                 <Button icon onClick={() => handlePause(false)}>
-                <Icon name='pause' />
-                Pause
+                    <Icon name='pause' />
+                    Pause
                 </Button>
-                <Button
-                positive
-                icon 
-                labelPosition='right'
-                disabled={numPlayers && selectedDevice ? false : true}
-                onClick={handleSkip}
-                loading={loadingGame}
-                >
-                Skip
-                <Icon name='angle double right' />
+                <Button positive icon labelPosition='right' disabled={numPlayers && selectedDevice ? false : true} onClick={handleSkip} loading={loadingGame}>
+                    Skip
+                    <Icon name='angle double right' />
                 </Button>
             </Modal.Actions>
             )
-        
         case 'paused': 
         return (
             <Modal.Actions>
