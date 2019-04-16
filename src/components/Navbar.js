@@ -5,14 +5,15 @@ const Navbar = (props) => {
     return (
         <Menu inverted pointing secondary>
             <Menu.Item 
-            name='home' 
-                />
-            <Menu.Item
-            name='docs'
+                name='home'
+                href="http://localhost:3000/" 
             />
             <Menu.Item
-            name='github'
-            href='https://github.com/bmcilhenny/musical-chairs-frontend-react'
+                name='docs'
+            />
+            <Menu.Item
+                name='github'
+                href='https://github.com/bmcilhenny/musical-chairs-frontend-react'
             />
             <Menu.Menu position='right'>
             <Button color='green'>Log Out</Button>
