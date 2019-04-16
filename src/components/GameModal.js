@@ -100,7 +100,7 @@ class GameModal extends Component {
       })
     }
 
-    handleStartGameClick = async () => {
+    handleStartGame = async () => {
       let roundsLeft = this.props.numPlayers - 1;
       if (this.state.counterInterval) {
         clearInterval(this.state.counterInterval)
@@ -302,7 +302,7 @@ class GameModal extends Component {
             handleClose={this.handleClose}
             handleSkip={this.handleSkip}
             handlePause={this.handlePause}
-            handleStartGameClick={this.handleStartGameClick}
+            handleStartGame={this.handleStartGame}
           />
         </Modal>
       )

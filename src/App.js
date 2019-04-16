@@ -28,6 +28,25 @@ export default class App extends Component {
     }
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      this.makeInitialFetch(spotify)
+       .then(resp => {
+        const [user, playlists, {devices}] = resp;
+        this.setState({user, playlists, devices}) 
+       })
+       .catch(this.handleInitialFetchSpotifyDataErrors)
+      
+       setInterval(() => this.getDevices(), 5000);
+    }, 1000)
+  }
+
+  componentDidUpdate() {
+    if (!this.state.numPlayers && this.state.selectedPlaylist) {
+     this.scrollToBottom();
+    }
+   }
+
   getDevices = async () => {
     const { devices } = await spotify.getMyDevices();
     this.setState({ devices });
@@ -46,25 +65,6 @@ export default class App extends Component {
       spotify.getMyDevices()
    ])
   }
-  
-   componentDidMount() {
-     setTimeout(() => {
-       this.makeInitialFetch(spotify)
-        .then(resp => {
-         const [user, playlists, {devices}] = resp;
-         this.setState({user, playlists, devices}) 
-        })
-        .catch(this.handleInitialFetchSpotifyDataErrors)
-       
-        setInterval(() => this.getDevices(), 5000);
-     }, 1000)
-   }
-
-   componentDidUpdate() {
-     if (!this.state.numPlayers && this.state.selectedPlaylist) {
-      this.scrollToBottom();
-     }
-    }
 
     renderErrorMessage() {
       if (this.state.error) {
