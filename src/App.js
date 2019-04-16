@@ -4,7 +4,7 @@ import Spotify from 'spotify-web-api-js';
 import Loading from './components/Loading';
 import PlaylistCounter from './components/PlaylistCounter';
 import PlaylistFilter from './components/PlaylistFilter';
-import StartGameModal from './components/StartGameModal';
+import GameModal from './components/GameModal';
 import Navbar from './components/Navbar';
 import ErrorMessage from './components/ErrorMessage';
 import * as Util from './util/Spotify';
@@ -127,7 +127,7 @@ export default class App extends Component {
                 <Divider />
                 <Grid stackable columns={6} style={{width: '80%'}} container>
                   {playlistsToRender.map((playlist, i) => 
-                    <StartGameModal 
+                    <GameModal 
                       spotify={spotify}
                       playlist={playlist} 
                       key={`${playlist.name}_${i}xx`} 
