@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Label, Transition, Modal, Button, Icon, Image, Header, Container } from 'semantic-ui-react';
+import React, { Component } from 'react';
+import { Label, Transition, Modal, Image, Header, Container } from 'semantic-ui-react';
 import { times } from 'lodash';
 import PlaylistCard from './PlaylistCard';
 import * as Helper from '../helpers';
