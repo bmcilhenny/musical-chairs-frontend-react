@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal, Button, Icon} from 'semantic-ui-react';
 
-const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, handlePause, handleClose, handleSkip, handleStartGame}) => {
+const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, handlePause, handleClose, handleSkip, startGame}) => {
     switch (gameStatus) {
         case 'play':
             return (
@@ -68,7 +68,7 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
                     labelPosition='right' 
                     content='Play Again' 
                     disabled={numPlayers && selectedDevice ? false : true}
-                    onClick={handleStartGame}
+                    onClick={startGame}
                     loading={loadingGame}
                 />
             </Modal.Actions>
@@ -94,7 +94,7 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
                 labelPosition='right' 
                 content='Start Game' 
                 disabled={numPlayers && selectedDevice ? false : true}
-                onClick={handleStartGame}
+                onClick={startGame}
                 loading={loadingGame}
             />
             </Modal.Actions>
