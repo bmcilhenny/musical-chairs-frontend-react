@@ -5,6 +5,7 @@ import PlaylistCard from './PlaylistCard';
 import * as Helper from '../helpers';
 import GameModalActions from './GameModalActions';
 import GameModalDropdowns from './GameModalDropdowns';
+import {NAH_NAH_NAH_NAH_URI} from '../constants';
 
 class GameModal extends Component {
     constructor(props) {
@@ -90,7 +91,7 @@ class GameModal extends Component {
     deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
     playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye = () => {
-      this.props.spotify.play({device_id: this.props.selectedDevice, uris: ['spotify:track:1Yp50bPPjK0VIAI2mKK5TG']})
+      this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]})
       .then(resp => {
         debugger;
       })
