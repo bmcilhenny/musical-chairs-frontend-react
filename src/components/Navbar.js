@@ -12,6 +12,7 @@ const Navbar = (props) => {
             />
             <Menu.Item
             name='github'
+            href='https://github.com/bmcilhenny/musical-chairs-frontend-react'
             />
             <Menu.Menu position='right'>
             <Button color='green'>Log Out</Button>
