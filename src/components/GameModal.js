@@ -14,14 +14,15 @@ class GameModal extends Component {
             modalOpen: false,
             loadingGame: false,
             duration: 6000,
-            countdown: '',
+            shuffleCountdown: '',
+            shuffleCountdownInterval: '',
             modalMessage: 'Set up your game',
             shuffleAnimation: true,
             playing: false,
             gameStatus: null,
-            counterInterval: '',
             roundsLeft: props.numPlayers,
-            error: ''
+            error: '',
+
         }
     }
 
@@ -29,20 +30,21 @@ class GameModal extends Component {
         modalOpen: false,
         loadingGame: false,
         duration: 6000,
-        countdown: '',
+        shuffleCountdown: '',
+        shuffleCountdownInterval: '',
         modalMessage: 'Set up your game',
         shuffleAnimation: true,
         playing: false,
         gameStatus: null,
-        counterInterval: '',
         roundsLeft: this.props.numPlayers,
-        error: ''
+        error: '',
+
     })
     
     handleOpen = () => this.setState({ modalOpen: true })
 
     handleClose = () => {
-        clearInterval(this.state.counterInterval);
+        clearInterval(this.state.shuffleCountdownInterval);
         this.setState(this.defaultState())
     }
 
@@ -55,12 +57,20 @@ class GameModal extends Component {
       })
     }
 
+    startShuffleCountdown = () => {
+      let shuffelCountdownIntervalId = setInterval(this.tick, 1000);
+      this.setState({
+        shuffleCountdown: 5,
+        shuffleCountdownInterval: shuffelCountdownIntervalId
+      })
+    }
+
     setPlayState = (currentTrack, artistsNames) => {
       this.setState({
         modalMessage: `Now playing "${currentTrack.item.name}" by ${artistsNames}`,
         loadingGame: false,
         playing: true,
-        countdown: 'GO!',
+        shuffleCountdown: 'GO!',
         gameStatus: 'play'
       })
     }
@@ -105,15 +115,15 @@ class GameModal extends Component {
       if (err) {
         alert (err)
       } else {
-        this.startCountDown();
+        this.startShuffleCountdown();
         setTimeout(this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
       }
     }
 
     startGame = () => {
       let roundsLeft = this.props.numPlayers - 1;
-      if (this.state.counterInterval) {
-        clearInterval(this.state.counterInterval)
+      if (this.state.shuffleCountdownInterval) {
+        clearInterval(this.state.shuffleCountdownInterval)
       }
       this.setState({
         roundsLeft: roundsLeft
@@ -130,8 +140,7 @@ class GameModal extends Component {
       this.setState({
         gameStatus: 'gameOver',
         modalMessage: 'Game Over',
-        countdown: null
-
+        shuffleCountdown: null
       })
     }
   
@@ -144,7 +153,7 @@ class GameModal extends Component {
           playing: false 
         })
       } else {
-        this.startCountDown();
+        this.startShuffleCountdown();
         this.setState({
           shuffleAnimation: !this.state.shuffleAnimation,
           modalMessage:  'Shuffling...',
@@ -190,23 +199,15 @@ class GameModal extends Component {
     // }
   
     tick = () => {
-      const countdown = this.state.countdown;
+      const shuffleCountdown = this.state.shuffleCountdown;
     //   console.log('STATE COUNTDOWN', countdown);
-      if (countdown === 0) {
-        clearInterval(this.state.counterInterval)
+      if (shuffleCountdown === 0) {
+        clearInterval(shuffleCountdown)
       } else {
         this.setState({
-          countdown: (countdown - 1)
+          shuffleCountdown: (shuffleCountdown - 1)
         })
       }
-    }
-  
-    startCountDown = () => {
-      let counterInterval = setInterval(this.tick, 1000);
-      this.setState({
-        countdown: 5,
-        counterInterval: counterInterval
-      })
     }
   
     runRound = () => {
@@ -235,7 +236,7 @@ class GameModal extends Component {
         });
         this.setState({
             gameStatus: shouldDrink ? 'DRINK' : 'PAUSED',
-            countdown: shouldDrink ? 'DRINK' : 'PAUSED'
+            shuffleCountdown: shouldDrink ? 'DRINK' : 'PAUSED'
         });
         let resp = await this.props.spotify.getMyCurrentPlaybackState();
         if (resp.is_playing) {
@@ -248,11 +249,11 @@ class GameModal extends Component {
       console.log('NUM PLAYERS', this.props.numPlayers);
       console.log('ROUNDS', this.state.roundsLeft);
       const {playlist, index, selected, handlePlaylistSelect, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
-      const { gameStatus, loadingGame, roundsLeft} = this.state;
+      const { modalOpen, modalMessage, gameStatus, loadingGame, roundsLeft, shuffleCountdown, duration, shuffleAnimation, playing} = this.state;
       return (
         <Modal 
           size='mini'
-          open={this.state.modalOpen}
+          open={modalOpen}
           onClose={this.handleClose}
           trigger={<PlaylistCard
                       handleOpen={this.handleOpen}      
@@ -262,16 +263,16 @@ class GameModal extends Component {
                       handlePlaylistSelect={handlePlaylistSelect} 
                     />} 
         >
-          <Modal.Header h2>{this.state.modalMessage}</Modal.Header>
-          {this.state.countdown ? <Label circular color='green' size='massive' floating>{this.state.countdown}</Label> : null}
+          <Modal.Header h2>{modalMessage}</Modal.Header>
+          {shuffleCountdown ? <Label circular color='green' size='massive' floating>{shuffleCountdown}</Label> : null}
           <Modal.Content>
             <Container textAlign='center'>
-              <Transition animation='shake' duration={this.state.duration} visible={this.state.shuffleAnimation}>
+              <Transition animation='shake' duration={duration} visible={shuffleAnimation}>
                 <Image 
                   centered 
                   size='small' 
                   src={playlist.imageUrl} 
-                  label={this.state.playing ? { as: 'a', color: 'green', corner: 'left', icon: 'music' } : null}
+                  label={playing ? { as: 'a', color: 'green', corner: 'left', icon: 'music' } : null}
                 />
               </Transition>
               <Header as='h3'>
