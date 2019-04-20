@@ -55,7 +55,7 @@ class GameModal extends Component {
       })
     }
 
-    startCountdown = (countdownType, initialVal) => {
+    setCountdown = (countdownType, initialVal) => {
       let countdownInterval = setInterval(() => this.tick(countdownType, initialVal), 1000);
       this.setState({
         [countdownType]: initialVal,
@@ -75,14 +75,6 @@ class GameModal extends Component {
       }
     }
 
-    startShuffleCountdown = () => {
-      let shuffleCountdownIntervalId = setInterval(this.tick, 1000);
-      this.setState({
-        shuffleCountdown: 5,
-        shuffleCountdownInterval: shuffleCountdownIntervalId
-      })
-    }
-
     setPlayState = (currentTrack, artistsNames) => {
       this.setState({
         modalMessage: `Now playing "${currentTrack.item.name}" by ${artistsNames}`,
@@ -96,19 +88,19 @@ class GameModal extends Component {
     handleGetCurrentPlaybackResponse = (err, currentTrack) => {
       if (err) {
         alert (err)
-        // handleError(err)
+        this.setState({ 
+          loadingGame: false,
+          modalMessage: 'There was an error getting your playback, try again',
+          playing: false 
+        })
       } else {
         const artists = currentTrack.item.artists;
         const artistsNames = artists.reduce((string, artist, i ) => {
           return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
         }, '');
         this.setPlayState(currentTrack, artistsNames);
-        this.setRoundCounterInterval();
+        this.setCountdown('roundCountdown', Helper.genRandomNumber(50, 10))
       }
-    }
-
-    setRoundCounterInterval = () => {
-      // in here set interval for a counter to countdown starting from Helper.randomNumber(50, 10) 
     }
 
     handlePlayResponse = async () => {
@@ -132,8 +124,13 @@ class GameModal extends Component {
     handleShuffleResponse = (err, resp) => {
       if (err) {
         alert (err)
+        this.setState({ 
+          loadingGame: false,
+          modalMessage: 'There was an error shuffling, try again',
+          playing: false 
+        })
       } else {
-        this.startCountdown('shuffleCountdown', 5);
+        this.setCountdown('shuffleCountdown', 5);
         setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
       }
     }
