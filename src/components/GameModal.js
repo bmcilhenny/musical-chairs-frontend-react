@@ -135,7 +135,7 @@ class GameModal extends Component {
         alert (err)
       } else {
         this.startCountdown('shuffleCountdown', 5);
-        setTimeout(this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
+        setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
       }
     }
 
