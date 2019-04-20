@@ -56,7 +56,6 @@ class GameModal extends Component {
     }
 
     startCountdown = (countdownType, initialVal) => {
-      debugger;
       let countdownInterval = setInterval(() => this.tick(countdownType, initialVal), 1000);
       this.setState({
         [countdownType]: initialVal,
@@ -65,13 +64,13 @@ class GameModal extends Component {
     }
 
     tick = (countdownType, initialVal) => {
-      const countdown = this.state[`${countdownType}`];
+      const countdown = this.state[countdownType];
       const countdownInterval = this.state[`${countdownType}Interval`];
       if (countdown === 0) {
         clearInterval(countdownInterval)
       } else {
         this.setState({
-          [countdown]: (countdown - 1)
+          [countdownType]: (countdown - 1)
         })
       }
     }
