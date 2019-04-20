@@ -21,8 +21,7 @@ class GameModal extends Component {
             playing: false,
             gameStatus: null,
             roundsLeft: props.numPlayers,
-            error: '',
-
+            error: ''
         }
     }
 
@@ -37,8 +36,7 @@ class GameModal extends Component {
         playing: false,
         gameStatus: null,
         roundsLeft: this.props.numPlayers,
-        error: '',
-
+        error: ''
     })
     
     handleOpen = () => this.setState({ modalOpen: true })
@@ -57,11 +55,32 @@ class GameModal extends Component {
       })
     }
 
+    startCountdown = (countdownType, initialVal) => {
+      debugger;
+      let countdownInterval = setInterval(() => this.tick(countdownType, initialVal), 1000);
+      this.setState({
+        [countdownType]: initialVal,
+        [`${countdownType}Interval`]: countdownInterval
+      })
+    }
+
+    tick = (countdownType, initialVal) => {
+      const countdown = this.state[`${countdownType}`];
+      const countdownInterval = this.state[`${countdownType}Interval`];
+      if (countdown === 0) {
+        clearInterval(countdownInterval)
+      } else {
+        this.setState({
+          [countdown]: (countdown - 1)
+        })
+      }
+    }
+
     startShuffleCountdown = () => {
-      let shuffelCountdownIntervalId = setInterval(this.tick, 1000);
+      let shuffleCountdownIntervalId = setInterval(this.tick, 1000);
       this.setState({
         shuffleCountdown: 5,
-        shuffleCountdownInterval: shuffelCountdownIntervalId
+        shuffleCountdownInterval: shuffleCountdownIntervalId
       })
     }
 
@@ -115,7 +134,7 @@ class GameModal extends Component {
       if (err) {
         alert (err)
       } else {
-        this.startShuffleCountdown();
+        this.startCountdown('shuffleCountdown', 5);
         setTimeout(this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
       }
     }
@@ -130,18 +149,17 @@ class GameModal extends Component {
       })
       this.setShuffleState();
       this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse);
-      
-      Helper.sleep(15000)
-      this.playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye()
-      Helper.sleep(11000)
-      this.setState({
-        roundsLeft: this.props.numPlayers - 1
-      })
-      this.setState({
-        gameStatus: 'gameOver',
-        modalMessage: 'Game Over',
-        shuffleCountdown: null
-      })
+      // Helper.sleep(15000)
+      // this.playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye()
+      // Helper.sleep(11000)
+      // this.setState({
+      //   roundsLeft: this.props.numPlayers - 1
+      // })
+      // this.setState({
+      //   gameStatus: 'gameOver',
+      //   modalMessage: 'Game Over',
+      //   shuffleCountdown: null
+      // })
     }
   
     handleShuffle = (err, resp) => {
@@ -197,18 +215,6 @@ class GameModal extends Component {
     //     })
     //   }
     // }
-  
-    tick = () => {
-      const shuffleCountdown = this.state.shuffleCountdown;
-    //   console.log('STATE COUNTDOWN', countdown);
-      if (shuffleCountdown === 0) {
-        clearInterval(shuffleCountdown)
-      } else {
-        this.setState({
-          shuffleCountdown: (shuffleCountdown - 1)
-        })
-      }
-    }
   
     runRound = () => {
       let roundDuration = Helper.genRandomNumber(this.state.max, this.state.min)
