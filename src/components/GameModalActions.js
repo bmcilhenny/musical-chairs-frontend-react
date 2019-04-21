@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal, Button, Icon} from 'semantic-ui-react';
 
-const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, handlePause, handleClose, handleSkip, startGame}) => {
+const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, handlePause, handleClose, handleSkip, startGame, handleResume}) => {
     switch (gameStatus) {
         case 'play':
             return (
@@ -21,9 +21,9 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
         return (
             <Modal.Actions>
             <Button negative onClick={handleClose}>Cancel</Button>
-                <Button icon >
+                <Button icon onClick={handleResume}>
                 <Icon name='play' />
-                Play
+                Resume
                 </Button>
                 <Button 
                     positive

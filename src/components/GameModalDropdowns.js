@@ -11,6 +11,13 @@ const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice,
                     <span>rounds remaining</span>
                 </Fragment>
             )
+        case 'paused':
+            return (
+                <Fragment>
+                    <Label circular color='green'>{roundsLeft}</Label>
+                    <span>rounds remaining</span>
+                </Fragment>
+            )
         case 'drink':
         return (
             <Fragment>

@@ -23,7 +23,8 @@ class GameModal extends Component {
             playing: false,
             gameStatus: null,
             roundsLeft: props.numPlayers,
-            error: ''
+            error: '',
+            resuming: false
         }
     }
 
@@ -40,7 +41,8 @@ class GameModal extends Component {
         playing: false,
         gameStatus: null,
         roundsLeft: this.props.numPlayers,
-        error: ''
+        error: '',
+        resuming: false
     })
     
     handleOpen = () => this.setState({ modalOpen: true })
@@ -73,7 +75,7 @@ class GameModal extends Component {
       const countdownInterval = this.state[`${countdownType}Interval`];
       if (countdown === 0 && countdownType === 'roundCountdown') {
         clearInterval(countdownInterval);
-        this.handlePause(true)
+        this.handlePause();
       } else if (countdown === 0) {
         clearInterval(countdownInterval)
       } else {
@@ -102,12 +104,24 @@ class GameModal extends Component {
           playing: false 
         })
       } else {
-        const artists = currentTrack.item.artists;
-        const artistsNames = artists.reduce((string, artist, i ) => {
-          return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
-        }, '');
-        this.setPlayState(currentTrack, artistsNames);
-        this.setCountdown('roundCountdown', Helper.genRandomNumber(2, 1))
+        if (this.state.resuming) {
+          this.setState({
+            resuming: false
+          })
+          const artists = currentTrack.item.artists;
+          const artistsNames = artists.reduce((string, artist, i ) => {
+            return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
+          }, '');
+          this.setPlayState(currentTrack, artistsNames);
+          this.setCountdown('roundCountdown', this.state.roundCountdown)
+        } else {
+          const artists = currentTrack.item.artists;
+          const artistsNames = artists.reduce((string, artist, i ) => {
+            return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
+          }, '');
+          this.setPlayState(currentTrack, artistsNames);
+          this.setCountdown('roundCountdown', Helper.genRandomNumber(20, 10))
+        }
       }
     }
 
@@ -138,8 +152,24 @@ class GameModal extends Component {
           playing: false 
         })
       } else {
-        this.setCountdown('shuffleCountdown', 5);
-        setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
+        if (this.state.resuming) {
+          this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse)
+        } else {
+          this.setCountdown('shuffleCountdown', 5);
+          setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
+        }
+      }
+    }
+
+    handlePauseResponse = (err, resp) => {
+      if (err) {
+
+      } else {
+        if (this.state.resuming) {
+          this.setState({
+            resuming: true
+          })
+        }
       }
     }
 
@@ -239,9 +269,18 @@ class GameModal extends Component {
       console.log('SKIP SONG')
     }
 
-    handlePause = async (shouldDrink) => {
-      if (shouldDrink) {
-        console.log('SHOULD WE DRINK?', shouldDrink);
+    handleResume = () => {
+      this.setState({
+        resuming: true
+      })
+      this.props.spotify.play({device_id: this.props.selectedDevice}, this.handlePlayResponse)
+      // this.props.spotify.setShuffle(false, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse)
+    }
+
+    // refactor this to not use async, await, will have to right yet another callback to handle spotify.pause()
+    handlePause = async () => {
+      if (this.state.resuming) {
+        console.log('SHOULD WE DRINK?', );
         await this.props.spotify.pause().catch((err) => {
             console.log('ERROR PAUSING', err)
         });
@@ -251,11 +290,19 @@ class GameModal extends Component {
         });
         let resp = await this.props.spotify.getMyCurrentPlaybackState();
         if (resp.is_playing) {
-            await this.handlePause(shouldDrink);
+            await this.handlePause();
         } 
         // ).catch(err => console.log('ERROR GETTING CURRENT PLAYBACK STATE IN HANDLE PAUSE', err));
       } else {
-        
+        await this.props.spotify.pause().catch((err) => {
+          console.log('ERROR PAUSING', err)
+        });
+        clearInterval(this.state.roundCountdownInterval)
+        this.setState({
+          gameStatus: 'paused',
+          shuffleCountdown: 'PAUSED',
+          resuming: true
+        });      
       }
         
     }  
@@ -317,6 +364,7 @@ class GameModal extends Component {
             handleSkip={this.handleSkip}
             handlePause={this.handlePause}
             startGame={this.startGame}
+            handleResume={this.handleResume}
           />
         </Modal>
       )
