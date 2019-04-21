@@ -16,6 +16,8 @@ class GameModal extends Component {
             duration: 6000,
             shuffleCountdown: '',
             shuffleCountdownInterval: '',
+            roundCountdown: '',
+            roundCountdownInterval: '',
             modalMessage: 'Set up your game',
             shuffleAnimation: true,
             playing: false,
@@ -31,6 +33,8 @@ class GameModal extends Component {
         duration: 6000,
         shuffleCountdown: '',
         shuffleCountdownInterval: '',
+        roundCountdown: '',
+        roundCountdownInterval: '',
         modalMessage: 'Set up your game',
         shuffleAnimation: true,
         playing: false,
@@ -43,6 +47,7 @@ class GameModal extends Component {
 
     handleClose = () => {
         clearInterval(this.state.shuffleCountdownInterval);
+        clearInterval(this.state.roundCountdownInterval);
         this.setState(this.defaultState())
     }
 
@@ -66,7 +71,10 @@ class GameModal extends Component {
     tick = (countdownType, initialVal) => {
       const countdown = this.state[countdownType];
       const countdownInterval = this.state[`${countdownType}Interval`];
-      if (countdown === 0) {
+      if (countdown === 0 && countdownType === 'roundCountdown') {
+        clearInterval(countdownInterval);
+        this.handlePause(true)
+      } else if (countdown === 0) {
         clearInterval(countdownInterval)
       } else {
         this.setState({
@@ -99,7 +107,7 @@ class GameModal extends Component {
           return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
         }, '');
         this.setPlayState(currentTrack, artistsNames);
-        this.setCountdown('roundCountdown', Helper.genRandomNumber(50, 10))
+        this.setCountdown('roundCountdown', Helper.genRandomNumber(2, 1))
       }
     }
 
@@ -212,19 +220,19 @@ class GameModal extends Component {
     //   }
     // }
   
-    runRound = () => {
-      let roundDuration = Helper.genRandomNumber(this.state.max, this.state.min)
-      setTimeout(() => {
-        this.props.spotify.getMyCurrentPlaybackState().then(resp => {
-            if (resp.is_playing) {
-                this.handlePause(true);
-            }
-        });
-        this.setState({
-            roundsLeft: this.state.roundsLeft - 1
-        })
-      }, roundDuration)
-    }
+    // runRound = () => {
+    //   // let roundDuration = Helper.genRandomNumber(this.state.max, this.state.min)
+    //   setTimeout(() => {
+    //     this.props.spotify.getMyCurrentPlaybackState().then(resp => {
+    //         if (resp.is_playing) {
+    //             this.handlePause(true);
+    //         }
+    //     });
+    //     this.setState({
+    //         roundsLeft: this.state.roundsLeft - 1
+    //     })
+    //   }, roundDuration)
+    // }
   
     handleSkip = () => {
         // check to see if song that was playing is different than song that is playing
@@ -232,24 +240,28 @@ class GameModal extends Component {
     }
 
     handlePause = async (shouldDrink) => {
+      if (shouldDrink) {
         console.log('SHOULD WE DRINK?', shouldDrink);
         await this.props.spotify.pause().catch((err) => {
             console.log('ERROR PAUSING', err)
         });
         this.setState({
-            gameStatus: shouldDrink ? 'DRINK' : 'PAUSED',
-            shuffleCountdown: shouldDrink ? 'DRINK' : 'PAUSED'
+            gameStatus: 'drink',
+            shuffleCountdown: 'DRINK'
         });
         let resp = await this.props.spotify.getMyCurrentPlaybackState();
         if (resp.is_playing) {
             await this.handlePause(shouldDrink);
         } 
         // ).catch(err => console.log('ERROR GETTING CURRENT PLAYBACK STATE IN HANDLE PAUSE', err));
+      } else {
+        
+      }
+        
     }  
   
     render() {
-      console.log('NUM PLAYERS', this.props.numPlayers);
-      console.log('ROUNDS', this.state.roundsLeft);
+      console.log('Round Countdown', this.state.roundCountdown)
       const {playlist, index, selected, handlePlaylistSelect, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
       const { modalOpen, modalMessage, gameStatus, loadingGame, roundsLeft, shuffleCountdown, duration, shuffleAnimation, playing} = this.state;
       return (

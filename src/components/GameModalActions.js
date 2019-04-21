@@ -42,10 +42,6 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
         return (
             <Modal.Actions>
             <Button negative onClick={handleClose}>Cancel</Button>
-            <Button icon >
-            <Icon name='play' />
-            Play
-            </Button>
             <Button 
                 positive
                 icon 

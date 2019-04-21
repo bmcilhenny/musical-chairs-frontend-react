@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { times } from 'lodash';
 import Navbar from './Navbar';
-import { Card, Divider, Placeholder, Button, Icon, Input, Container, Grid } from 'semantic-ui-react';
+import { Card, Divider, Placeholder, Button, Icon, Input, Grid } from 'semantic-ui-react';
 
 class Loading extends Component {
     render() {
