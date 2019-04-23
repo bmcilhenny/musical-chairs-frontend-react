@@ -8,6 +8,7 @@ import GameModal from './components/GameModal';
 import Navbar from './components/Navbar';
 import ErrorMessage from './components/ErrorMessage';
 import * as Util from './util/Spotify';
+import * as Helper from './helpers';
 
 const spotify = new Spotify();
 Util.setupSpotify(spotify);
@@ -18,6 +19,7 @@ export default class App extends Component {
     this.state = { 
        user: {},
        playlists: [],
+       randomPlaylist: '',
        filterString: '',
        selectedPlaylist: '',
        numPlayers: '',
@@ -26,6 +28,7 @@ export default class App extends Component {
        loading: false,
        error: ''
     }
+    this.randomPlaylist = React.createRef();
   }
 
   componentDidMount() {
@@ -84,6 +87,15 @@ export default class App extends Component {
     })
   }
 
+  handleRandomize = async () => {
+    if (this.state.playlists.length) {
+      await this.setState({
+        randomPlaylist: Helper.genRandomNumber((this.state.playlists.length - 1), 0)
+      })
+      this.randomPlaylist.current.handleOpen();
+    }
+  }
+
    render() {
       let playlistsToRender = this.state.user && 
       this.state.playlists &&
@@ -94,7 +106,7 @@ export default class App extends Component {
          <Segment inverted>
             {this.state.user.display_name ? 
               <Fragment>
-                <Navbar />
+                <Navbar handleRandomize={this.handleRandomize} />
                 {this.renderErrorMessage()}
                 <Header as='h2' icon textAlign='center' >
                   <Image src={this.state.user.images[0].url} size='huge' circular />
@@ -104,7 +116,6 @@ export default class App extends Component {
                 </Header>
                 <Container textAlign='center'>
                   <PlaylistCounter playlists={playlistsToRender} />
-                  {/* <HoursCounter playlists={playlistsToRender} /> */}
                 </Container>
                 <br />
                 <Container textAlign='center'>
@@ -116,7 +127,8 @@ export default class App extends Component {
                 <Divider />
                 <Grid doubling columns={6} style={{width: '80%'}} container>
                   {playlistsToRender.map((playlist, i) => 
-                    <GameModal 
+                    <GameModal
+                      ref={i === this.state.randomPlaylist ? this.randomPlaylist : null} 
                       spotify={spotify}
                       playlist={playlist} 
                       key={`${playlist.name}_${i}xx`}
@@ -132,7 +144,6 @@ export default class App extends Component {
                 </Grid>
                 <br />
                 <Divider />
-                <div ref='bottom'></div>
                 <br />
                 <br />
               </Fragment>
