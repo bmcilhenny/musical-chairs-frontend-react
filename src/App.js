@@ -114,7 +114,7 @@ export default class App extends Component {
                   />
                 </Container>
                 <Divider />
-                <Grid stackable columns={6} style={{width: '80%'}} container>
+                <Grid doubling columns={6} style={{width: '80%'}} container>
                   {playlistsToRender.map((playlist, i) => 
                     <GameModal 
                       spotify={spotify}
