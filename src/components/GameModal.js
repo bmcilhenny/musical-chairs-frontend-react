@@ -174,6 +174,9 @@ class GameModal extends Component {
           roundsLeft: undefined,
           shuffleCountdown: 'GAME OVER'
         })
+      
+      } else if (this.state.gameStatus === 'gameOver') {
+        // do nothing, because setState is immediate, it will get caught in the else if below because this.state.roundsLeft is undefined
       } else if (this.state.roundsLeft === undefined) {
         debugger;
         this.setState({
