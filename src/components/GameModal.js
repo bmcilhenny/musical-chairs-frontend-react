@@ -151,7 +151,6 @@ class GameModal extends Component {
           playing: false 
         })
       } else {
-        debugger;
         if (this.state.resuming) {
           this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse)
         } else {
@@ -167,7 +166,6 @@ class GameModal extends Component {
       clearInterval(this.state.roundCountdownInterval)
       let roundsLeft = this.props.numPlayers - 1;
       if ((this.state.roundsLeft - 1) === 0) {
-        debugger;
         this.setState({
           gameStatus: 'gameOver',
           modalMessage: 'Cheers to the guzzler!',
@@ -178,13 +176,11 @@ class GameModal extends Component {
       } else if (this.state.gameStatus === 'gameOver') {
         // do nothing, because setState is immediate, it will get caught in the else if below because this.state.roundsLeft is undefined
       } else if (this.state.roundsLeft === undefined) {
-        debugger;
         this.setState({
           roundsLeft
         })
         this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse);
       } else {
-        debugger;
         this.setState({
           roundsLeft: this.state.roundsLeft - 1
         })
