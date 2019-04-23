@@ -16,7 +16,7 @@ const Navbar = (props) => {
                 href='https://github.com/bmcilhenny/musical-chairs-frontend-react'
             />
             <Menu.Menu position='right'>
-            <Button color='green'>Log Out</Button>
+            <Button color='green'>Randomize</Button>
             </Menu.Menu>
         </Menu>
     )
