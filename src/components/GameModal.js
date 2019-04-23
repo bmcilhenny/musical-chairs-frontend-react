@@ -97,7 +97,6 @@ class GameModal extends Component {
 
     handleGetCurrentPlaybackResponse = (err, currentTrack) => {
       if (err) {
-        alert (err)
         this.setState({ 
           loadingGame: false,
           modalMessage: 'There was an error getting your playback, try again',
@@ -130,7 +129,11 @@ class GameModal extends Component {
 
     handleNextRound = (err, success) => {
       if (err) {
-        alert(err)
+        this.setState({ 
+          loadingGame: false,
+          modalMessage: 'There was an error setting up the next round, close this modal and try again.',
+          playing: false 
+        })
       } else {
         setTimeout( () => this.startRound(), 10000)
       }
@@ -142,13 +145,13 @@ class GameModal extends Component {
 
     handleShuffleResponse = (err, resp) => {
       if (err) {
-        alert (err)
         this.setState({ 
           loadingGame: false,
           modalMessage: 'There was an error shuffling, try again',
           playing: false 
         })
       } else {
+        debugger;
         if (this.state.resuming) {
           this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse)
         } else {
@@ -158,14 +161,7 @@ class GameModal extends Component {
       }
     }
 
-    handlePauseResponse = (err, resp) => {
-      if (err) {
-      } else {
-      }
-    }
-
     startRound = () => {
-      console.log("ROUNDS LEFT", this.state.roundsLeft)
       clearInterval(this.state.shuffleCountdownInterval)
       clearInterval(this.state.roundCountdownInterval)
       let roundsLeft = this.props.numPlayers - 1;
@@ -243,7 +239,7 @@ class GameModal extends Component {
         clearInterval(this.state.roundCountdownInterval)
         this.setState({
           gameStatus: 'paused',
-          shuffleCountdown: 'PAUSE'
+          shuffleCountdown: ''
       });
       }
       let resp = await this.props.spotify.getMyCurrentPlaybackState();
@@ -253,7 +249,6 @@ class GameModal extends Component {
     }  
   
     render() {
-      console.log('Round Countdown', this.state.roundCountdown)
       const {playlist, index, selected, handlePlaylistSelect, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
       const { modalOpen, modalMessage, gameStatus, loadingGame, roundsLeft, shuffleCountdown, duration, shuffleAnimation, playing} = this.state;
       return (
