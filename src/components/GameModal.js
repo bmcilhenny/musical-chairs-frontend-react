@@ -22,7 +22,7 @@ class GameModal extends Component {
             shuffleAnimation: true,
             playing: false,
             gameStatus: null,
-            roundsLeft: props.numPlayers,
+            roundsLeft: undefined,
             error: '',
             resuming: false
         }
@@ -40,7 +40,7 @@ class GameModal extends Component {
         shuffleAnimation: true,
         playing: false,
         gameStatus: null,
-        roundsLeft: this.props.numPlayers,
+        roundsLeft: undefined,
         error: '',
         resuming: false
     })
@@ -128,14 +128,16 @@ class GameModal extends Component {
     numPlayerOptions = () => times(14, (i) => ({ key: i + 2, text: `${i + 2} guzzlers`, value: i + 2  }))
     deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
-    playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye = () => {
-      this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]})
-      .then(resp => {
-      })
-      .catch(err => {
-        debugger;
+    handleNextRound = (err, success) => {
+      if (err) {
         alert(err)
-      })
+      } else {
+        setTimeout( () => this.startRound(), 10000)
+      }
+    }
+
+    playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye = () => {
+      this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]}, this.handleNextRound)
     }
 
     handleShuffleResponse = (err, resp) => {
@@ -162,27 +164,35 @@ class GameModal extends Component {
       }
     }
 
-    startGame = () => {
+    startRound = () => {
+      console.log("ROUNDS LEFT", this.state.roundsLeft)
+      clearInterval(this.state.shuffleCountdownInterval)
+      clearInterval(this.state.roundCountdownInterval)
       let roundsLeft = this.props.numPlayers - 1;
-      if (this.state.shuffleCountdownInterval) {
+      if ((this.state.roundsLeft - 1) === 0) {
+        debugger;
         clearInterval(this.state.shuffleCountdownInterval)
+        clearInterval(this.state.roundCountdownInterval)
+        this.setState({
+          gameStatus: 'gameOver',
+          modalMessage: 'Game Over',
+          roundsLeft: undefined
+        })
+      } else if (this.state.roundsLeft === undefined) {
+        debugger;
+        this.setState({
+          roundsLeft
+        })
+        this.setShuffleState();
+        this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse);
+      } else {
+        debugger;
+        this.setState({
+          roundsLeft: this.state.roundsLeft - 1
+        })
+        this.setShuffleState();
+        this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse);
       }
-      this.setState({
-        roundsLeft: roundsLeft
-      })
-      this.setShuffleState();
-      this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse);
-      // Helper.sleep(15000)
-      // this.playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye()
-      // Helper.sleep(11000)
-      // this.setState({
-      //   roundsLeft: this.props.numPlayers - 1
-      // })
-      // this.setState({
-      //   gameStatus: 'gameOver',
-      //   modalMessage: 'Game Over',
-      //   shuffleCountdown: null
-      // })
     }
   
     handleShuffle = (err, resp) => {
@@ -276,6 +286,7 @@ class GameModal extends Component {
             gameStatus: 'drink',
             shuffleCountdown: 'DRINK'
         });
+        setTimeout(() => this.playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye(), 15000);
       } else {
         clearInterval(this.state.roundCountdownInterval)
         this.setState({
@@ -345,7 +356,7 @@ class GameModal extends Component {
             handleClose={this.handleClose}
             handleSkip={this.handleSkip}
             handlePause={this.handlePause}
-            startGame={this.startGame}
+            startRound={this.startRound}
             handleResume={this.handleResume}
           />
         </Modal>

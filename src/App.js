@@ -40,13 +40,7 @@ export default class App extends Component {
        setInterval(() => this.getDevices(), 5000);
     }, 1000)
   }
-
-  componentDidUpdate() {
-    if (!this.state.numPlayers && this.state.selectedPlaylist) {
-     this.scrollToBottom();
-    }
-   }
-
+  
   getDevices = async () => {
     const { devices } = await spotify.getMyDevices();
     this.setState({ devices });
@@ -72,11 +66,6 @@ export default class App extends Component {
       }
     }
     
-    scrollToBottom = () => {
-      this.refs.bottom.scrollIntoView({block: 'end', behavior: 'smooth'});
-    }
-
-
    handlePlaylistSelect = (playlistId) => {
      this.setState({
        selectedPlaylist: playlistId
