@@ -126,7 +126,7 @@ class GameModal extends Component {
         this.props.spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}, this.handleGetCurrentPlaybackResponse);
     }
 
-    numPlayerOptions = () => times(14, (i) => ({ key: i + 2, text: `${i + 2} guzzlers`, value: i + 2  }))
+    numPlayerOptions = () => times(13, (i) => ({ key: i + 3, text: `${i + 3} guzzlers`, value: i + 3  }))
     deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
     handleNextRound = (err, success) => {
@@ -180,9 +180,9 @@ class GameModal extends Component {
             roundsLeft
           })
         } else {
-          this.setState(prevState => ({
-            roundsLeft: prevState.roundsLeft - 1
-          }))
+          this.setState({
+            roundsLeft: this.state.roundsLeft - 1
+          })
         }
         this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse)
       } 
