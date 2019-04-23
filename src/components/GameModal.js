@@ -155,6 +155,7 @@ class GameModal extends Component {
         if (this.state.resuming) {
           this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse)
         } else {
+          this.setShuffleState();
           this.setCountdown('shuffleCountdown', 5);
           setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
         }
@@ -178,14 +179,12 @@ class GameModal extends Component {
         this.setState({
           roundsLeft
         })
-        this.setShuffleState();
         this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse);
       } else {
         debugger;
         this.setState({
           roundsLeft: this.state.roundsLeft - 1
         })
-        this.setShuffleState();
         this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse);
       }
     }

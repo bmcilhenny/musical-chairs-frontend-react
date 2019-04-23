@@ -30,7 +30,7 @@ const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice,
                 <DropdownWithOptions
                     disabled={true} 
                     options={deviceOptions} 
-                    placeholder='Select which device to stream music from'
+                    placeholder='Select which device to stream music from..'
                     value={selectedDevice}
                 />
             </Fragment>
@@ -47,7 +47,7 @@ const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice,
                 <DropdownWithOptions
                     disabled={true} 
                     options={deviceOptions} 
-                    placeholder='Select which device to stream music from'
+                    placeholder='Select which device to stream music from..'
                     value={selectedDevice}
                 />
             </Fragment>
@@ -65,7 +65,7 @@ const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice,
                 <DropdownWithOptions 
                     disabled={false}
                     options={deviceOptions} 
-                    placeholder='Select which device to stream music from'
+                    placeholder='Select which device to stream music from..'
                     handleChange={handleDeviceChange}
                     value={selectedDevice}
                 />
