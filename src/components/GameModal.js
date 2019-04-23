@@ -110,12 +110,10 @@ class GameModal extends Component {
         }, '');
         this.setPlayState(currentTrack, artistsNames);
         if (this.state.resuming) {
+          this.setCountdown('roundCountdown', this.state.roundCountdown)
           this.setState({
             resuming: false
           })
-          
-          
-          this.setCountdown('roundCountdown', this.state.roundCountdown)
         } else {
           this.setCountdown('roundCountdown', Helper.genRandomNumber(20, 10))
         }
