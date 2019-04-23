@@ -10,20 +10,13 @@ const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice,
             <span>rounds remaining</span>
         </Fragment>
     )
-    switch (gameStatus) {
-        case 'play':
-            if (roundsLeft === 1) {
-                return lastRound;
-            } else {
-                return roundsRemaining
-            }
-        case 'paused':
-            if (roundsLeft === 1) {
-                return lastRound;
-            } else {
-                return roundsRemaining
-            }
-        case 'drink':
+    if (gameStatus === 'play' || gameStatus === 'paused' || gameStatus === 'drink') {
+        if (roundsLeft === 1) {
+            return lastRound;
+        } else {
+            return roundsRemaining
+        }
+    } else if (gameStatus ===  'shuffle') {
         return (
             <Fragment>
                 <DropdownWithOptions
@@ -40,24 +33,7 @@ const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice,
                 />
             </Fragment>
         )
-        case 'shuffle':
-        return (
-            <Fragment>
-                <DropdownWithOptions
-                    disabled={true} 
-                    options={numPlayerOptions} 
-                    placeholder='How many guzzlers will be guzzling this eve?'
-                    value={numPlayers}
-                />
-                <DropdownWithOptions
-                    disabled={true} 
-                    options={deviceOptions} 
-                    placeholder='Select which device to stream music from..'
-                    value={selectedDevice}
-                />
-            </Fragment>
-        )
-        default:
+    } else {
         return (
             <Fragment>
                 <DropdownWithOptions
@@ -78,6 +54,5 @@ const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice,
         )
     }
 }
-
 
 export default GameModalDropdowns;

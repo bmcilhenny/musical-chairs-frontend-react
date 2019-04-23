@@ -111,11 +111,11 @@ class GameModal extends Component {
       } else {
         const artists = currentTrack.item.artists;
         const artistsNames = artists.reduce((string, artist, i ) => {
-          return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
+          return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
         }, '');
         this.setPlayState(currentTrack, artistsNames);
         // if (this.state.resuming) {
-          this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown, Helper.genRandomNumber(20, 10))
+          this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(20, 10))
         // } else {
         //   this.setCountdown('roundCountdown', Helper.genRandomNumber(20, 10))
         // }
@@ -141,7 +141,7 @@ class GameModal extends Component {
           playing: false 
         })
       } else {
-        setTimeout(this.startRound, 10000)
+        setTimeout(this.startRound, 11000)
       }
     }
 
@@ -274,7 +274,6 @@ class GameModal extends Component {
             gameStatus={gameStatus} 
             numPlayers={numPlayers}
             selectedDevice={selectedDevice}
-            handleClose={this.handleClose}
             loadingGame={loadingGame}
             handleClose={this.handleClose}
             handleSkip={this.handleSkip}
