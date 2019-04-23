@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, Button, Icon} from 'semantic-ui-react';
+import {Modal, Button, Icon, Grid} from 'semantic-ui-react';
 
 const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, handlePause, handleClose, handleSkip, startRound, handleResume}) => {
     switch (gameStatus) {
@@ -42,6 +42,10 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
         return (
             <Modal.Actions>
             <Button negative onClick={handleClose}>Cancel</Button>
+            <Button icon disabled={true}>
+                <Icon name='play' />
+                Resume
+            </Button>
             <Button 
                 positive
                 icon 
@@ -59,6 +63,10 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
             return (
             <Modal.Actions>
                 <Button negative onClick={handleClose}>Cancel</Button>
+                <Button icon disabled={true}>
+                    <Icon name='play' />
+                    Resume
+                </Button>
                 <Button 
                     positive icon='question' 
                     labelPosition='right' 
@@ -73,6 +81,10 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
             return (
             <Modal.Actions>
                 <Button negative onClick={handleClose}>Cancel</Button>
+                <Button icon disabled={true}>
+                    <Icon name='play' />
+                    Resume
+                </Button>
                 <Button 
                     positive icon='random'
                     labelPosition='right' 
@@ -83,16 +95,44 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
             )
         default: 
         return (
+            
             <Modal.Actions>
-            <Button negative onClick={handleClose}>Cancel</Button>
-            <Button 
-                positive icon='checkmark' 
-                labelPosition='right' 
-                content='Start Game' 
-                disabled={numPlayers && selectedDevice ? false : true}
-                onClick={startRound}
-                loading={loadingGame}
-            />
+                <Grid columns={3} >
+                    <Grid.Row>
+                        <Grid.Column>
+                        <Button negative onClick={handleClose} >Cancel</Button>
+                        </Grid.Column>
+                        <Grid.Column>
+                        <Button icon disabled={true}>
+                            <Icon name='play' />
+                            Resume
+                        </Button>
+                        </Grid.Column>
+                        <Grid.Column>
+                            <Button 
+                                positive icon='checkmark' 
+                                labelPosition='right' 
+                                content='Start' 
+                                disabled={numPlayers && selectedDevice ? false : true}
+                                onClick={startRound}
+                                loading={loadingGame}
+                            />
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+                {/* <Button negative onClick={handleClose} >Cancel</Button>
+                <Button icon disabled={true}>
+                    <Icon name='play' />
+                    Resume
+                </Button>
+                <Button 
+                    positive icon='checkmark' 
+                    labelPosition='right' 
+                    content='Start' 
+                    disabled={numPlayers && selectedDevice ? false : true}
+                    onClick={startRound}
+                    loading={loadingGame}
+                /> */}
             </Modal.Actions>
         )
     }

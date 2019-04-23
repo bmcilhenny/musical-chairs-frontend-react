@@ -255,7 +255,7 @@ class GameModal extends Component {
       const { modalOpen, modalMessage, gameStatus, loadingGame, roundsLeft, shuffleCountdown, duration, shuffleAnimation, playing} = this.state;
       return (
         <Modal 
-          size='mini'
+          size='tiny'
           open={modalOpen}
           onClose={this.handleClose}
           trigger={<PlaylistCard
