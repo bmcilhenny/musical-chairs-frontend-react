@@ -47,8 +47,7 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
                     positive
                     icon 
                     labelPosition='right'
-                    disabled={numPlayers && selectedDevice ? false : true}
-                    onClick={handleSkip}
+                    disabled={true}
                     loading={loadingGame}
                 >
                 Skip
