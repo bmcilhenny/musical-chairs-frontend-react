@@ -114,11 +114,7 @@ class GameModal extends Component {
           return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
         }, '');
         this.setPlayState(currentTrack, artistsNames);
-        // if (this.state.resuming) {
-          this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(20, 10))
-        // } else {
-        //   this.setCountdown('roundCountdown', Helper.genRandomNumber(20, 10))
-        // }
+        this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(20, 10))
         this.setState({
           resuming: false
         })
