@@ -104,22 +104,19 @@ class GameModal extends Component {
           playing: false 
         })
       } else {
+        const artists = currentTrack.item.artists;
+        const artistsNames = artists.reduce((string, artist, i ) => {
+          return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
+        }, '');
+        this.setPlayState(currentTrack, artistsNames);
         if (this.state.resuming) {
           this.setState({
             resuming: false
           })
-          const artists = currentTrack.item.artists;
-          const artistsNames = artists.reduce((string, artist, i ) => {
-            return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
-          }, '');
-          this.setPlayState(currentTrack, artistsNames);
+          
+          
           this.setCountdown('roundCountdown', this.state.roundCountdown)
         } else {
-          const artists = currentTrack.item.artists;
-          const artistsNames = artists.reduce((string, artist, i ) => {
-            return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
-          }, '');
-          this.setPlayState(currentTrack, artistsNames);
           this.setCountdown('roundCountdown', Helper.genRandomNumber(20, 10))
         }
       }
