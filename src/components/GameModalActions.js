@@ -7,10 +7,7 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
             return (
             <Modal.Actions>
                 <Button negative onClick={handleClose}>Cancel</Button>
-                <Button icon onClick={() => handlePause(false)}>
-                    <Icon name='pause' />
-                    Pause
-                </Button>
+                <Button icon='pause' content=' Pause' onClick={() => handlePause(false)} />
                 <Button positive icon labelPosition='right' disabled={numPlayers && selectedDevice ? false : true} onClick={handleSkip} loading={loadingGame}>
                     Skip
                     <Icon name='angle double right' />
@@ -20,10 +17,10 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
         case 'paused': 
         return (
             <Modal.Actions>
-            <Button negative onClick={handleClose}>Cancel</Button>
+                <Button negative onClick={handleClose}>Cancel</Button>
                 <Button icon onClick={handleResume}>
-                <Icon name='play' />
-                Resume
+                    <Icon name='play' />
+                    Resume
                 </Button>
                 <Button 
                     positive
@@ -41,22 +38,22 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
         case 'drink': 
         return (
             <Modal.Actions>
-            <Button negative onClick={handleClose}>Cancel</Button>
-            <Button icon disabled={true}>
-                <Icon name='play' />
-                Resume
-            </Button>
-            <Button 
-                positive
-                icon 
-                labelPosition='right'
-                disabled={numPlayers && selectedDevice ? false : true}
-                onClick={handleSkip}
-                loading={loadingGame}
-            >
-            Skip
-            <Icon name='angle double right' />
-            </Button>
+                <Button negative onClick={handleClose}>Cancel</Button>
+                <Button icon disabled={true}>
+                    <Icon name='play' />
+                    Resume
+                </Button>
+                <Button 
+                    positive
+                    icon 
+                    labelPosition='right'
+                    disabled={numPlayers && selectedDevice ? false : true}
+                    onClick={handleSkip}
+                    loading={loadingGame}
+                >
+                Skip
+                <Icon name='angle double right' />
+                </Button>
             </Modal.Actions>
         )
         case 'gameOver':
