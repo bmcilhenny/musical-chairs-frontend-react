@@ -75,7 +75,7 @@ class GameModal extends Component {
       const countdownInterval = this.state[`${countdownType}Interval`];
       if (countdown === 0 && countdownType === 'roundCountdown') {
         clearInterval(countdownInterval);
-        this.handlePause();
+        this.handlePause(true);
       } else if (countdown === 0) {
         clearInterval(countdownInterval)
       } else {
@@ -163,13 +163,7 @@ class GameModal extends Component {
 
     handlePauseResponse = (err, resp) => {
       if (err) {
-
       } else {
-        if (this.state.resuming) {
-          this.setState({
-            resuming: true
-          })
-        }
       }
     }
 
@@ -278,33 +272,26 @@ class GameModal extends Component {
     }
 
     // refactor this to not use async, await, will have to right yet another callback to handle spotify.pause()
-    handlePause = async () => {
-      if (this.state.resuming) {
-        console.log('SHOULD WE DRINK?', );
-        await this.props.spotify.pause().catch((err) => {
-            console.log('ERROR PAUSING', err)
-        });
+    handlePause = async (shouldDrink) => {
+      await this.props.spotify.pause().catch((err) => {
+          console.log('ERROR PAUSING', err)
+      });
+      if (shouldDrink) {
         this.setState({
             gameStatus: 'drink',
             shuffleCountdown: 'DRINK'
         });
-        let resp = await this.props.spotify.getMyCurrentPlaybackState();
-        if (resp.is_playing) {
-            await this.handlePause();
-        } 
-        // ).catch(err => console.log('ERROR GETTING CURRENT PLAYBACK STATE IN HANDLE PAUSE', err));
       } else {
-        await this.props.spotify.pause().catch((err) => {
-          console.log('ERROR PAUSING', err)
-        });
         clearInterval(this.state.roundCountdownInterval)
         this.setState({
           gameStatus: 'paused',
-          shuffleCountdown: 'PAUSED',
-          resuming: true
-        });      
+          shuffleCountdown: 'PAUSE'
+      });
       }
-        
+      let resp = await this.props.spotify.getMyCurrentPlaybackState();
+      if (resp.is_playing) {
+          await this.handlePause(shouldDrink);
+      } 
     }  
   
     render() {
