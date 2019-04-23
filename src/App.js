@@ -119,7 +119,7 @@ export default class App extends Component {
                     <GameModal 
                       spotify={spotify}
                       playlist={playlist} 
-                      key={`${playlist.name}_${i}xx`} 
+                      key={`${playlist.name}_${i}xx`}
                       selected={this.state.selectedPlaylist === playlist.id} 
                       handlePlaylistSelect={this.handlePlaylistSelect} 
                       devices={this.state.devices}  
