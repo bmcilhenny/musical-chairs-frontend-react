@@ -44,6 +44,11 @@ class GameModal extends Component {
         error: '',
         resuming: false
     })
+
+    componentWillUnmount() {
+      clearInterval(this.state.shuffleCountdownInterval);
+      clearInterval(this.state.roundCountdownInterval);
+    }
     
     handleOpen = () => this.setState({ modalOpen: true })
 
@@ -58,7 +63,8 @@ class GameModal extends Component {
         shuffleAnimation: !this.state.shuffleAnimation,
         modalMessage:  'Shuffling...',
         playing: false,
-        gameStatus: 'shuffle'
+        gameStatus: 'shuffle',
+        loadingGame: true
       })
     }
 
@@ -108,14 +114,14 @@ class GameModal extends Component {
           return string += artist.name + ((artists.length !== 1) && ((artist.length - 1) !== i) ? ', ' : '')
         }, '');
         this.setPlayState(currentTrack, artistsNames);
-        if (this.state.resuming) {
-          this.setCountdown('roundCountdown', this.state.roundCountdown)
-          this.setState({
-            resuming: false
-          })
-        } else {
-          this.setCountdown('roundCountdown', Helper.genRandomNumber(20, 10))
-        }
+        // if (this.state.resuming) {
+          this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown, Helper.genRandomNumber(20, 10))
+        // } else {
+        //   this.setCountdown('roundCountdown', Helper.genRandomNumber(20, 10))
+        // }
+        this.setState({
+          resuming: false
+        })
       }
     }
 
@@ -135,7 +141,7 @@ class GameModal extends Component {
           playing: false 
         })
       } else {
-        setTimeout( () => this.startRound(), 10000)
+        setTimeout(this.startRound, 10000)
       }
     }
 
@@ -172,42 +178,18 @@ class GameModal extends Component {
           roundsLeft: undefined,
           shuffleCountdown: 'GAME OVER'
         })
-      
-      } else if (this.state.gameStatus === 'gameOver') {
-        // do nothing, because setState is immediate, it will get caught in the else if below because this.state.roundsLeft is undefined
-      } else if (this.state.roundsLeft === undefined) {
-        this.setState({
-          roundsLeft
-        })
-        this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse);
       } else {
-        this.setState({
-          roundsLeft: this.state.roundsLeft - 1
-        })
-        this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse);
-      }
-    }
-  
-    handleShuffle = (err, resp) => {
-      if (err) {
-        alert (err)
-        this.setState({ 
-          loadingGame: false,
-          modalMessage: 'There was an error, try again',
-          playing: false 
-        })
-      } else {
-        this.startShuffleCountdown();
-        this.setState({
-          shuffleAnimation: !this.state.shuffleAnimation,
-          modalMessage:  'Shuffling...',
-          playing: false,
-          gameStatus: 'shuffle'
-        })
-        setTimeout(() => {
-          this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse);
-        }, this.state.duration)
-      }
+        if (this.state.roundsLeft === undefined) {
+          this.setState({
+            roundsLeft
+          })
+        } else {
+          this.setState(prevState => ({
+            roundsLeft: prevState.roundsLeft - 1
+          }))
+        }
+        this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse)
+      } 
     }
   
     handleSkip = () => {
@@ -227,6 +209,7 @@ class GameModal extends Component {
       await this.props.spotify.pause().catch((err) => {
           console.log('ERROR PAUSING', err)
       });
+      clearInterval(this.state.roundCountdownInterval)
       if (shouldDrink) {
         this.setState({
             gameStatus: 'drink',
@@ -234,16 +217,11 @@ class GameModal extends Component {
         });
         setTimeout(() => this.playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye(), 15000);
       } else {
-        clearInterval(this.state.roundCountdownInterval)
         this.setState({
           gameStatus: 'paused',
           shuffleCountdown: ''
       });
       }
-      let resp = await this.props.spotify.getMyCurrentPlaybackState();
-      if (resp.is_playing) {
-          await this.handlePause(shouldDrink);
-      } 
     }  
   
     render() {
