@@ -3,6 +3,17 @@ import {Modal, Button, Icon} from 'semantic-ui-react';
 
 const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, handlePause, handleClose, handleSkip, startRound, handleResume}) => {
     switch (gameStatus) {
+        case 'async':
+            return (
+                <Modal.Actions>
+                    <Button negative onClick={handleClose}>Cancel</Button>
+                    <Button icon='pause' content=' Pause' loading={true} />
+                    <Button positive icon labelPosition='right' disabled={numPlayers && selectedDevice ? false : true} onClick={handleSkip} loading={loadingGame}>
+                        Skip
+                        <Icon name='angle double right' />
+                    </Button>
+                </Modal.Actions>
+            )
         case 'play':
             return (
             <Modal.Actions>
