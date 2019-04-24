@@ -60,10 +60,11 @@ class GameModal extends Component {
 
     handleClose = () => {
         this.clearAllTimeouts();
-        this.props.spotify.pause().catch(this.handlePauseError);
-        clearInterval(this.state.shuffleCountdownInterval);
-        clearInterval(this.state.roundCountdownInterval);
-        this.setState(this.defaultState())
+        this.props.spotify.pause().catch(this.handlePauseError).then(resp => {
+          clearInterval(this.state.shuffleCountdownInterval);
+          clearInterval(this.state.roundCountdownInterval);
+          this.setState(this.defaultState())
+        });
     }
 
     setShuffleState = () => {
