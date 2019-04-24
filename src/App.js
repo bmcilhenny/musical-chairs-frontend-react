@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import { Image, Header, Divider, Container, Grid, Segment } from 'semantic-ui-react';
+import { Image, Header, Divider, Container, Grid, Segment, Card  } from 'semantic-ui-react';
 import Spotify from 'spotify-web-api-js';
 import Loading from './components/Loading';
 import PlaylistCounter from './components/PlaylistCounter';
@@ -125,23 +125,27 @@ export default class App extends Component {
                   />
                 </Container>
                 <Divider />
-                <Grid doubling columns={6} style={{width: '80%'}} container>
-                  {playlistsToRender.map((playlist, i) => 
-                    <GameModal
-                      ref={i === this.state.randomPlaylist ? this.randomPlaylist : null} 
-                      spotify={spotify}
-                      playlist={playlist} 
-                      key={`${playlist.name}_${i}xx`}
-                      selected={this.state.selectedPlaylist === playlist.id} 
-                      handlePlaylistSelect={this.handlePlaylistSelect} 
-                      devices={this.state.devices}  
-                      handleDeviceChange={this.handleDeviceChange}
-                      handlePlayersChange={this.handlePlayersChange}
-                      selectedDevice={this.state.selectedDevice}
-                      numPlayers={this.state.numPlayers} 
-                    />
-                  )}
-                </Grid>
+                <Divider hidden/>
+                <Divider hidden/>
+                
+                  <Grid doubling columns={6} style={{width: '90%'}} container>       
+                      {playlistsToRender.map((playlist, i) => 
+                        <GameModal
+                          ref={i === this.state.randomPlaylist ? this.randomPlaylist : null} 
+                          spotify={spotify}
+                          playlist={playlist} 
+                          key={`${playlist.name}_${i}xx`}
+                          selected={this.state.selectedPlaylist === playlist.id} 
+                          handlePlaylistSelect={this.handlePlaylistSelect} 
+                          devices={this.state.devices}  
+                          handleDeviceChange={this.handleDeviceChange}
+                          handlePlayersChange={this.handlePlayersChange}
+                          selectedDevice={this.state.selectedDevice}
+                          numPlayers={this.state.numPlayers} 
+                        />
+                      )}
+                  </Grid>
+                 
                 <br />
                 <Divider />
                 <br />

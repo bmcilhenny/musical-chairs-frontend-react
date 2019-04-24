@@ -1,24 +1,17 @@
 import React from 'react';
-import { Card, Image, Grid, Button} from 'semantic-ui-react';
+import { Image, Grid, Button, Header} from 'semantic-ui-react';
 
 const PlaylistCard = (props) => {
-    const {playlist, selected, handlePlaylistSelect, handleOpen} = props;
+    const {playlist, handleOpen} = props;
     return (
         <Grid.Column>
-            <Card onClick={() => {
-                handlePlaylistSelect(playlist.id);
-                handleOpen();
-            }}>
-                <Card.Content>
-                <Image src={playlist.imageUrl} />
-                <br />
-                <br />
-                <Card.Header textAlign='center'>{playlist.name}</Card.Header>
-                <Card.Meta textAlign='center'>{playlist.total} songs</Card.Meta>
-                </Card.Content>
-                {selected ?  
-                <Button attached='bottom' color='green'>Selected</Button> : <Button attached='bottom'>Select</Button>}
-            </Card>
+            <div onClick={handleOpen}>
+                <Image  src={playlist.imageUrl} style={{cursor: 'pointer'}} size='medium' as='a'/>
+                <Header as='h5' style={{color: 'white', marginBlockStart: '0.5em'}}>
+                {playlist.name}
+                    <Header.Subheader style={{color: '#969696'}}>{playlist.total} song{playlist.total > 1 ? 's' : null}</Header.Subheader>
+                </Header>
+            </div>
         </Grid.Column>
     )
  }

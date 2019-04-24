@@ -255,7 +255,7 @@ class GameModal extends Component {
           onClose={this.handleClose}
           trigger={<PlaylistCard
                       handleOpen={this.handleOpen}      
-                      key={`${playlist.name}_${index}xx`} 
+                      key={`${playlist.name}_${index}`} 
                       playlist={playlist} 
                       selected={selected} 
                       handlePlaylistSelect={handlePlaylistSelect} 
