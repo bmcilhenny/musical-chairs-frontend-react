@@ -10,7 +10,7 @@ const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice,
             <span>rounds remaining</span>
         </Fragment>
     )
-    if (gameStatus === 'play' || gameStatus === 'paused' || gameStatus === 'drink') {
+    if (gameStatus === 'play' || gameStatus === 'paused' || gameStatus === 'drink' ||  gameStatus === 'async') {
         if (roundsLeft === 1) {
             return lastRound;
         } else {
