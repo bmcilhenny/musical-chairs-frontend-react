@@ -7,7 +7,7 @@ const Navbar = ({handleRandomize}) => {
         <Menu inverted pointing secondary>
             <Menu.Item 
                 name='home'
-                href={URL} 
+                href={BASE_URL} 
             />
             <Menu.Item
                 name='docs'
