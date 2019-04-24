@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Grid, Button, Reveal, Header} from 'semantic-ui-react';
+import { Image, Grid, Icon, Reveal, Header} from 'semantic-ui-react';
 
 const PlaylistCard = (props) => {
     const {playlist, handleOpen} = props;
@@ -10,7 +10,8 @@ const PlaylistCard = (props) => {
                         <Image  src={playlist.imageUrl} size='medium'/>
                     </Reveal.Content>
                     <Reveal.Content hidden>
-                        <Image  src={playlist.imageUrl} size='medium'/>
+                        <Icon name='beer' size='medium' style={{}} />
+                        <Image  src={playlist.imageUrl} style={{filter: 'brightness(50%)'}} size='medium'/>
                     </Reveal.Content>
                 </Reveal>
                     <Header as='h5' style={{color: 'white', marginBlockStart: '0.5em'}}>
