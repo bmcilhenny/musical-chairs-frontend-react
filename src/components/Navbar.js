@@ -1,6 +1,6 @@
 import React from 'react';
 import {Menu, Button, Popup } from 'semantic-ui-react';
-import {URL} from '../constants';
+import {BASE_URL} from '../constants';
 
 const Navbar = ({handleRandomize}) => {
     return (
