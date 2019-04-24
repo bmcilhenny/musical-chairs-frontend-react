@@ -1,12 +1,13 @@
 import React from 'react';
 import {Menu, Button, Popup } from 'semantic-ui-react';
+import {URL} from '../constants';
 
 const Navbar = ({handleRandomize}) => {
     return (
         <Menu inverted pointing secondary>
             <Menu.Item 
                 name='home'
-                href="http://localhost:3000/" 
+                href={URL} 
             />
             <Menu.Item
                 name='docs'
