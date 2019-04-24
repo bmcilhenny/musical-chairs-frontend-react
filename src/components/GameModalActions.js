@@ -96,7 +96,7 @@ const GameModalActions = ({gameStatus, numPlayers, selectedDevice, loadingGame, 
                     positive icon='random'
                     labelPosition='right' 
                     content='Shuffling' 
-                    disabled={true}
+                    loading={loadingGame}
                 />
             </Modal.Actions>
             )
