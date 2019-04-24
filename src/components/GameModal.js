@@ -24,7 +24,8 @@ class GameModal extends Component {
             gameStatus: null,
             roundsLeft: undefined,
             error: '',
-            resuming: false
+            resuming: false,
+            timeouts: []
         }
     }
 
@@ -42,17 +43,24 @@ class GameModal extends Component {
         gameStatus: null,
         roundsLeft: undefined,
         error: '',
-        resuming: false
+        resuming: false,
+        timeouts: []
     })
 
     componentWillUnmount() {
       clearInterval(this.state.shuffleCountdownInterval);
       clearInterval(this.state.roundCountdownInterval);
     }
+
+    clearAllTimeouts = () => {
+      this.state.timeouts.forEach(timeout => clearTimeout(timeout))
+    }
     
     handleOpen = () => this.setState({ modalOpen: true })
 
     handleClose = () => {
+        this.clearAllTimeouts();
+        this.props.spotify.pause();
         clearInterval(this.state.shuffleCountdownInterval);
         clearInterval(this.state.roundCountdownInterval);
         this.setState(this.defaultState())
@@ -81,6 +89,7 @@ class GameModal extends Component {
       const countdownInterval = this.state[`${countdownType}Interval`];
       if (countdown === 0 && countdownType === 'roundCountdown') {
         clearInterval(countdownInterval);
+        debugger;
         this.handlePause(true);
       } else if (countdown === 0) {
         clearInterval(countdownInterval)
@@ -137,7 +146,10 @@ class GameModal extends Component {
           playing: false 
         })
       } else {
-        setTimeout(this.startRound, 11000)
+        let startRoundTimeout = setTimeout(this.startRound, 11000);
+        this.setState(prevState => ({
+          timeouts: [...prevState.timeouts, startRoundTimeout]
+        }))
       }
     }
 
@@ -158,7 +170,10 @@ class GameModal extends Component {
         } else {
           this.setShuffleState();
           this.setCountdown('shuffleCountdown', 5);
-          setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
+          let playTunesTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse), 6000);
+          this.setState(prevState => ({
+            timeouts: [...prevState.timeouts, playTunesTimeout]
+          }))
         }
       }
     }
@@ -189,29 +204,38 @@ class GameModal extends Component {
     }
   
     handleSkip = () => {
-        // check to see if song that was playing is different than song that is playing
-      console.log('SKIP SONG')
+      clearInterval(this.state.roundCountdownInterval)
+      this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse) 
     }
 
-    handleResume = () => {
-      this.setState({
+    handleResume = async () => {
+      await this.setState(prevState => ({
+        gameStatus: 'async',
         resuming: true
-      })
+      }))            
       this.props.spotify.play({device_id: this.props.selectedDevice}, this.handlePlayResponse)
     }
 
     // refactor this to not use async, await, will have to right yet another callback to handle spotify.pause()
     handlePause = async (shouldDrink) => {
+      await this.setState(prevState => ({
+        gameStatus: 'async'
+      }))
       await this.props.spotify.pause().catch((err) => {
-          console.log('ERROR PAUSING', err)
+        this.setState({ 
+          loadingGame: false,
+          modalMessage: 'There was an error pausing, try again',
+          playing: false 
+        })
       });
       clearInterval(this.state.roundCountdownInterval)
       if (shouldDrink) {
-        this.setState({
+        let playNahNahTimeout = setTimeout(() => this.playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye(), 15000);
+        this.setState(prevState => ({
             gameStatus: 'drink',
-            shuffleCountdown: 'DRINK'
-        });
-        setTimeout(() => this.playNahNahNahNahNahNahNahNahHeyHeyHeyGoodbye(), 15000);
+            shuffleCountdown: 'DRINK',
+            timeouts: [...prevState.timeouts, playNahNahTimeout]
+        }));
       } else {
         this.setState({
           gameStatus: 'paused',
