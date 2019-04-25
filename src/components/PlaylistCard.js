@@ -7,7 +7,7 @@ class PlaylistCard extends Component {
         this.state = {
             size: false,
             underlined: false,
-            image: false
+            imageLoaded: false
         }
     }
 
@@ -21,7 +21,7 @@ class PlaylistCard extends Component {
         const {playlist, handleOpen } = this.props;
         return (
             <Fragment>
-                { this.state.image ? null :
+                { this.state.imageLoaded ? null :
                     <Placeholder inverted >
                         <Placeholder.Image  style={{ height: 150, width: 150}} />
                         <Placeholder.Paragraph>
@@ -31,11 +31,11 @@ class PlaylistCard extends Component {
                     </Placeholder>
                 }
                     <Fragment >
-                        <div style={this.state.image ? {} : {display: 'none'}}>
+                        <div style={this.state.imageLoaded ? {} : {display: 'none'}}>
                             <Reveal animated='fade' instant onClick={handleOpen} >
                                 <Reveal.Content visible >
                                     <div  onMouseEnter={() => this.toggle('size')} onMouseLeave={() => this.toggle('size')} style={{zIndex: '-1', cursor: 'pointer', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', border: '1px solid rgba(0, 0, 0, 0)', height: this.state.size ? '50px' : '45px', width: this.state.size ? '50px' : '45px', backgroundColor: 'rgba(0, 0, 0, 0)', borderRadius: '50%'}}></div>
-                                    <Image src={playlist.imageUrl} onLoad={() => this.toggle('image')} style={{zIndex: '-2'}} />
+                                    <Image src={playlist.imageUrl} onLoad={() => this.toggle('imageLoaded')} style={{zIndex: '-2'}} />
                                 </Reveal.Content>
                                 <Reveal.Content hidden>
                                 <Icon  name='beer' size='large' style={{zIndex: '-1', cursor: 'pointer', fontSize: this.state.size ? '1.3em' : '1.0em', position: 'absolute', top: '50%', left: '51%', transform: 'translate(-50%, -50%)'}} />

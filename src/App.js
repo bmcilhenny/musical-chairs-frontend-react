@@ -67,12 +67,6 @@ export default class App extends Component {
         return <ErrorMessage error={this.state.error}/>
       }
     }
-    
-   handlePlaylistSelect = (playlistId) => {
-     this.setState({
-       selectedPlaylist: playlistId
-     })
-   }
 
    handleDeviceChange = (nothing, {value}) => {
      this.setState({
@@ -136,7 +130,6 @@ export default class App extends Component {
                               spotify={spotify}
                               playlist={playlist} 
                               key={`${playlist.name}_${i}xx`} 
-                              handlePlaylistSelect={this.handlePlaylistSelect} 
                               devices={devices}  
                               handleDeviceChange={this.handleDeviceChange}
                               handlePlayersChange={this.handlePlayersChange}
