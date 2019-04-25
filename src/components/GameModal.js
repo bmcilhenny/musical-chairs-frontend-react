@@ -90,7 +90,6 @@ class GameModal extends Component {
       const countdownInterval = this.state[`${countdownType}Interval`];
       if (countdown === 0 && countdownType === 'roundCountdown') {
         clearInterval(countdownInterval);
-        debugger;
         this.handlePause(true);
       } else if (countdown === 0) {
         clearInterval(countdownInterval)

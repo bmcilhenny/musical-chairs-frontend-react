@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import { Image, Header, Divider, Container, Grid, Segment, Card  } from 'semantic-ui-react';
+import { Image, Header, Divider, Container, Grid, Segment  } from 'semantic-ui-react';
 import Spotify from 'spotify-web-api-js';
 import Loading from './components/Loading';
 import PlaylistCounter from './components/PlaylistCounter';
