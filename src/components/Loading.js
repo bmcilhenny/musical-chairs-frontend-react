@@ -1,31 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import { times } from 'lodash';
-import Navbar from './Navbar';
-import { Card, Divider, Placeholder, Button, Icon, Input, Grid } from 'semantic-ui-react';
+import { Divider, Placeholder, Icon, Input, Grid } from 'semantic-ui-react';
 
 class Loading extends Component {
     render() {
-      const cards = times(18, () => {
+      const cards = times(30, () => {
         return (
           <Grid.Column>
-            <Card >
-              <Card.Content>
-                <Placeholder>
-                  <Placeholder.Image rectangular />
-                  <br/>
-                  <br/>
+            <Placeholder inverted >
+                <Placeholder.Image  style={{ height: 150, width: 150}} />
+                <Placeholder.Paragraph>
+                  <Placeholder.Line length='very long'/>
                   <Placeholder.Line />
-                  <Placeholder.Line />
-                </Placeholder>
-              </Card.Content>
-              <Button attached='bottom' disabled>Select</Button>
-            </Card>
+                </Placeholder.Paragraph>
+            </Placeholder>
           </Grid.Column>
         )
       });
       return (
         <Fragment>
-            <Navbar />
             <br/>
             <Grid centered columns={1}>
               <Grid.Row >
@@ -49,7 +42,9 @@ class Loading extends Component {
               </Grid.Row>
             </Grid>
             <Divider inverted />
-            <Grid stackable columns={6} style={{width: '80%'}} container>
+            <br />
+            <br />
+            <Grid doubling columns={6} style={{width: '90%'}} container>
               { cards }
             </Grid>
         </Fragment>
