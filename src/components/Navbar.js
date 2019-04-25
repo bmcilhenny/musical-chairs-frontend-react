@@ -2,7 +2,7 @@ import React from 'react';
 import {Menu, Button, Popup } from 'semantic-ui-react';
 import {BASE_URL} from '../constants';
 
-const Navbar = ({handleRandomize}) => {
+const Navbar = ({handleRandomize, loading}) => {
     return (
         <Menu inverted pointing secondary>
             <Menu.Item 
@@ -18,7 +18,7 @@ const Navbar = ({handleRandomize}) => {
             />
             <Menu.Menu position='right'>
             <Popup
-                trigger={<Button onClick={handleRandomize} color='green'>Randomize</Button>}
+                trigger={<Button onClick={handleRandomize} loading={loading ? true : false} color='green'>Randomize</Button>}
                 content="Tryna play your luck? We'll select a random playlist for ya."
                 position='bottom right'
             />
