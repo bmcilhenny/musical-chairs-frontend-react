@@ -38,7 +38,7 @@ class PlaylistCard extends Component {
                                     <Image src={playlist.imageUrl} onLoad={() => this.toggle('imageLoaded')} style={{zIndex: '-2'}} />
                                 </Reveal.Content>
                                 <Reveal.Content hidden>
-                                <Icon  name='beer' size='large' style={{zIndex: '-1', cursor: 'pointer', fontSize: this.state.size ? '1.3em' : '1.0em', position: 'absolute', top: '50%', left: '51%', transform: 'translate(-50%, -50%)'}} />
+                                    <Icon  name='beer' size='large' style={{zIndex: '-1', cursor: 'pointer', fontSize: this.state.size ? '1.3em' : '1.0em', position: 'absolute', top: '50%', left: '51%', transform: 'translate(-50%, -50%)'}} />
                                     <div  style={{zIndex: '-2', cursor: 'pointer', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', border: '1px solid white', height: this.state.size ? '50px' : '45px', width: this.state.size ? '50px' : '45px', backgroundColor: 'rgba(0, 0, 0, 0.5)', filter: 'brightness(50%)', borderRadius: '50%'}}></div>
                                     <Image src={playlist.imageUrl} style={{filter: 'brightness(50%)', zIndex: '-3'}} size='medium'/>
                                 </Reveal.Content>

@@ -91,7 +91,6 @@ export default class App extends Component {
 
    render() {
      const {user, playlists, devices, filterString, selectedDevice, numPlayers, randomPlaylist } = this.state;
-     console.log('Playlists done loading', (!!playlists.length))
       let playlistsToRender = user && 
       playlists &&
       devices ? 
