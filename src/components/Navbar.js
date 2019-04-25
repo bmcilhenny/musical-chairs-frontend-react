@@ -10,7 +10,7 @@ const Navbar = ({handleRandomize}) => {
                 href={BASE_URL} 
             />
             <Menu.Item
-                name='docs'
+                name='about'
             />
             <Menu.Item
                 name='github'
