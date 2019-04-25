@@ -245,7 +245,7 @@ class GameModal extends Component {
     }
   
     render() {
-      const {playlist, index, selected, handlePlaylistSelect, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
+      const {playlist, index, selected, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
       const { modalOpen, modalMessage, gameStatus, loadingGame, roundsLeft, shuffleCountdown, duration, shuffleAnimation, playing} = this.state;
       return (
         <Modal 
@@ -256,8 +256,6 @@ class GameModal extends Component {
                       handleOpen={this.handleOpen}      
                       key={`${playlist.name}_${index}`} 
                       playlist={playlist} 
-                      selected={selected} 
-                      handlePlaylistSelect={handlePlaylistSelect} 
                     />} 
         >
           <Modal.Header h2>{modalMessage}</Modal.Header>
