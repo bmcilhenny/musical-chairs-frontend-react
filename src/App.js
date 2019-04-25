@@ -21,7 +21,6 @@ export default class App extends Component {
        playlists: [],
        randomPlaylist: '',
        filterString: '',
-       selectedPlaylist: '',
        numPlayers: '',
        devices: [],
        selectedDevice: '',
@@ -97,60 +96,61 @@ export default class App extends Component {
   }
 
    render() {
-      let playlistsToRender = this.state.user && 
-      this.state.playlists &&
-      this.state.devices ? 
-        this.state.playlists.filter(playlist => 
-         playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())) : [];
+     const {user, playlists, devices, filterString, selectedDevice, numPlayers, randomPlaylist } = this.state;
+     console.log('Playlists done loading', (!!playlists.length))
+      let playlistsToRender = user && 
+      playlists &&
+      devices ? 
+        playlists.filter(playlist => 
+         playlist.name.toLowerCase().includes(filterString.toLowerCase())) : [];
       return (
          <Segment inverted>
-            {this.state.user.display_name ? 
-              <Fragment>
-                <Navbar handleRandomize={this.handleRandomize} />
-                {this.renderErrorMessage()}
-                <Header as='h2' icon textAlign='center' >
-                  <Image src={this.state.user.images[0].url} size='huge' circular />
+            <Navbar handleRandomize={this.handleRandomize} loading={!(!!playlists.length)}/>
+            {user.display_name ? 
+                <Fragment>
+                  {this.renderErrorMessage()}
+                  <Header as='h2' icon textAlign='center' >
+                    <Image src={user.images[0].url} size='huge' circular />
+                    <br />
+                    <br />
+                    <Header.Content>{user.display_name}'s Playlists</Header.Content>
+                  </Header>
+                  <Container textAlign='center'>
+                    <PlaylistCounter playlists={playlistsToRender} />
+                  </Container>
+                  <br />
+                  <Container textAlign='center'>
+                    <PlaylistFilter 
+                      handleChange={e => this.setState({filterString: e.target.value})} 
+                      filterString={filterString} 
+                    />
+                  </Container>
+                  <Divider />
+                  <Divider hidden/>
+                  <Divider hidden/>
+                    <Grid doubling columns={6} style={{width: '90%'}} container>       
+                        {playlistsToRender.map((playlist, i) =>
+                          <Grid.Column>
+                            <GameModal
+                              ref={i === randomPlaylist ? this.randomPlaylist : null} 
+                              spotify={spotify}
+                              playlist={playlist} 
+                              key={`${playlist.name}_${i}xx`} 
+                              handlePlaylistSelect={this.handlePlaylistSelect} 
+                              devices={devices}  
+                              handleDeviceChange={this.handleDeviceChange}
+                              handlePlayersChange={this.handlePlayersChange}
+                              selectedDevice={selectedDevice}
+                              numPlayers={numPlayers}
+                            />
+                          </Grid.Column> 
+                        )}
+                    </Grid>
+                  <br />
+                  <Divider />
                   <br />
                   <br />
-                  <Header.Content>{this.state.user.display_name}'s Playlists</Header.Content>
-                </Header>
-                <Container textAlign='center'>
-                  <PlaylistCounter playlists={playlistsToRender} />
-                </Container>
-                <br />
-                <Container textAlign='center'>
-                  <PlaylistFilter 
-                    handleChange={e => this.setState({filterString: e.target.value})} 
-                    filterString={this.state.filterString} 
-                  />
-                </Container>
-                <Divider />
-                <Divider hidden/>
-                <Divider hidden/>
-                
-                  <Grid doubling columns={6} style={{width: '90%'}} container>       
-                      {playlistsToRender.map((playlist, i) => 
-                        <GameModal
-                          ref={i === this.state.randomPlaylist ? this.randomPlaylist : null} 
-                          spotify={spotify}
-                          playlist={playlist} 
-                          key={`${playlist.name}_${i}xx`}
-                          selected={this.state.selectedPlaylist === playlist.id} 
-                          handlePlaylistSelect={this.handlePlaylistSelect} 
-                          devices={this.state.devices}  
-                          handleDeviceChange={this.handleDeviceChange}
-                          handlePlayersChange={this.handlePlayersChange}
-                          selectedDevice={this.state.selectedDevice}
-                          numPlayers={this.state.numPlayers} 
-                        />
-                      )}
-                  </Grid>
-                 
-                <br />
-                <Divider />
-                <br />
-                <br />
-              </Fragment>
+                </Fragment>
                 : <Loading/>
             }
          </Segment>
