@@ -138,13 +138,17 @@ class GameModal extends Component {
     numPlayerOptions = () => times(13, (i) => ({ key: i + 3, text: `${i + 3} guzzlers`, value: i + 3  }))
     deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
+    handleErrorState = (modalMessage) => {
+      this.setState({
+        loadingGame: false,
+          modalMessage: modalMessage,
+          playing: false 
+      })
+    }
+
     handleNextRound = (err, success) => {
       if (err) {
-        this.setState({ 
-          loadingGame: false,
-          modalMessage: 'There was an error setting up the next round, close this modal and try again.',
-          playing: false 
-        })
+        this.handleErrorState('There was an error setting up the next round, close this modal and try again.')
       } else {
         let startRoundTimeout = setTimeout(this.startRound, 11000);
         this.setState(prevState => ({
@@ -155,11 +159,7 @@ class GameModal extends Component {
 
     handleShuffleResponse = (err, resp) => {
       if (err) {
-        this.setState({ 
-          loadingGame: false,
-          modalMessage: 'There was an error shuffling, try again',
-          playing: false 
-        })
+        this.handleErrorState('There was an error shuffling, try again')
       } else {
         if (this.state.resuming) {
           this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse)
@@ -204,12 +204,11 @@ class GameModal extends Component {
       this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handleShuffleResponse) 
     }
 
-    handleResume = async () => {
-      await this.setState(prevState => ({
+    handleResume = () => {
+      this.setState(prevState => ({
         gameStatus: 'async',
         resuming: true
-      }))            
-      this.props.spotify.play({device_id: this.props.selectedDevice}, this.handlePlayResponse)
+      }), () => this.props.spotify.play({device_id: this.props.selectedDevice}, this.handlePlayResponse))            
     }
 
     // refactor this to not use async, await, will have to right yet another callback to handle spotify.pause()
@@ -218,7 +217,7 @@ class GameModal extends Component {
       await this.setState(prevState => ({
         gameStatus: 'async'
       }))
-      await this.props.spotify.pause().catch(this.handlePauseError).then(resp => {
+      await this.props.spotify.pause().catch(() => this.handleErrorState('There was an error pausing, try again')).then(resp => {
         clearInterval(this.state.roundCountdownInterval)
         if (shouldDrink) {
           let playNahNahTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]}, this.handleNextRound), 15000);
@@ -235,14 +234,6 @@ class GameModal extends Component {
         }
       });
     } 
-    
-    handlePauseError = (err) => {
-      this.setState({ 
-        loadingGame: false,
-        modalMessage: 'There was an error pausing, try again',
-        playing: false 
-      })
-    }
   
     render() {
       const {playlist, index, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
