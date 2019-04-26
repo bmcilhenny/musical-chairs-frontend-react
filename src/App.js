@@ -68,25 +68,22 @@ export default class App extends Component {
       }
     }
 
-   handleDeviceChange = (nothing, {value}) => {
+   handleDeviceChange = (_, {value}) => {
      this.setState({
       selectedDevice: value 
      })
    }
    
-   handlePlayersChange = (nothing, {value}) => {
+   handlePlayersChange = (_, {value}) => {
     this.setState({
       numPlayers: value
     })
   }
 
-  handleRandomize = async () => {
-    if (this.state.playlists.length) {
-      await this.setState({
+  handleRandomize = () => {
+      this.setState({
         randomPlaylist: Helper.genRandomNumber((this.state.playlists.length - 1), 0)
-      })
-      this.randomPlaylist.current.handleOpen();
-    }
+      }, () => this.randomPlaylist.current.handleOpen())
   }
 
    render() {
