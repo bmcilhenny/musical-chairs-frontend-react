@@ -245,7 +245,7 @@ class GameModal extends Component {
     }
   
     render() {
-      const {playlist, index, selected, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
+      const {playlist, index, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
       const { modalOpen, modalMessage, gameStatus, loadingGame, roundsLeft, shuffleCountdown, duration, shuffleAnimation, playing} = this.state;
       return (
         <Modal 
