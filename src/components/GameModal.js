@@ -205,7 +205,7 @@ class GameModal extends Component {
     }
 
     handleResume = () => {
-      this.setState(prevState => ({
+      this.setState(({
         gameStatus: 'async',
         resuming: true
       }), () => this.props.spotify.play({device_id: this.props.selectedDevice}, this.handlePlayResponse))            
