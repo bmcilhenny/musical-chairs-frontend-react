@@ -1,6 +1,7 @@
 import { cleanPlaylistData } from './DataCleaner';
 import {tokenExpired} from '../helpers';
 import { SCOPES, SPOTIFY_CLIENT_ID } from '../constants';
+import QueryString from 'querystring';
 
 export const setUpSpotifyAuthorization = () => {
   const client_id = process.env.SPOTIFY_CLIENT_ID || SPOTIFY_CLIENT_ID;
@@ -24,6 +25,17 @@ export const handleSpotifyToken = (spotify, props) => {
   }
 }
 
+export const handleRedirectResponse = (props) => {
+  if (window.location.hash.length > 1) {
+  const querystring = window.location.hash.slice(1);
+  const query = QueryString.parse(querystring);
+    if (query.access_token) {
+      localStorage.setItem('spotify-access-token', JSON.stringify({token: query.access_token, expires: Date.now()}));
+      props.history.push('/home')
+    }
+  }
+  return null;
+}
 
 export const getPaginatedPlaylists = async (spotify, playlists, limit=50, offset=0) => {
   try {
