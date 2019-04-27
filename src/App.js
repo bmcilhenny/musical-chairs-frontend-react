@@ -4,7 +4,7 @@ import { Segment  } from 'semantic-ui-react';
 import Home from './components/Home'
 import Login from './components/Login'
 import QueryString from 'querystring';
-import {withRouter} from 'react-router';
+import {withRouter, Redirect} from 'react-router';
 import { setUpSpotifyAuthorization} from './util/Spotify';
 
 class App extends Component {
@@ -44,7 +44,7 @@ class App extends Component {
           <Switch>
             <Route exact path='/login' render={(routerProps) => < Login {...routerProps} handleLogin={this.handleLogin} />} />
             <Route exact path='/home' render={(routerProps) =>  <Home {...routerProps} handleLogout={this.handleLogout} /> } />
-            <Route path='*' render={(routerProps) =>  <Home {...routerProps}/> } />
+            <Route path='*' render={() => <Redirect to='/home' />} />
           </Switch>
         </Segment>
     )
