@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import { Image, Header, Divider, Container, Grid, Segment  } from 'semantic-ui-react';
+import { Image, Header, Divider, Container, Grid  } from 'semantic-ui-react';
 import Loading from './Loading';
 import PlaylistCounter from './PlaylistCounter';
 import PlaylistFilter from './PlaylistFilter';
@@ -118,12 +118,11 @@ class Home extends Component {
                   <Divider hidden/>
                     <Grid doubling columns={6} style={{width: '90%'}} container>       
                         {playlistsToRender.map((playlist, i) =>
-                          <Grid.Column>
+                          <Grid.Column key={`${playlist.name}_${i}xx`} >
                             <GameModal
                               ref={i === randomPlaylist ? this.randomPlaylist : null} 
                               spotify={spotify}
                               playlist={playlist} 
-                              key={`${playlist.name}_${i}xx`} 
                               devices={devices}  
                               handleDeviceChange={this.handleDeviceChange}
                               handlePlayersChange={this.handlePlayersChange}

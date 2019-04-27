@@ -4,9 +4,9 @@ import { Divider, Placeholder, Icon, Input, Grid } from 'semantic-ui-react';
 
 class Loading extends Component {
     render() {
-      const cards = times(30, () => {
+      const cards = times(30, (i) => {
         return (
-          <Grid.Column>
+          <Grid.Column key={`column_${i}`}>
             <Placeholder inverted >
                 <Placeholder.Image  style={{ height: 150, width: 150}} />
                 <Placeholder.Paragraph>
