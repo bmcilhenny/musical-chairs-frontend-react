@@ -1,14 +1,14 @@
 import React, {Component, Fragment} from 'react';
-import { Image, Header, Divider, Container, Grid  } from 'semantic-ui-react';
-import Loading from './components/Loading';
-import PlaylistCounter from './components/PlaylistCounter';
-import PlaylistFilter from './components/PlaylistFilter';
-import GameModal from './components/GameModal';
-import Navbar from './components/Navbar';
-import ErrorMessage from './components/ErrorMessage';
-import * as Util from './util/Spotify';
-import * as Helper from './helpers';
-import withAuth from './components/hocs/withAuth';
+import { Image, Header, Divider, Container, Grid, Segment  } from 'semantic-ui-react';
+import Loading from './Loading';
+import PlaylistCounter from './PlaylistCounter';
+import PlaylistFilter from './PlaylistFilter';
+import GameModal from './GameModal';
+import Navbar from './Navbar';
+import ErrorMessage from './ErrorMessage';
+import * as Util from '../util/Spotify';
+import * as Helper from '../helpers';
+import withAuth from './hocs/withAuth';
 
 class Home extends Component {
   constructor(props) {
@@ -85,7 +85,7 @@ class Home extends Component {
 
    render() {
      const {user, playlists, devices, filterString, selectedDevice, numPlayers, randomPlaylist } = this.state;
-     const { spotify } = this.props;
+     const { spotify, handleLogout } = this.props;
       let playlistsToRender = user && 
       playlists &&
       devices ? 
@@ -93,7 +93,7 @@ class Home extends Component {
          playlist.name.toLowerCase().includes(filterString.toLowerCase())) : [];
       return (
         <Fragment>
-            <Navbar handleRandomize={this.handleRandomize} loading={!(!!playlists.length)}/>
+            <Navbar handleRandomize={this.handleRandomize} handleLogout={handleLogout} loading={!(!!playlists.length)}/>
             {user.display_name ? 
                 <Fragment>
                   {this.renderErrorMessage()}
@@ -145,4 +145,4 @@ class Home extends Component {
    }
 }
 
-export default withAuth(Home);
+export default withAuth(Home );
