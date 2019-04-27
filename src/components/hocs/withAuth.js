@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import Spotify from 'spotify-web-api-js';
 import * as Util from '../../util/Spotify';
+// import {withRouter} from 'react-router';
  
 const withAuth = (WrappedComponent) => {
     const spotify = new Spotify();
-    Util.setupSpotify(spotify);
+    // Util.setupSpotify(spotify);
     return class extends Component {
+        constructor(props) {
+            super(props)
+        }
         
         componentDidMount() {
-            debugger;
             const token = localStorage.getItem('spotify-access-token');
-            if (!token) {
-                this.props.history.push('/login')
-            } else {
+            if (token) {
                 spotify.setAccessToken(token)
+            } else {
+                this.props.history.push('/login')
             }
         }
 
