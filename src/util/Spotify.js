@@ -1,9 +1,10 @@
 import { cleanPlaylistData } from './DataCleaner';
 import {tokenExpired} from '../helpers';
+import { SCOPES, SPOTIFY_CLIENT_ID } from '../constants';
 
 export const setUpSpotifyAuthorization = () => {
-  const client_id = process.env.SPOTIFY_CLIENT_ID || '5f8edf6fa5254fb8ae8f9ff4839e8d4c';
-  const scopes = encodeURIComponent('user-read-playback-state user-modify-playback-state playlist-read-private');
+  const client_id = process.env.SPOTIFY_CLIENT_ID || SPOTIFY_CLIENT_ID;
+  const scopes = encodeURIComponent(SCOPES);
   const redirect_uri = window.location.href;
   const url = `https://accounts.spotify.com/authorize?response_type=token&client_id=${client_id}&scope=${scopes}&show_dialog=true&redirect_uri=${redirect_uri}`;
   window.location = url;
