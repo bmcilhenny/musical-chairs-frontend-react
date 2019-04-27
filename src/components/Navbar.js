@@ -1,11 +1,8 @@
 import React from 'react';
 import {Menu, Button, Popup } from 'semantic-ui-react';
 import {BASE_URL} from '../constants';
-import Cookies from 'universal-cookie';
-const cookies = new Cookies();
-// console.log('COOKIES???', cookies.remove('spotify-access-token'))
 
-const Navbar = ({handleRandomize, loading}) => {
+const Navbar = ({handleRandomize, handleLogout, loading}) => {
     return (
         <Menu inverted pointing secondary>
             <Menu.Item 
@@ -25,10 +22,7 @@ const Navbar = ({handleRandomize, loading}) => {
                     content="Tryna play your luck? We'll select a random playlist for ya."
                     position='bottom right'
                 />
-                <Button secondary onClick={() => {
-                    cookies.remove('spotify-access-token')
-                    window.location.reload();
-                }}>Log out</Button>
+                <Button secondary onClick={handleLogout}>Log out</Button>
             </Menu.Menu>
         </Menu>
     )
