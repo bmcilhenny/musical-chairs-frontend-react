@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import Spotify from 'spotify-web-api-js';
+import { handleSpotifyToken } from '../../util/Spotify';
  
 const withAuth = (WrappedComponent) => {
     const spotify = new Spotify();
     return class extends Component {
-
-        tokenExpired = (expires) => (Date.now - expires) > 3600000 ? true : false
+        constructor(props) {
+            super(props)
+            this.state = {}
+          }
         
         componentDidMount() {
-            const {token, expires} = JSON.parse(localStorage.getItem('spotify-access-token'));
-            debugger;
-            if (token && !(this.tokenExpired(expires))) {
-                spotify.setAccessToken(token)
-            } else {
-                this.props.history.push('/login')
-            }
+            handleSpotifyToken(spotify, this.props)
+        }
+
+        static getDerivedStateFromProps(nextProps, _) {
+            handleSpotifyToken(spotify, nextProps)
+            return null;
         }
 
         render() {
