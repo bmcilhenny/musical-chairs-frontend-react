@@ -5,6 +5,7 @@ import Home from './components/Home'
 import Login from './components/Login'
 import QueryString from 'querystring';
 import {withRouter} from 'react-router';
+import { setUpSpotifyAuthorization} from './util/Spotify';
 
 class App extends Component {
   constructor(props) {
@@ -16,11 +17,7 @@ class App extends Component {
 
   
   handleLogin = () => {
-    const client_id = process.env.SPOTIFY_CLIENT_ID || '5f8edf6fa5254fb8ae8f9ff4839e8d4c';
-    const scopes = encodeURIComponent('user-read-playback-state user-modify-playback-state playlist-read-private');
-    const redirect_uri = window.location.href;
-    const url = `https://accounts.spotify.com/authorize?response_type=token&client_id=${client_id}&scope=${scopes}&show_dialog=true&redirect_uri=${redirect_uri}`;
-    window.location = url;
+    setUpSpotifyAuthorization()
   }
 
   handleLogout = () => {
