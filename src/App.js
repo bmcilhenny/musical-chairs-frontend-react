@@ -5,6 +5,8 @@ import Home from './components/Home'
 import Login from './components/Login'
 import {withRouter, Redirect} from 'react-router';
 import { setUpSpotifyAuthorization, handleRedirectResponse} from './util/Spotify';
+import DynamicImport from './components/hocs/DynamicImport';
+
 
 class App extends Component {
   constructor(props) {
