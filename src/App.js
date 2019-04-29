@@ -7,12 +7,12 @@ import Loadable from 'react-loadable';
  
 const Home = Loadable({
   loader: () => import('./components/Home'),
-  loading: null,
+  loading: () => null,
 });
 
 const Login = Loadable({
   loader: () => import('./components/Login'),
-  loading: null,
+  loading: () => null,
 });
 
 
