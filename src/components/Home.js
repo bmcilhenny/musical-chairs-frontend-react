@@ -27,6 +27,11 @@ class Home extends Component {
     this.randomPlaylist = React.createRef();
   }
 
+  handleLogout = () => {
+    localStorage.clear();
+    this.props.history.push('/login')
+  }
+
   componentDidMount() {
     setTimeout(() => {
       this.makeInitialFetch(this.props.spotify)
@@ -85,7 +90,7 @@ class Home extends Component {
 
    render() {
      const {user, playlists, devices, filterString, selectedDevice, numPlayers, randomPlaylist } = this.state;
-     const { spotify, handleLogout } = this.props;
+     const { spotify } = this.props;
       let playlistsToRender = user && 
       playlists &&
       devices ? 
@@ -93,7 +98,7 @@ class Home extends Component {
          playlist.name.toLowerCase().includes(filterString.toLowerCase())) : [];
       return (
         <Fragment>
-            <Navbar handleRandomize={this.handleRandomize} handleLogout={handleLogout} loading={!(!!playlists.length)}/>
+            <Navbar handleRandomize={this.handleRandomize} handleLogout={this.handleLogout} loading={!(!!playlists.length)}/>
             {user.display_name ? 
                 <Fragment>
                   {this.renderErrorMessage()}
