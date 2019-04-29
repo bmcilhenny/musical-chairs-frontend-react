@@ -4,30 +4,15 @@ import { Segment  } from 'semantic-ui-react';
 import {withRouter, Redirect} from 'react-router';
 // import { handleRedirectResponse} from './util/Spotify';
 import Loadable from 'react-loadable';
+import Login from './components/Login'
  
 const Home = Loadable({
   loader: () => import('./components/Home'),
   loading: () => null,
 });
 
-const Login = Loadable({
-  loader: () => import('./components/Login'),
-  loading: () => null,
-});
-
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-
-    }
-  }
-
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   handleRedirectResponse(nextProps);
-  // }
-
 
   render() {
     return (
