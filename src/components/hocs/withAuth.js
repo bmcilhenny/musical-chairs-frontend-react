@@ -1,26 +1,42 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import Spotify from 'spotify-web-api-js';
-import { handleSpotifyToken } from '../../util/Spotify';
+import { tokenExpired } from '../../helpers'
  
 const withAuth = (WrappedComponent) => {
     const spotify = new Spotify();
     return class extends Component {
         constructor(props) {
             super(props)
-            this.state = {}
+            this.state = { authorized: false}
           }
         
         componentDidMount() {
-            handleSpotifyToken(spotify, this.props)
+            let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
+            if (spotifyAccessToken) {
+                const {token, expires} = spotifyAccessToken;
+                if (!(tokenExpired(expires))) {
+                    spotify.setAccessToken(token)
+                    this.setState({authorized: true})
+                }
+            }
         }
 
         static getDerivedStateFromProps(nextProps, _) {
-            handleSpotifyToken(spotify, nextProps)
+            let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
+            if (spotifyAccessToken) {
+                const {token, expires} = spotifyAccessToken;
+                if (!(tokenExpired(expires))) {
+                    spotify.setAccessToken(token)
+                    return { authorized: true };
+                }
+            }
             return null;
         }
 
         render() {
-            return <WrappedComponent spotify={spotify} {...this.props} />
+            
+            return this.state.authorized ? <WrappedComponent spotify={spotify} {...this.props} /> : <Redirect to='/login' />
         }
     }
 }
