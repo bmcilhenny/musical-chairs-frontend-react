@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import { Image, Header, Divider, Container, Grid  } from 'semantic-ui-react';
-import Loading from './Loading';
+import Loading from './loading/Loading';
 import PlaylistCounter from './PlaylistCounter';
 import PlaylistFilter from './PlaylistFilter';
 import GameModal from './GameModal';
