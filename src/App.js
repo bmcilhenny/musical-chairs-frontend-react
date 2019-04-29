@@ -2,7 +2,7 @@ import React, {Component } from 'react';
 import {Route, Switch } from 'react-router-dom';
 import { Segment  } from 'semantic-ui-react';
 import {withRouter, Redirect} from 'react-router';
-import { setUpSpotifyAuthorization, handleRedirectResponse} from './util/Spotify';
+// import { handleRedirectResponse} from './util/Spotify';
 import Loadable from 'react-loadable';
  
 const Home = Loadable({
@@ -24,27 +24,17 @@ class App extends Component {
     }
   }
 
-  
-  handleLogin = () => {
-    setUpSpotifyAuthorization()
-  }
-
-  handleLogout = () => {
-    localStorage.clear();
-    this.props.history.push('/login')
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    handleRedirectResponse(nextProps);
-  }
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   handleRedirectResponse(nextProps);
+  // }
 
 
   render() {
     return (
         <Segment inverted>
           <Switch>
-            <Route exact path='/login' render={(routerProps) => < Login {...routerProps} handleLogin={this.handleLogin} />} />
-            <Route exact path='/home' render={(routerProps) =>  <Home {...routerProps} handleLogout={this.handleLogout} /> } />
+            <Route exact path='/login' render={(routerProps) => < Login {...routerProps} />} />
+            <Route exact path='/home' render={(routerProps) =>  <Home {...routerProps} /> } />
             <Route path='*' render={() => <Redirect to='/home' />} />
           </Switch>
         </Segment>
