@@ -1,11 +1,19 @@
 import React, {Component } from 'react';
 import {Route, Switch } from 'react-router-dom';
 import { Segment  } from 'semantic-ui-react';
-import Home from './components/Home'
-import Login from './components/Login'
 import {withRouter, Redirect} from 'react-router';
 import { setUpSpotifyAuthorization, handleRedirectResponse} from './util/Spotify';
-import DynamicImport from './components/hocs/DynamicImport';
+import Loadable from 'react-loadable';
+ 
+const Home = Loadable({
+  loader: () => import('./components/Home'),
+  loading: null,
+});
+
+const Login = Loadable({
+  loader: () => import('./components/Login'),
+  loading: null,
+});
 
 
 class App extends Component {
