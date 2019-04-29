@@ -2,12 +2,12 @@ import React from 'react';
 import {Menu, Button, Popup } from 'semantic-ui-react';
 import {BASE_URL} from '../constants';
 
-const Navbar = ({handleRandomize, handleLogout, loading}) => {
+const Navbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
     return (
         <Menu inverted pointing secondary>
             <Menu.Item 
                 name='home'
-                href={BASE_URL} 
+                href={loggedIn ? BASE_URL : '/login'} 
             />
             <Menu.Item
                 name='about'
@@ -16,14 +16,16 @@ const Navbar = ({handleRandomize, handleLogout, loading}) => {
                 name='github'
                 href='https://github.com/bmcilhenny/musical-chairs-frontend-react'
             />
-            <Menu.Menu position='right'>
-                <Popup
-                    trigger={<Button onClick={handleRandomize} loading={loading ? true : false} color='green'>Randomize</Button>}
-                    content="Tryna play your luck? We'll select a random playlist for ya."
-                    position='bottom right'
-                />
-                <Button secondary onClick={handleLogout}>Log out</Button>
-            </Menu.Menu>
+            {loggedIn ?  
+                (<Menu.Menu position='right'>
+                    <Popup
+                        trigger={<Button onClick={handleRandomize} loading={loading ? true : false} color='green'>Randomize</Button>}
+                        content="Tryna play your luck? We'll select a random playlist for ya."
+                        position='bottom right'
+                    />
+                    <Button secondary onClick={handleLogout}>Log out</Button>
+                </Menu.Menu>) : null}
+            
         </Menu>
     )
 }
