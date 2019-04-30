@@ -8,4 +8,6 @@ export const MILEY_URL = 'https://ia801003.us.archive.org/18/items/mbid-37e52b37
 export const GALACTIC_URL = 'https://ia802309.us.archive.org/25/items/mbid-17a0278f-7c32-43b0-ba90-ef1ad44bc5f0/mbid-17a0278f-7c32-43b0-ba90-ef1ad44bc5f0-8029742784_thumb250.jpg'
 export const BRUCE_URL = 'https://ia801301.us.archive.org/19/items/mbid-569eb4cc-f487-4904-a628-af9c09ecdd1d/mbid-569eb4cc-f487-4904-a628-af9c09ecdd1d-11838417749_thumb250.jpg';
 export const POGO_URL = 'https://ia800906.us.archive.org/28/items/mbid-ebaaaf39-8e47-4577-998d-d77b56b85992/mbid-ebaaaf39-8e47-4577-998d-d77b56b85992-21891675121_thumb250.jpg'
+export const DAFT_URL = 'https://ia801808.us.archive.org/9/items/mbid-36e2aede-346d-4931-8565-78d810d167c7/mbid-36e2aede-346d-4931-8565-78d810d167c7-4436344925_thumb250.jpg'
+export const KANYE_URL = 'https://ia802807.us.archive.org/21/items/mbid-7ca149b4-5718-444c-a113-1e12c91c8058/mbid-7ca149b4-5718-444c-a113-1e12c91c8058-20033907159_thumb250.jpg'
 export const ALBUM_ARTWORK = [FINDING_NEMO_URL ]
