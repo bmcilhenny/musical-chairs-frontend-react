@@ -3,6 +3,7 @@ import {Menu, Button, Popup } from 'semantic-ui-react';
 import {BASE_URL} from '../constants';
 
 const Navbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
+    loggedIn = true;
     return (
         <Menu inverted pointing secondary>
             <Menu.Item 

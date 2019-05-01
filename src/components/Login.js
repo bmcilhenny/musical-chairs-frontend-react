@@ -1,24 +1,13 @@
 import React, {Component, Fragment} from 'react';
 import { setUpSpotifyAuthorization } from '../util/Spotify';
-import { Button, Grid, Header, Icon, Image, Dropdown, Menu, Transition, Segment, Container, Divider, List } from 'semantic-ui-react';
+import { Button, Grid, Header, Icon, Image, Dropdown, Menu, Transition, Segment, Container, List } from 'semantic-ui-react';
 import QueryString from 'querystring';
-// import Navbar from '../components/Navbar';
 import {FINDING_NEMO_URL, KHRUANGBIN_URL, MILEY_URL, GALACTIC_URL, BRUCE_URL, POGO_URL, DAFT_URL, KANYE_URL, BASE_URL } from '../constants';
+import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
-const trigger = (
-        <span>
-            <Image avatar src={FINDING_NEMO_URL} /> Profile
-        </span>
-    )
 
-const options = [
-  { key: 'user', text: 'Log out' },
-  { key: 'settings', text: 'Settings'}
-]
 
 const imageStyle = {boxShadow:' 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}
-
-const DropdownImageTriggerExample = () => <Dropdown trigger={trigger} options={options} pointing='top left'/>
 
 const Navbar = ({loggedIn}) => {
     return (
@@ -54,14 +43,6 @@ class Login extends Component {
             visible: true,
             clicked: false
         }
-        this.myRef = React.createRef()
-    }
-
-    handleScroll = () => {
-        this.setState(prevState => ({
-            clicked: !prevState.clicked
-        }), this.myRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }))
-        
     }
 
     toggleVisibility = () => this.setState(prevState => ({ visible: !prevState.visible }));
@@ -91,7 +72,27 @@ class Login extends Component {
                     backgroundImage: 'linear-gradient(90deg, #C074B2, #8AB5E8)',
                     color: 'white'
                 }}>
-                    <Navbar loggedIn={false}/>
+                    <Menu attached='top' style={{backgroundColor: 'transparent'}} borderless inverted >
+                        <Menu.Item position='left'>
+                            <Header as='h3' inverted >
+                                <Icon name='beer' /> Musical Cheers
+                            </Header>
+                        </Menu.Item>
+                        <Menu.Menu position='right'>
+                            <Menu.Item name='home' href={'/login'} />
+                            <Menu.Item name='about' />
+                            <Menu.Item name='github' href='https://github.com/bmcilhenny/musical-chairs-frontend-react'/>
+                            <Menu.Item>
+                                <Image avatar src={FINDING_NEMO_URL} />
+                                <Dropdown text='Profile' pointing='top right'>
+                                    <Dropdown.Menu >
+                                        <Dropdown.Item text='Settings' />
+                                        <Dropdown.Item text='Log out' />
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Menu.Item>
+                        </Menu.Menu>
+                    </Menu>
                     <br />
                     <br />
                     <br />
@@ -141,40 +142,51 @@ class Login extends Component {
                         </Grid.Row>
                         <Grid.Row>
                             <Transition animation='bounce' duration={2000} visible={this.state.visible}>
+                            <Link activeClass="active" to="About Section" spy={true} smooth={true} duration={1000}>
                                 <Button circular icon='chevron down' inverted onClick={this.handleScroll}/>
+                            </Link>
                             </Transition>
                         </Grid.Row>
                     </Grid>
                 </div>
                 <Segment style={{ padding: '8em 0em' }} vertical>
-      <Grid container stackable verticalAlign='middle'>
-        <Grid.Row>
-          <Grid.Column width={8}>
-            <Header as='h3' style={{ fontSize: '2em' }}>
-              We Help Companies and Companions
-            </Header>
-            <p style={{ fontSize: '1.33em' }}>
-              We can give your company superpowers to do things that they never thought possible.
-              Let us delight your customers and empower your needs... through pure data analytics.
-            </p>
-            <Header as='h3' style={{ fontSize: '2em' }}>
-              We Make Bananas That Can Dance
-            </Header>
-            <p style={{ fontSize: '1.33em' }}>
-              Yes that's right, you thought it was the stuff of dreams, but even bananas can be
-              bioengineered.
-            </p>
-          </Grid.Column>
-          <Grid.Column floated='right' width={6}>
-            <Image bordered rounded size='large' src='/images/wireframe/white-image.png' />
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column textAlign='center'>
-            <Button size='huge' href={this.myRef}>Check Them Out</Button>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+    <Element name="About Section">
+        <Grid container stackable verticalAlign='middle'>
+            <Grid.Row style={{marginBottom: '2em'}}>
+                <Grid.Column textAlign='center'>
+                    <Header as='h1' style={{ fontSize: '4em'}}>
+                        About
+                    </Header>
+                </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+            <Grid.Column width={8}>
+                <Header as='h3' style={{ fontSize: '2em' }}>
+                The Deep History of Musical Cheers 
+                </Header>
+                <p style={{ fontSize: '1.33em' }}>
+                What began as a way to pass the time at boring parties has blossomed into an international sports and heritage past-time for ages. Musical chairs meets flip cup meets automated music selection. Cheers.
+                </p>
+                <Header as='h3' style={{ fontSize: '2em' }}>
+                How to Play
+                </Header>
+                <p style={{ fontSize: '1.33em' }}>
+                However many players will be playing, place that many solo cups around the table. Then pour about a 1/5 of beer into each cup. Choose your playlist, your players, your device (make sure spotify is open on either your laptop or phone at all times, otherwise those devices won't appear in the set up game screen), and begin round. Users walk dance around the table till the music stops, then it's flip cup time. The last person to flip their cup is out. Remove that cup from the table. Refill, then play the next round until one guzzler remains standing. Rinse. Repeat. Enjoy.
+                bioengineered.
+                </p>
+            </Grid.Column>
+            <Grid.Column floated='right' width={6}>
+                <Image bordered rounded size='large' src='https://images.pexels.com/photos/761963/pexels-photo-761963.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260' />
+            </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+            <Grid.Column textAlign='center'>
+                <Button positive size='huge' href={this.myRef}>Start Playing</Button>
+            </Grid.Column>
+            </Grid.Row>
+        </Grid>
+    
+    </Element>
     </Segment>
     <Segment style={{ padding: '0em' }} vertical>
       <Grid celled='internally' columns='equal' stackable>
@@ -190,7 +202,7 @@ class Login extends Component {
               "This is the funnest game I've ever played."
             </Header>
             <p style={{ fontSize: '1.33em' }}>
-              <Image avatar src='/images/avatar/large/nan.jpg' />
+              <Image avatar src='https://image.flaticon.com/icons/png/128/145/145850.png' />
               My Mom
             </p>
           </Grid.Column>
@@ -203,7 +215,7 @@ class Login extends Component {
           Breaking down musical barriers, with APIs
         </Header>
         <p style={{ fontSize: '1.33em' }}>
-          Instead of forcing your least athletic friend to play dj during your next house party, why not just use Musical Cheers? This insanely awesome app makes sure your least athletic friend will play atleast 1 round of musical cheers.
+          Instead of forcing your least athletic friend to play dj during your next house party, why not just use Musical Cheers? This insanely awesome app makes sure your least athletic friend will play at least 1 round of musical cheers by automating the dj-process.
         </p>
         <Button as='a' size='large'>
           Read More

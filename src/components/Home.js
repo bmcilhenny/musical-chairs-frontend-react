@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import { Image, Header, Divider, Container, Grid  } from 'semantic-ui-react';
+import { Image, Header, Divider, Container, Grid, Segment  } from 'semantic-ui-react';
 import Loading from './loading/Loading';
 import PlaylistCounter from './PlaylistCounter';
 import PlaylistFilter from './PlaylistFilter';
@@ -97,7 +97,7 @@ class Home extends Component {
         playlists.filter(playlist => 
          playlist.name.toLowerCase().includes(filterString.toLowerCase())) : [];
       return (
-        <Fragment>
+        <Segment inverted>
             <Navbar handleRandomize={this.handleRandomize} handleLogout={this.handleLogout} loading={!(!!playlists.length)}/>
             {user.display_name ? 
                 <Fragment>
@@ -144,7 +144,7 @@ class Home extends Component {
                 </Fragment>
                 : <Loading/>
             }
-        </Fragment>
+        </Segment>
       )
    }
 }

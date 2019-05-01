@@ -2,8 +2,12 @@ import React, {Component } from 'react';
 import {Route, Switch } from 'react-router-dom';
 import {withRouter, Redirect} from 'react-router';
 import Loadable from 'react-loadable';
-import Login from './components/Login'
  
+const Login = Loadable({
+  loader: () => import('./components/Login'),
+  loading: () => null,
+});
+
 const Home = Loadable({
   loader: () => import('./components/Home'),
   loading: () => null,
