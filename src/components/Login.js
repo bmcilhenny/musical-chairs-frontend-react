@@ -3,11 +3,14 @@ import { setUpSpotifyAuthorization } from '../util/Spotify';
 import { Button, Grid, Header, Icon, Image, Dropdown, Menu, Transition, Segment, Container, List } from 'semantic-ui-react';
 import QueryString from 'querystring';
 import {FINDING_NEMO_URL, KHRUANGBIN_URL, MILEY_URL, GALACTIC_URL, BRUCE_URL, POGO_URL, DAFT_URL, KANYE_URL, BASE_URL } from '../constants';
-import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import { Link, Element  } from 'react-scroll'
 
 
-
-const imageStyle = {boxShadow:' 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}
+const styles = {
+    imageStyle: {
+        boxShadow:' 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
+    }
+}
 
 const Navbar = ({loggedIn}) => {
     return (
@@ -111,28 +114,28 @@ class Login extends Component {
                             <Grid.Column stackable width={8}>
                                 <Grid columns={4} >       
                                     <Grid.Column>
-                                        <Image  size='medium' style={imageStyle} src={BRUCE_URL} />
+                                        <Image  size='medium' style={styles.imageStyle} src={BRUCE_URL} />
                                     </Grid.Column> 
                                     <Grid.Column>
-                                        <Image size='medium' style={imageStyle} src={MILEY_URL} />
+                                        <Image size='medium' style={styles.imageStyle} src={MILEY_URL} />
                                     </Grid.Column> 
                                     <Grid.Column>
-                                        <Image size='medium' style={imageStyle} src={FINDING_NEMO_URL} />
+                                        <Image size='medium' style={styles.imageStyle} src={FINDING_NEMO_URL} />
                                     </Grid.Column> 
                                     <Grid.Column>
-                                        <Image size='medium' style={imageStyle} src={GALACTIC_URL} />
+                                        <Image size='medium' style={styles.imageStyle} src={GALACTIC_URL} />
                                     </Grid.Column> 
                                     <Grid.Column>
-                                        <Image size='medium' style={imageStyle} src={KHRUANGBIN_URL} />
+                                        <Image size='medium' style={styles.imageStyle} src={KHRUANGBIN_URL} />
                                     </Grid.Column> 
                                     <Grid.Column>
-                                        <Image size='medium' style={imageStyle} src={POGO_URL} />
+                                        <Image size='medium' style={styles.imageStyle} src={POGO_URL} />
                                     </Grid.Column>
                                     <Grid.Column>
-                                        <Image size='medium' style={imageStyle} src={DAFT_URL} />
+                                        <Image size='medium' style={styles.imageStyle} src={DAFT_URL} />
                                     </Grid.Column>
                                     <Grid.Column>
-                                        <Image size='medium' style={imageStyle} src={KANYE_URL} />
+                                        <Image size='medium' style={styles.imageStyle} src={KANYE_URL} />
                                     </Grid.Column> 
                                 </Grid>
                             </Grid.Column>
@@ -171,8 +174,7 @@ class Login extends Component {
                 How to Play
                 </Header>
                 <p style={{ fontSize: '1.33em' }}>
-                However many players will be playing, place that many solo cups around the table. Then pour about a 1/5 of beer into each cup. Choose your playlist, your players, your device (make sure spotify is open on either your laptop or phone at all times, otherwise those devices won't appear in the set up game screen), and begin round. Users walk dance around the table till the music stops, then it's flip cup time. The last person to flip their cup is out. Remove that cup from the table. Refill, then play the next round until one guzzler remains standing. Rinse. Repeat. Enjoy.
-                bioengineered.
+                    However many players will be playing, place that many solo cups around the table. Then pour about a 1/5 of your drink of choice into each cup. Choose your playlist, your players, your device (make sure spotify is open on either your laptop or phone at all times, otherwise those devices won't appear in the set up game screen), and begin round. Users walk (read dance) around the table till the music stops, then it's flip cup time. The last person to flip their cup is out. Remove that cup from the table. Refill, then play the another round until one guzzler remains standing. Rinse. Repeat. Enjoy.
                 </p>
             </Grid.Column>
             <Grid.Column floated='right' width={6}>
