@@ -1,8 +1,8 @@
 import React from 'react';
 import {Menu, Button, Popup } from 'semantic-ui-react';
-import {BASE_URL} from '../constants';
+import {BASE_URL} from '../../constants';
 
-const Navbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
+const MainNavbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
     loggedIn = true;
     return (
         <Menu inverted pointing secondary>
@@ -31,4 +31,4 @@ const Navbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
     )
 }
 
-export default Navbar;
+export default MainNavbar;
