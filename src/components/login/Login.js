@@ -1,13 +1,11 @@
 import React, {Component, Fragment} from 'react';
-import { setUpSpotifyAuthorization } from '../../util/Spotify';
 import QueryString from 'querystring';
 import About from './About';
 import Footer from './Footer';
-import { Button, Grid, Header, Icon, Image, Dropdown, Menu, Transition, Segment, Container } from 'semantic-ui-react';
-import {FINDING_NEMO_URL, KHRUANGBIN_URL, MILEY_URL, GALACTIC_URL, BRUCE_URL, POGO_URL, DAFT_URL, KANYE_URL } from '../../constants';
-import { Link  } from 'react-scroll'
-
-
+import Jumbotron from './Jumbotron';
+import Quotes from './Quotes';
+import { Button, Header, Icon, Image, Dropdown, Menu, Segment, Container } from 'semantic-ui-react';
+import {FINDING_NEMO_URL } from '../../constants';
 
 const styles = {
     jumboTron: {
@@ -15,12 +13,8 @@ const styles = {
         backgroundImage: '-webkit-gradient(linear, left top, right top, from(#C074B2), to(#8AB5E8))',
         backgroundImage: 'linear-gradient(90deg, #C074B2, #8AB5E8)',
         color: 'white'
-    },
-    imageStyle: {
-        boxShadow:' 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
     }
 }
-
 
 class Login extends Component {
     constructor(props) {
@@ -77,80 +71,10 @@ class Login extends Component {
                     <br />
                     <br />
                     <br />
-                    <Grid centered>
-                        <Grid.Row >
-                            <Grid.Column width={5} verticalAlign='middle' >
-                                <Header as='h1' inverted>
-                                        Looking to play musical chairs?
-                                        <Header.Subheader>Leave the dj-ing to us. Automated musical chairs integrated with your Spotify-enabled devices.</Header.Subheader>
-                                </Header>
-                                <Button positive size='large' circular onClick={setUpSpotifyAuthorization}>
-                                    <Icon name='spotify' inverted/> OPEN WEB PLAYER
-                                </Button>
-                            </Grid.Column>
-                            <Grid.Column stackable width={8}>
-                                <Grid columns={4} >       
-                                    <Grid.Column>
-                                        <Image  size='medium' style={styles.imageStyle} src={BRUCE_URL} />
-                                    </Grid.Column> 
-                                    <Grid.Column>
-                                        <Image size='medium' style={styles.imageStyle} src={MILEY_URL} />
-                                    </Grid.Column> 
-                                    <Grid.Column>
-                                        <Image size='medium' style={styles.imageStyle} src={FINDING_NEMO_URL} />
-                                    </Grid.Column> 
-                                    <Grid.Column>
-                                        <Image size='medium' style={styles.imageStyle} src={GALACTIC_URL} />
-                                    </Grid.Column> 
-                                    <Grid.Column>
-                                        <Image size='medium' style={styles.imageStyle} src={KHRUANGBIN_URL} />
-                                    </Grid.Column> 
-                                    <Grid.Column>
-                                        <Image size='medium' style={styles.imageStyle} src={POGO_URL} />
-                                    </Grid.Column>
-                                    <Grid.Column>
-                                        <Image size='medium' style={styles.imageStyle} src={DAFT_URL} />
-                                    </Grid.Column>
-                                    <Grid.Column>
-                                        <Image size='medium' style={styles.imageStyle} src={KANYE_URL} />
-                                    </Grid.Column> 
-                                </Grid>
-                            </Grid.Column>
-                        </Grid.Row>
-                        <Grid.Row>
-                            <br/>
-                        </Grid.Row>
-                        <Grid.Row>
-                            <Transition animation='bounce' duration={2000} visible={this.state.visible}>
-                            <Link activeClass="active" to="About Section" spy={true} smooth={true} duration={1000}>
-                                <Button circular icon='chevron down' inverted />
-                            </Link>
-                            </Transition>
-                        </Grid.Row>
-                    </Grid>
+                    <Jumbotron visible={this.state.visible} />
                 </div>
                 <About />
-                <Segment style={{ padding: '0em' }} vertical>
-                    <Grid celled='internally' columns='equal' stackable>
-                        <Grid.Row textAlign='center'>
-                        <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
-                            <Header as='h3' style={{ fontSize: '2em' }}>
-                            "This man is a genius"
-                            </Header>
-                            <p style={{ fontSize: '1.33em' }}>- Mark Zuckerberg</p>
-                        </Grid.Column>
-                        <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
-                            <Header as='h3' style={{ fontSize: '2em' }}>
-                            "This is the funnest game I've ever played."
-                            </Header>
-                            <p style={{ fontSize: '1.33em' }}>
-                            <Image avatar src='https://image.flaticon.com/icons/png/128/145/145850.png' />
-                            My Mom
-                            </p>
-                        </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
-                </Segment>
+                <Quotes />
                 <Segment style={{ padding: '8em 0em' }} vertical>
                     <Container text>
                         <Header as='h3' style={{ fontSize: '2em' }}>
