@@ -10,4 +10,4 @@ export const BRUCE_URL = 'https://ia801301.us.archive.org/19/items/mbid-569eb4cc
 export const POGO_URL = 'https://ia800906.us.archive.org/28/items/mbid-ebaaaf39-8e47-4577-998d-d77b56b85992/mbid-ebaaaf39-8e47-4577-998d-d77b56b85992-21891675121_thumb250.jpg'
 export const DAFT_URL = 'https://ia801808.us.archive.org/9/items/mbid-36e2aede-346d-4931-8565-78d810d167c7/mbid-36e2aede-346d-4931-8565-78d810d167c7-4436344925_thumb250.jpg'
 export const KANYE_URL = 'https://ia802807.us.archive.org/21/items/mbid-7ca149b4-5718-444c-a113-1e12c91c8058/mbid-7ca149b4-5718-444c-a113-1e12c91c8058-20033907159_thumb250.jpg'
-export const ALBUM_ARTWORK = [FINDING_NEMO_URL ]
+export const GITHUB_URL = 'https://github.com/bmcilhenny/musical-chairs-frontend-react';
