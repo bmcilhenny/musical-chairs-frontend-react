@@ -1,11 +1,11 @@
 import React, {Component, Fragment} from 'react';
 import QueryString from 'querystring';
+import LoginNavbar from '../navbars/LoginNavbar';
 import About from './About';
 import Footer from './Footer';
 import Jumbotron from './Jumbotron';
 import Quotes from './Quotes';
-import { Button, Header, Icon, Image, Dropdown, Menu, Segment, Container } from 'semantic-ui-react';
-import {FINDING_NEMO_URL } from '../../constants';
+import { Button, Header, Segment, Container } from 'semantic-ui-react';
 
 const styles = {
     jumboTron: {
@@ -47,27 +47,7 @@ class Login extends Component {
         return (
             <Fragment>
                 <div className='login-form' style={styles.jumboTron}>
-                    <Menu attached='top' style={{backgroundColor: 'transparent'}} borderless inverted >
-                        <Menu.Item position='left'>
-                            <Header as='h3' inverted >
-                                <Icon name='beer' /> Musical Cheers
-                            </Header>
-                        </Menu.Item>
-                        <Menu.Menu position='right'>
-                            <Menu.Item name='home' href={'/login'} />
-                            <Menu.Item name='about' />
-                            <Menu.Item name='github' href='https://github.com/bmcilhenny/musical-chairs-frontend-react'/>
-                            <Menu.Item>
-                                <Image avatar src={FINDING_NEMO_URL} />
-                                <Dropdown text='Profile' pointing='top right'>
-                                    <Dropdown.Menu >
-                                        <Dropdown.Item text='Settings' />
-                                        <Dropdown.Item text='Log out' />
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </Menu.Item>
-                        </Menu.Menu>
-                    </Menu>
+                    <LoginNavbar />
                     <br />
                     <br />
                     <br />
