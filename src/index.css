@@ -12,3 +12,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+div.menuHover:hover {
+    cursor: pointer;
+    background: rgba(255,255,255,.08) !important;
+    color: rgba(0,0,0,.95);
+}
+
+div.footerAbout:hover {
+  cursor: pointer;
+}
+
+div.footerAbout:hover a {
+  cursor: pointer;
+  color: #fff;
+}
+
+div.footerAbout a {
+  color: rgba(255,255,255,.5);
+
+}
+
