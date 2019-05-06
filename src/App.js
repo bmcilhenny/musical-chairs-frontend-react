@@ -4,7 +4,7 @@ import {withRouter, Redirect} from 'react-router';
 import Loadable from 'react-loadable';
  
 const Login = Loadable({
-  loader: () => import('./components/Login'),
+  loader: () => import('./components/login/Login'),
   loading: () => null,
 });
 
