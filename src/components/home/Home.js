@@ -39,7 +39,11 @@ class Home extends Component {
        .then(resp => {
         const [user, playlists, {devices}] = resp;
         const getDevicesIntervalID = setInterval(() => this.getDevices(), 5000);
-        this.setState({user, playlists, devices, getDevicesIntervalID}) 
+        this.setState({user, playlists, devices, getDevicesIntervalID});
+        debugger;
+        if (playlists.length === 0) {
+          throw new Error("You have no playlists. Create a playlist on your Spotify account to play.");
+        }
         localStorage.setItem('user', JSON.stringify(user));
        })
        .catch(this.handleInitialFetchSpotifyDataErrors)
@@ -104,9 +108,9 @@ class Home extends Component {
       return (
         <Segment inverted>
             <MainNavbar handleRandomize={this.handleRandomize} handleLogout={this.handleLogout} loading={!(!!playlists.length)}/>
+            {this.renderErrorMessage()}
             {user.display_name ? 
                 <Fragment>
-                  {this.renderErrorMessage()}
                   <Header as='h2' icon textAlign='center' >
                     <Image src={user.images[0].url} size='huge' circular />
                     <br />
