@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-scroll';
 import {Menu, Dropdown, Image, Header, Icon } from 'semantic-ui-react';
-import { FINDING_NEMO_URL, GITHUB_URL } from '../../constants';
+import { GITHUB_URL } from '../../constants';
 import { setUpSpotifyAuthorization } from '../../util/Spotify';
 
 
-const LoginNavbar = ({authorized, user}) => {
+const LoginNavbar = ({user, handleLogout}) => {
     return (
         <Menu attached='top' style={{backgroundColor: 'transparent'}} borderless inverted >
             <Menu.Item position='left' >
@@ -24,10 +24,10 @@ const LoginNavbar = ({authorized, user}) => {
                 {user.images ?
                     <Menu.Item>
                         <Image avatar src={user.images[0].url} />
-                        <Dropdown text={`Welcome, ${user.display_name}`} pointing='top right'>
+                        <Dropdown text={user.display_name} pointing='top right'>
                             <Dropdown.Menu >
                                 <Dropdown.Item text='Settings' />
-                                <Dropdown.Item text='Log out' />
+                                <Dropdown.Item text='Log out' onClick={handleLogout} />
                             </Dropdown.Menu>
                         </Dropdown>
                     </Menu.Item> :
