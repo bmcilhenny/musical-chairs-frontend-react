@@ -5,7 +5,7 @@ const ErrorMessage = ({error}) => {
     return (
         <Message negative>
             <Message.Header>There was an error fetching some data.</Message.Header>
-            <p>{error}</p>
+            <p>{error.message}</p>
         </Message>
     )
 }
