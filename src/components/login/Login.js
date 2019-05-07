@@ -6,6 +6,7 @@ import Footer from './Footer';
 import Jumbotron from './Jumbotron';
 import Quotes from './Quotes';
 import { Button, Header, Segment, Container } from 'semantic-ui-react';
+import {tokenExpired} from '../../helpers';
 
 const styles = {
     jumboTron: {
@@ -21,14 +22,26 @@ class Login extends Component {
         super(props)
         this.state = {
             visible: true,
-            clicked: false
+            clicked: false,
+            authorized: false,
+            user: {}
         }
     }
 
     toggleVisibility = () => this.setState(prevState => ({ visible: !prevState.visible }));
 
     componentDidMount() {
-        setInterval(() => this.toggleVisibility(), 2500)
+        setInterval(() => this.toggleVisibility(), 2500);
+        let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
+        if (spotifyAccessToken) {
+            const {token, expires} = spotifyAccessToken;
+            if (!(tokenExpired(expires))) {
+                let user = JSON.parse(localStorage.getItem('user'));
+                this.setState({authorized: true, user: user})
+            } else {
+                localStorage.clear();
+            }
+        }
     }
 
     static getDerivedStateFromProps(nextProps) { 
@@ -47,7 +60,7 @@ class Login extends Component {
         return (
             <Fragment>
                 <div className='login-form' style={styles.jumboTron}>
-                    <LoginNavbar />
+                    <LoginNavbar authorized={this.state.authorized} user={this.state.user} />
                     <br />
                     <br />
                     <br />
