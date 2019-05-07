@@ -51,10 +51,6 @@ class GameModal extends Component {
       clearInterval(this.state.shuffleCountdownInterval);
       clearInterval(this.state.roundCountdownInterval);
     }
-
-    clearAllTimeouts = () => {
-      this.state.timeouts.forEach(timeout => clearTimeout(timeout))
-    }
     
     handleOpen = () => this.setState({ modalOpen: true })
 
@@ -64,6 +60,9 @@ class GameModal extends Component {
       clearInterval(this.state.roundCountdownInterval);
       this.setState(this.defaultState());
     }
+
+    numPlayerOptions = () => times(13, (i) => ({ key: i + 3, text: `${i + 3} guzzlers`, value: i + 3  }))
+    deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
     setShuffleState = () => {
       this.setState({
@@ -96,6 +95,10 @@ class GameModal extends Component {
           [countdownType]: (countdown - 1)
         })
       }
+    }
+
+    clearAllTimeouts = () => {
+      this.state.timeouts.forEach(timeout => clearTimeout(timeout))
     }
 
     setPlayState = (currentTrack, artistsNames) => {
@@ -171,10 +174,6 @@ class GameModal extends Component {
       }
     }
 
-    numPlayerOptions = () => times(13, (i) => ({ key: i + 3, text: `${i + 3} guzzlers`, value: i + 3  }))
-    deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
-
-
     handleNextRoundResponse = (err, success) => {
       if (err) {
         this.handleSpotifyPlaybackError(err, 'There was an error setting up the next round, close this modal and try again.')
@@ -187,8 +186,8 @@ class GameModal extends Component {
     }
 
     startRound = () => {
-      clearInterval(this.state.shuffleCountdownInterval)
-      clearInterval(this.state.roundCountdownInterval)
+      clearInterval(this.state.shuffleCountdownInterval);
+      clearInterval(this.state.roundCountdownInterval);
       let roundsLeft = this.props.numPlayers - 1;
       if ((this.state.roundsLeft - 1) === 0) {
         this.setState({
@@ -226,9 +225,7 @@ class GameModal extends Component {
     // refactor this to not use async, await, will have to right yet another callback to handle spotify.pause()
     handlePause = async (shouldDrink) => {
       // set gameStatus to async so users can't mash on play/pause button and send off requests
-      await this.setState(prevState => ({
-        gameStatus: 'async'
-      }))
+      await this.setState({gameStatus: 'async'});
       await this.props.spotify.pause().catch(() => this.handleErrorState('There was an error pausing, try again')).then(resp => {
         clearInterval(this.state.roundCountdownInterval)
         if (shouldDrink) {
