@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, Header, Button, Image, Icon, Transition } from 'semantic-ui-react';
 import { Link  } from 'react-scroll';
-import { setUpSpotifyAuthorization } from '../../util/Spotify';
+import { handleTokenExpired } from '../../util/Spotify';
 import {FINDING_NEMO_URL, KHRUANGBIN_URL, MILEY_URL, GALACTIC_URL, BRUCE_URL, POGO_URL, DAFT_URL, KANYE_URL } from '../../constants';
 
 const styles = {
@@ -10,7 +10,7 @@ const styles = {
     }
 }
 
-const Jumbotron = ({visible}) => {
+const Jumbotron = ({visible, handlePushToHome}) => {
     return (
         <Grid centered>
             <Grid.Row >
@@ -19,7 +19,7 @@ const Jumbotron = ({visible}) => {
                             Looking to play musical chairs?
                             <Header.Subheader>Leave the dj-ing to us. Automated musical chairs integrated with your Spotify-enabled devices.</Header.Subheader>
                     </Header>
-                    <Button positive size='large' circular onClick={setUpSpotifyAuthorization}>
+                    <Button positive size='large' circular onClick={() => handleTokenExpired(handlePushToHome)}>
                         <Icon name='spotify' inverted/> OPEN WEB PLAYER
                     </Button>
                 </Grid.Column>

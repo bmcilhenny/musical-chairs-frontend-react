@@ -35,6 +35,10 @@ class Login extends Component {
         localStorage.clear();
     }
 
+    handlePushToHome = () => {
+        this.props.history.push('/home')
+    }
+
     componentDidMount() {
         const animationIntervalID = setInterval(() => this.toggleVisibility(), 2500);
         const spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
@@ -51,9 +55,12 @@ class Login extends Component {
     }
 
     static getDerivedStateFromProps(nextProps) { 
+        if (nextProps.location.search === "?error=access_denied") {
+            nextProps.history.push('/login')
+        }
         if (window.location.hash.length > 1) {
-        const querystring = window.location.hash.slice(1);
-        const query = QueryString.parse(querystring);
+            const querystring = window.location.hash.slice(1);
+            const query = QueryString.parse(querystring);
             if (query.access_token) {
             localStorage.setItem('spotify-access-token', JSON.stringify({token: query.access_token, expires: Date.now()}));
             nextProps.history.push('/home')
@@ -74,9 +81,9 @@ class Login extends Component {
                     <br />
                     <br />
                     <br />
-                    <Jumbotron visible={this.state.visible} />
+                    <Jumbotron visible={this.state.visible} handlePushToHome={this.handlePushToHome} />
                 </div>
-                <About />
+                <About handlePushToHome={this.handlePushToHome}/>
                 <Quotes />
                 <ReadMore />
                 <Footer />
