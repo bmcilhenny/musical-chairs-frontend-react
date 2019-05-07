@@ -12,6 +12,7 @@ const withAuth = (WrappedComponent) => {
           }
         
         componentDidMount() {
+            debugger;
             let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
             if (spotifyAccessToken) {
                 const {token, expires} = spotifyAccessToken;

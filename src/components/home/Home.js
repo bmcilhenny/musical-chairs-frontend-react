@@ -59,6 +59,7 @@ class Home extends Component {
   };
 
   handleInitialFetchSpotifyDataErrors = (error) => {
+    debugger;
     this.setState({
       error: error
     })
