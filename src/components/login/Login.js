@@ -23,12 +23,16 @@ class Login extends Component {
         this.state = {
             visible: true,
             clicked: false,
-            authorized: false,
             user: {}
         }
     }
 
     toggleVisibility = () => this.setState(prevState => ({ visible: !prevState.visible }));
+
+    handleLogout = () => {
+        this.setState({user: {}});
+        localStorage.clear();
+    }
 
     componentDidMount() {
         setInterval(() => this.toggleVisibility(), 2500);
@@ -37,7 +41,7 @@ class Login extends Component {
             const {token, expires} = spotifyAccessToken;
             if (!(tokenExpired(expires))) {
                 let user = JSON.parse(localStorage.getItem('user'));
-                this.setState({authorized: true, user: user})
+                this.setState({user: user})
             } else {
                 localStorage.clear();
             }
@@ -60,7 +64,7 @@ class Login extends Component {
         return (
             <Fragment>
                 <div className='login-form' style={styles.jumboTron}>
-                    <LoginNavbar authorized={this.state.authorized} user={this.state.user} />
+                    <LoginNavbar user={this.state.user} handleLogout={this.handleLogout} />
                     <br />
                     <br />
                     <br />
