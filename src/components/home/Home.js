@@ -7,7 +7,7 @@ import GameModal from '../game_modal/GameModal';
 import MainNavbar from '../navbars/MainNavbar';
 import ErrorMessage from './ErrorMessage';
 import * as Util from '../../util/Spotify';
-import * as Helper from '../../helpers';
+import {genRandomNumber} from '../../helpers';
 import withAuth from '../hocs/withAuth';
 
 class Home extends Component {
@@ -45,7 +45,7 @@ class Home extends Component {
         }
         localStorage.setItem('user', JSON.stringify(user));
        })
-       .catch(this.handleInitialFetchSpotifyDataErrors)
+       .catch(this.handleSpotifyError)
     }, 1000)
   }
 
@@ -53,16 +53,16 @@ class Home extends Component {
     clearInterval(this.state.getDevicesIntervalID)
   }
   
-  getDevices = async () => {
-    const { devices } = await this.props.spotify.getMyDevices();
-    this.setState({ devices });
+  getDevices = () => {
+    this.props.spotify.getMyDevices().then(devices => this.setState({devices: devices.devices})).catch(this.handleSpotifyError);
   };
 
-  handleInitialFetchSpotifyDataErrors = (error) => {
-    debugger;
-    this.setState({
-      error: error
-    })
+  handleSpotifyError = error => {
+    if (JSON.parse(error.response).error.status === 401) {
+      Util.setUpSpotifyAuthorization();
+    } else {
+      this.setState({error})
+    }
   }
 
   makeInitialFetch = (spotify) => {
@@ -73,11 +73,11 @@ class Home extends Component {
    ])
   }
 
-    renderErrorMessage() {
+  renderErrorMessage() {
       if (this.state.error) {
         return <ErrorMessage error={this.state.error}/>
       }
-    }
+  }
 
    handleDeviceChange = (_, {value}) => {
      this.setState({
@@ -93,7 +93,7 @@ class Home extends Component {
 
   handleRandomize = () => {
       this.setState({
-        randomPlaylist: Helper.genRandomNumber((this.state.playlists.length - 1), 0)
+        randomPlaylist: genRandomNumber((this.state.playlists.length - 1), 0)
       }, () => this.randomPlaylist.current.handleOpen())
   }
 
