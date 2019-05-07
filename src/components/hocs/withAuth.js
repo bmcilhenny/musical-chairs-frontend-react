@@ -29,13 +29,15 @@ const withAuth = (WrappedComponent) => {
                 if (!(tokenExpired(expires))) {
                     spotify.setAccessToken(token)
                     return { authorized: true };
+                } else {
+                    return { authorized: false };
                 }
+            } else {
+                return { authorized: false };
             }
-            return null;
         }
 
         render() {
-            
             return this.state.authorized ? <WrappedComponent spotify={spotify} {...this.props} /> : <Redirect to='/login' />
         }
     }
