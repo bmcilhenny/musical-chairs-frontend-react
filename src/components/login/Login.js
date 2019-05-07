@@ -7,6 +7,7 @@ import Jumbotron from './Jumbotron';
 import Quotes from './Quotes';
 import { Button, Header, Segment, Container } from 'semantic-ui-react';
 import {tokenExpired} from '../../helpers';
+import {Link} from 'react-scroll';
 
 const styles = {
     jumboTron: {
@@ -38,7 +39,7 @@ class Login extends Component {
         setInterval(() => this.toggleVisibility(), 2500);
         let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
         if (spotifyAccessToken) {
-            const {token, expires} = spotifyAccessToken;
+            const {_, expires} = spotifyAccessToken;
             if (!(tokenExpired(expires))) {
                 let user = JSON.parse(localStorage.getItem('user'));
                 this.setState({user: user})
@@ -80,9 +81,11 @@ class Login extends Component {
                         <p style={{ fontSize: '1.33em' }}>
                         Instead of forcing your least athletic friend to play dj during your next house party, why not just use Musical Cheers? This insanely awesome app makes sure your least athletic friend will play at least 1 round of musical cheers by automating the dj-process.
                         </p>
-                        <Button as='a' size='large'>
-                        Read More
-                        </Button>
+                        <Link activeClass="active" to="About Section" spy={true} smooth={true} duration={1000}>
+                            <Button as='a' size='large'>
+                                Read More
+                            </Button>
+                        </Link>
                     </Container>
                 </Segment>
                 <Footer />
