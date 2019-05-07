@@ -1,6 +1,6 @@
 import React from 'react';
 import {Menu, Button, Popup } from 'semantic-ui-react';
-import {BASE_URL} from '../../constants';
+import {BASE_URL, GITHUB_URL} from '../../constants';
 
 const MainNavbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
     loggedIn = true;
@@ -15,7 +15,7 @@ const MainNavbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
             />
             <Menu.Item
                 name='github'
-                href='https://github.com/bmcilhenny/musical-chairs-frontend-react'
+                href={GITHUB_URL}
             />
             {loggedIn ?  
                 (<Menu.Menu position='right'>
