@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Label, Transition, Modal, Image, Header, Container } from 'semantic-ui-react';
 import { times } from 'lodash';
-import PlaylistCard from './PlaylistCard';
-import * as Helper from '../helpers';
+import PlaylistCard from '../playlist/PlaylistCard';
+import * as Helper from '../../helpers';
 import GameModalActions from './GameModalActions';
 import GameModalDropdowns from './GameModalDropdowns';
-import {NAH_NAH_NAH_NAH_URI} from '../constants';
+import {NAH_NAH_NAH_NAH_URI} from '../../constants';
 
 class GameModal extends Component {
     constructor(props) {

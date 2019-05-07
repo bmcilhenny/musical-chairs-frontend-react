@@ -1,14 +1,14 @@
 import React, {Component, Fragment} from 'react';
 import { Image, Header, Divider, Container, Grid, Segment  } from 'semantic-ui-react';
-import Loading from './loading/Loading';
-import PlaylistCounter from './PlaylistCounter';
-import PlaylistFilter from './PlaylistFilter';
-import GameModal from './GameModal';
-import MainNavbar from './navbars/MainNavbar';
+import Loading from '../loading/Loading';
+import PlaylistCounter from '../playlist/PlaylistCounter';
+import PlaylistFilter from '../playlist/PlaylistFilter';
+import GameModal from '../game_modal/GameModal';
+import MainNavbar from '../navbars/MainNavbar';
 import ErrorMessage from './ErrorMessage';
-import * as Util from '../util/Spotify';
-import * as Helper from '../helpers';
-import withAuth from './hocs/withAuth';
+import * as Util from '../../util/Spotify';
+import * as Helper from '../../helpers';
+import withAuth from '../hocs/withAuth';
 
 class Home extends Component {
   constructor(props) {

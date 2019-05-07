@@ -9,7 +9,7 @@ const Login = Loadable({
 });
 
 const Home = Loadable({
-  loader: () => import('./components/Home'),
+  loader: () => import('./components/home/Home'),
   loading: () => null,
 });
 
