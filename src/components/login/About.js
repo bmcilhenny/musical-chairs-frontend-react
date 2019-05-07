@@ -1,8 +1,9 @@
 import React from 'react';
+import {handleTokenExpired} from '../../util/Spotify';
 import {Segment, Grid, Header, Button, Image } from 'semantic-ui-react';
 import { Element  } from 'react-scroll';
 
-const About = () => {
+const About = ({handlePushToHome}) => {
     return (
         <Segment style={{ padding: '8em 0em' }} vertical>
             <Element name="About Section">
@@ -35,7 +36,7 @@ const About = () => {
                     </Grid.Row>
                     <Grid.Row>
                     <Grid.Column textAlign='center'>
-                        <Button positive size='huge' >Start Playing</Button>
+                        <Button positive size='huge' onClick={() => handleTokenExpired(handlePushToHome)} >Start Playing</Button>
                     </Grid.Column>
                     </Grid.Row>
                 </Grid>
