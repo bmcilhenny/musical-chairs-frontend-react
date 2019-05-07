@@ -114,8 +114,7 @@ class GameModal extends Component {
         this.handleErrorState('Your Spotify token has expired. Refresh the page.');
       } else if (parsedError.status === 404) {
         this.handleErrorState(`${parsedError.message}! Make sure your device stays open for the duration of the game.`);
-      }
-        else {
+      } else {
           this.handleErrorState(modalMessage);
         }
     }
@@ -145,6 +144,7 @@ class GameModal extends Component {
       }
     }
 
+    // responsible for updating the modal to show user what is being played
     handleGetCurrentPlaybackResponse = (err, currentTrack) => {
       if (err) {
         this.handleSpotifyPlaybackError(err, 'There was an error getting your playback, try again');
@@ -165,6 +165,7 @@ class GameModal extends Component {
       if (err) {
         this.handleSpotifyPlaybackError(err, 'There was an unforseen error playing your chune. Close this modal and try again.');
       } else {
+        // this is not the best way to handle it, figuring out a better option
         await Helper.sleep(1000);
         this.props.spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}, this.handleGetCurrentPlaybackResponse);
       }
