@@ -6,6 +6,7 @@ import * as Helper from '../../helpers';
 import GameModalActions from './GameModalActions';
 import GameModalDropdowns from './GameModalDropdowns';
 import {NAH_NAH_NAH_NAH_URI} from '../../constants';
+import { cleanPlaybackErrorMessage } from '../../util/DataCleaner';
 
 class GameModal extends Component {
     constructor(props) {
@@ -128,9 +129,14 @@ class GameModal extends Component {
       }
     }
 
-    handlePlayResponse = async () => {
+    handlePlayResponse = async (err, success) => {
+      if (err) {
+        const playbackErrorMessage = cleanPlaybackErrorMessage(err);
+        this.handleErrorState(playbackErrorMessage);
+      } else {
         await Helper.sleep(600);
         this.props.spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}, this.handleGetCurrentPlaybackResponse);
+      }
     }
 
     numPlayerOptions = () => times(13, (i) => ({ key: i + 3, text: `${i + 3} guzzlers`, value: i + 3  }))
@@ -138,7 +144,7 @@ class GameModal extends Component {
 
     handleErrorState = (modalMessage) => {
       this.setState({
-        loadingGame: false,
+          loadingGame: false,
           modalMessage: modalMessage,
           playing: false 
       })
