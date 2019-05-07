@@ -14,10 +14,9 @@ const Footer = () => {
                         <List link inverted>
                             <List.Item as='a' href='/home'>Home</List.Item>
                             <div className='footerAbout'>
-                                    <Link  className='footerAbout' to="About Section" spy={true} smooth={true} duration={1000}>
-                                        About
-                                    </Link>
-                                {/* </List.Item> */}
+                                <Link to="About Section" spy={true} smooth={true} duration={1000}>
+                                    About
+                                </Link>
                             </div>
                             <List.Item as='a' href={GITHUB_URL} >Github</List.Item>
                         </List>
