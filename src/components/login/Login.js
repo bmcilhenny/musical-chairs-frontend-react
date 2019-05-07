@@ -23,7 +23,8 @@ class Login extends Component {
         this.state = {
             visible: true,
             clicked: false,
-            user: {}
+            user: {}, 
+            animationIntervalID: null
         }
     }
 
@@ -35,13 +36,13 @@ class Login extends Component {
     }
 
     componentDidMount() {
-        setInterval(() => this.toggleVisibility(), 2500);
+        let animationIntervalID = setInterval(() => this.toggleVisibility(), 2500);
         let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
         if (spotifyAccessToken) {
-            const {_, expires} = spotifyAccessToken;
+            const {ignore, expires} = spotifyAccessToken;
             if (!(tokenExpired(expires))) {
                 let user = JSON.parse(localStorage.getItem('user'));
-                this.setState({user: user})
+                this.setState({user: user, animationIntervalID: animationIntervalID})
             } else {
                 localStorage.clear();
             }
@@ -58,6 +59,10 @@ class Login extends Component {
             }
         }
         return null;
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.animationIntervalID)
     }
 
     render() {
