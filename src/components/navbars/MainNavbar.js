@@ -24,7 +24,7 @@ const MainNavbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
                         content="Tryna play your luck? We'll select a random playlist for ya."
                         position='bottom right'
                     />
-                    <Button secondary loading={loading ? true : false} onClick={handleLogout}>Log out</Button>
+                    <Button secondary disabled={loading ? true : false} onClick={handleLogout}>Log out</Button>
                 </Menu.Menu>) : null}
             
         </Menu>
