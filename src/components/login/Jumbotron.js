@@ -23,7 +23,7 @@ const Jumbotron = ({visible}) => {
                         <Icon name='spotify' inverted/> OPEN WEB PLAYER
                     </Button>
                 </Grid.Column>
-                <Grid.Column stackable width={8}>
+                <Grid.Column width={8}>
                     <Grid columns={4} >       
                         <Grid.Column>
                             <Image  size='medium' style={styles.imageStyle} src={BRUCE_URL} />

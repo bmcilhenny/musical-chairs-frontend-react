@@ -4,7 +4,7 @@ import {Segment, Grid, Image, Header } from 'semantic-ui-react';
 const Quotes = () => {
     return (
         <Segment style={{ padding: '0em' }} vertical>
-            <Grid celled='internally' columns='equal' stackable>
+            <Grid celled='internally' columns='equal' stackable >
                 <Grid.Row textAlign='center'>
                 <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
                     <Header as='h3' style={{ fontSize: '2em' }}>

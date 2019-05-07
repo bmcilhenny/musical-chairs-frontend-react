@@ -7,7 +7,7 @@ const Footer = () => {
     return (
         <Segment inverted vertical style={{ padding: '5em 0em' }}>
             <Container>
-                <Grid divided inverted stackable>
+                <Grid divided inverted stackable >
                     <Grid.Row>
                         <Grid.Column width={3}>
                         <Header inverted as='h4' content='About' />
