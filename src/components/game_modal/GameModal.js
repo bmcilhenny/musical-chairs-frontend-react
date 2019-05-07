@@ -6,7 +6,6 @@ import * as Helper from '../../helpers';
 import GameModalActions from './GameModalActions';
 import GameModalDropdowns from './GameModalDropdowns';
 import {NAH_NAH_NAH_NAH_URI} from '../../constants';
-import { cleanPlaybackErrorMessage } from '../../util/DataCleaner';
 
 class GameModal extends Component {
     constructor(props) {
@@ -110,7 +109,6 @@ class GameModal extends Component {
     }
 
     handleSpotifyPlaybackError = (error, modalMessage) => {
-      debugger;
       let parsedError = JSON.parse(error.response).error;
       if (parsedError.status === 401) {
         this.handleErrorState('Your Spotify token has expired. Refresh the page.');
@@ -151,7 +149,6 @@ class GameModal extends Component {
       if (err) {
         this.handleSpotifyPlaybackError(err, 'There was an error getting your playback, try again');
       } else {
-        debugger;
         const artists = currentTrack.item.artists;
         const artistsNames = artists.reduce((string, artist, i ) => {
           return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
