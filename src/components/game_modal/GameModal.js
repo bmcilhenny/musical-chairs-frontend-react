@@ -76,14 +76,14 @@ class GameModal extends Component {
     }
 
     setCountdown = (countdownType, initialVal) => {
-      let countdownInterval = setInterval(() => this.tick(countdownType, initialVal), 1000);
+      const countdownInterval = setInterval(() => this.tick(countdownType), 1000);
       this.setState({
         [countdownType]: initialVal,
         [`${countdownType}Interval`]: countdownInterval
       })
     }
 
-    tick = (countdownType, initialVal) => {
+    tick = (countdownType) => {
       const countdown = this.state[countdownType];
       const countdownInterval = this.state[`${countdownType}Interval`];
       if (countdown === 0 && countdownType === 'roundCountdown') {

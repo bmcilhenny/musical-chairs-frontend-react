@@ -10,5 +10,3 @@ export const cleanPlaylistData = playlists => {
     ))
     return cleanedPlaylists;
 }
-
-export const cleanPlaybackErrorMessage = (err, modalMessage)  => `${JSON.parse(err.response).error.message}! ${modalMessage}.`;
