@@ -60,10 +60,10 @@ class GameModal extends Component {
     handleOpen = () => this.setState({ modalOpen: true })
 
     handleClose = () => {
-        this.clearAllTimeouts();
-          clearInterval(this.state.shuffleCountdownInterval);
-          clearInterval(this.state.roundCountdownInterval);
-          this.setState(this.defaultState());
+      this.clearAllTimeouts();
+      clearInterval(this.state.shuffleCountdownInterval);
+      clearInterval(this.state.roundCountdownInterval);
+      this.setState(this.defaultState());
     }
 
     setShuffleState = () => {
@@ -109,38 +109,18 @@ class GameModal extends Component {
       })
     }
 
-    handleGetCurrentPlaybackResponse = (err, currentTrack) => {
-      if (err) {
-        this.setState({ 
-          loadingGame: false,
-          modalMessage: 'There was an error getting your playback, try again',
-          playing: false 
-        })
-      } else {
-        const artists = currentTrack.item.artists;
-        const artistsNames = artists.reduce((string, artist, i ) => {
-          return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
-        }, '');
-        this.setPlayState(currentTrack, artistsNames);
-        this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(20, 10))
-        this.setState({
-          resuming: false
-        })
+    handleSpotifyPlaybackError = (error, modalMessage) => {
+      debugger;
+      let parsedError = JSON.parse(error.response).error;
+      if (parsedError.status === 401) {
+        this.handleErrorState('Your Spotify token has expired. Refresh the page.');
+      } else if (parsedError.status === 404) {
+        this.handleErrorState(`${parsedError.message}! Make sure your device stays open for the duration of the game.`);
       }
+        else {
+          this.handleErrorState(modalMessage);
+        }
     }
-
-    handlePlayResponse = async (err, success) => {
-      if (err) {
-        const playbackErrorMessage = cleanPlaybackErrorMessage(err);
-        this.handleErrorState(playbackErrorMessage);
-      } else {
-        await Helper.sleep(600);
-        this.props.spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}, this.handleGetCurrentPlaybackResponse);
-      }
-    }
-
-    numPlayerOptions = () => times(13, (i) => ({ key: i + 3, text: `${i + 3} guzzlers`, value: i + 3  }))
-    deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
 
     handleErrorState = (modalMessage) => {
       this.setState({
@@ -150,20 +130,9 @@ class GameModal extends Component {
       })
     }
 
-    handleNextRound = (err, success) => {
-      if (err) {
-        this.handleErrorState('There was an error setting up the next round, close this modal and try again.')
-      } else {
-        let startRoundTimeout = setTimeout(this.startRound, 11000);
-        this.setState(prevState => ({
-          timeouts: [...prevState.timeouts, startRoundTimeout]
-        }))
-      }
-    }
-
     handleShuffleResponse = (err, resp) => {
       if (err) {
-        this.handleErrorState('There was an error shuffling, try again')
+        this.handleSpotifyPlaybackError(err, 'There was an error shuffling, try again')
       } else {
         if (this.state.resuming) {
           this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri}, this.handlePlayResponse)
@@ -175,6 +144,47 @@ class GameModal extends Component {
             timeouts: [...prevState.timeouts, playTunesTimeout]
           }))
         }
+      }
+    }
+
+    handleGetCurrentPlaybackResponse = (err, currentTrack) => {
+      if (err) {
+        this.handleSpotifyPlaybackError(err, 'There was an error getting your playback, try again');
+      } else {
+        debugger;
+        const artists = currentTrack.item.artists;
+        const artistsNames = artists.reduce((string, artist, i ) => {
+          return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
+        }, '');
+        this.setPlayState(currentTrack, artistsNames);
+        this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(50, 10))
+        this.setState({
+          resuming: false
+        })
+      }
+    }
+
+    handlePlayResponse = async (err, success) => {
+      if (err) {
+        this.handleSpotifyPlaybackError(err, 'There was an unforseen error playing your chune. Close this modal and try again.');
+      } else {
+        await Helper.sleep(1000);
+        this.props.spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}, this.handleGetCurrentPlaybackResponse);
+      }
+    }
+
+    numPlayerOptions = () => times(13, (i) => ({ key: i + 3, text: `${i + 3} guzzlers`, value: i + 3  }))
+    deviceOptions = () => this.props.devices.map(device => ({ key: device.name, text: device.name, value: device.id }))
+
+
+    handleNextRoundResponse = (err, success) => {
+      if (err) {
+        this.handleSpotifyPlaybackError(err, 'There was an error setting up the next round, close this modal and try again.')
+      } else {
+        let startRoundTimeout = setTimeout(this.startRound, 11000);
+        this.setState(prevState => ({
+          timeouts: [...prevState.timeouts, startRoundTimeout]
+        }))
       }
     }
 
@@ -224,7 +234,7 @@ class GameModal extends Component {
       await this.props.spotify.pause().catch(() => this.handleErrorState('There was an error pausing, try again')).then(resp => {
         clearInterval(this.state.roundCountdownInterval)
         if (shouldDrink) {
-          let playNahNahTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]}, this.handleNextRound), 15000);
+          let playNahNahTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]}, this.handleNextRoundResponse), 15000);
           this.setState(prevState => ({
               gameStatus: 'drink',
               shuffleCountdown: 'DRINK',
