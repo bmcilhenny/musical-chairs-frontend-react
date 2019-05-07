@@ -11,4 +11,4 @@ export const cleanPlaylistData = playlists => {
     return cleanedPlaylists;
 }
 
-export const cleanPlaybackErrorMessage = err => `${JSON.parse(err.response).error.message}! Make sure your device stays open for the duration of the game.`;
+export const cleanPlaybackErrorMessage = (err, modalMessage)  => `${JSON.parse(err.response).error.message}! ${modalMessage}.`;
