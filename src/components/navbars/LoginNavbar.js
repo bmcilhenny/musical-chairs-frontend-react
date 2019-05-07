@@ -6,6 +6,7 @@ import { setUpSpotifyAuthorization } from '../../util/Spotify';
 
 
 const LoginNavbar = ({user, handleLogout}) => {
+    debugger;
     return (
         <Menu attached='top' style={{backgroundColor: 'transparent'}} borderless inverted >
             <Menu.Item position='left' >
@@ -21,7 +22,7 @@ const LoginNavbar = ({user, handleLogout}) => {
                     </Link>
                 </Menu.Item>
                 <Menu.Item name='github' href={GITHUB_URL} />
-                {user.images ?
+                {user && user.images ?
                     <Menu.Item>
                         <Image avatar src={user.images[0].url} />
                         <Dropdown text={user.display_name} pointing='top right'>
