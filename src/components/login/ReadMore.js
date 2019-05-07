@@ -13,7 +13,7 @@ const ReadMore = () => {
                 Instead of forcing your least athletic friend to play dj during your next house party, why not just use Musical Cheers? This insanely awesome app makes sure your least athletic friend will play at least 1 round of musical cheers by automating the dj-process.
                 </p>
                 <Link activeClass="active" to="About Section" spy={true} smooth={true} duration={1000}>
-                    <Button as='a' size='large'>
+                    <Button size='large'>
                         Read More
                     </Button>
                 </Link>

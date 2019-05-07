@@ -247,7 +247,7 @@ class GameModal extends Component {
                       playlist={playlist} 
                     />} 
         >
-          <Modal.Header h2>{modalMessage}</Modal.Header>
+          <Modal.Header as='h2'>{modalMessage}</Modal.Header>
           {shuffleCountdown ? <Label circular color='green' size='massive' floating>{shuffleCountdown}</Label> : null}
           <Modal.Content>
             <Container textAlign='center'>

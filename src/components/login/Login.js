@@ -36,17 +36,18 @@ class Login extends Component {
     }
 
     componentDidMount() {
-        let animationIntervalID = setInterval(() => this.toggleVisibility(), 2500);
-        let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
+        const animationIntervalID = setInterval(() => this.toggleVisibility(), 2500);
+        const spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
+        let user = {};
         if (spotifyAccessToken) {
             const {ignore, expires} = spotifyAccessToken;
             if (!(tokenExpired(expires))) {
-                let user = JSON.parse(localStorage.getItem('user'));
-                this.setState({user: user, animationIntervalID: animationIntervalID})
+                user = JSON.parse(localStorage.getItem('user'));
             } else {
                 localStorage.clear();
             }
         }
+        this.setState({animationIntervalID, user})
     }
 
     static getDerivedStateFromProps(nextProps) { 
