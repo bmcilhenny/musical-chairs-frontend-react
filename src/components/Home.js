@@ -37,6 +37,7 @@ class Home extends Component {
       this.makeInitialFetch(this.props.spotify)
        .then(resp => {
         const [user, playlists, {devices}] = resp;
+        localStorage.setItem('user', JSON.stringify(user));
         this.setState({user, playlists, devices}) 
        })
        .catch(this.handleInitialFetchSpotifyDataErrors)
