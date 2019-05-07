@@ -12,7 +12,6 @@ const withAuth = (WrappedComponent) => {
           }
         
         componentDidMount() {
-            debugger;
             let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
             if (spotifyAccessToken) {
                 const {token, expires} = spotifyAccessToken;
@@ -23,6 +22,7 @@ const withAuth = (WrappedComponent) => {
             }
         }
 
+        // necessary? nextProps would only be changing if there was a new url, because app is exposing those props via the withRouter from react-router
         static getDerivedStateFromProps(nextProps, _) {
             let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
             if (spotifyAccessToken) {
