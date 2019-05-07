@@ -1,5 +1,6 @@
 import { cleanPlaylistData } from './DataCleaner';
 import { SCOPES, SPOTIFY_CLIENT_ID } from '../constants';
+import { tokenExpired } from '../helpers';
 
 export const setUpSpotifyAuthorization = () => {
   const client_id = process.env.SPOTIFY_CLIENT_ID || SPOTIFY_CLIENT_ID;
@@ -22,5 +23,17 @@ export const getPaginatedPlaylists = async (spotify, playlists, limit=50, offset
     }
   } catch (err) {
     throw new Error('Could not fetch playlist data, refresh and try again.')
+  }
+}
+
+export const handleTokenExpired = (pushHome) => {
+  let spotifyAccessToken = JSON.parse(localStorage.getItem('spotify-access-token'));
+  if (spotifyAccessToken) {
+      const {token, expires} = spotifyAccessToken;
+      if (!(tokenExpired(expires))) {
+          pushHome()
+      }
+  } else {
+      setUpSpotifyAuthorization()
   }
 }
