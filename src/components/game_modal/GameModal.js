@@ -6,6 +6,7 @@ import * as Helper from '../../helpers';
 import GameModalActions from './GameModalActions';
 import GameModalDropdowns from './GameModalDropdowns';
 import {NAH_NAH_NAH_NAH_URI} from '../../constants';
+import { sleep } from '../../helpers';
 
 class GameModal extends Component {
     constructor(props) {
@@ -25,7 +26,9 @@ class GameModal extends Component {
             roundsLeft: undefined,
             error: '',
             resuming: false,
-            timeouts: []
+            timeouts: [],
+            lastTrackURI: '',
+            currentTrackURI: ''
         }
     }
 
@@ -44,7 +47,9 @@ class GameModal extends Component {
         roundsLeft: undefined,
         error: '',
         resuming: false,
-        timeouts: []
+        timeouts: [],
+        lastTrackURI: '',
+        currentTrackURI: ''
     })
 
     componentWillUnmount() {
@@ -107,7 +112,8 @@ class GameModal extends Component {
         loadingGame: false,
         playing: true,
         shuffleCountdown: 'GO!',
-        gameStatus: 'play'
+        gameStatus: 'play',
+        currentTrackURI: currentTrack.item.uri
       })
     }
 
@@ -149,6 +155,9 @@ class GameModal extends Component {
 
     // responsible for updating the modal to show user what is being played
     handleGetCurrentPlaybackResponse = (err, currentTrack) => {
+      console.log('Firing current playback response')
+      console.log(this.state.lastTrackURI)
+      console.log(this.state.currentTrackURI)
       if (err) {
         this.handleSpotifyPlaybackError(err, 'There was an error getting your playback, try again');
       } else {
@@ -157,20 +166,60 @@ class GameModal extends Component {
           return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
         }, '');
         this.setPlayState(currentTrack, artistsNames);
-        this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(50, 10))
-        this.setState({
-          resuming: false
-        })
       }
     }
 
     handlePlayResponse = async (err, success) => {
+      console.log(this.state.lastTrackURI)
+      console.log(this.state.currentTrackURI)
       if (err) {
         this.handleSpotifyPlaybackError(err, 'There was an unforseen error playing your chune. Close this modal and try again.');
       } else {
-        // this is not the best way to handle it, figuring out a better option
-        await Helper.sleep(1000);
-        this.props.spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}, this.handleGetCurrentPlaybackResponse);
+        const a = this.state.lastTrackURI
+        const b = this.state.currentTrackURI
+        const resuming = this.state.resuming
+        debugger;
+        if (this.state.lastTrackURI !== this.state.currentTrackURI) {
+            this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(20, 10));
+            this.setState({
+              resuming: false,
+              loadingGame: false,
+              playing: true,
+              shuffleCountdown: 'GO!',
+              gameStatus: 'play'
+            });
+          // const artists = success.item.artists;
+          // const artistsNames = artists.reduce((string, artist, i ) => {
+          //   return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
+          // }, '');
+          // this.setPlayState(success, artistsNames);
+          // set play state, set countdown, make sure resuming state is false
+          
+        }  else {
+            await sleep(1000);
+            // while the current playing track is not different than the last played track, getMyCurrentPlayingTrack()
+            this.props.spotify.getMyCurrentPlayingTrack({device_id: this.props.selectedDevice}).then(currentTrack => {
+              debugger;
+              if (currentTrack.item.uri !== this.state.lastTrackURI) {
+                const artists = currentTrack.item.artists;
+                const artistsNames = artists.reduce((string, artist, i ) => {
+                  return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
+                }, '');
+                this.setPlayState(currentTrack, artistsNames);
+                // set play state, set countdown, make sure resuming state is false
+                this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(50, 10))
+                this.setState({
+                  resuming: false
+                })
+              } else if (this.state.resuming) {
+                this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(50, 10))
+                this.setState({
+                  resuming: false
+                })
+              }
+            });
+            debugger;
+        }
       }
     }
 
@@ -179,9 +228,14 @@ class GameModal extends Component {
         this.handleSpotifyPlaybackError(err, 'There was an error setting up the next round, close this modal and try again.')
       } else {
         let startRoundTimeout = setTimeout(this.startRound, 11000);
-        this.setState(prevState => ({
-          timeouts: [...prevState.timeouts, startRoundTimeout]
-        }))
+        this.setState(prevState => {
+          debugger;
+          return ({
+            timeouts: [...prevState.timeouts, startRoundTimeout],
+            currentTrackURI: '',
+            lastTrackURI: prevState.currentTrackURI
+          }) 
+        })
       }
     }
 
@@ -216,6 +270,7 @@ class GameModal extends Component {
     }
 
     handleResume = () => {
+      debugger;
       this.setState(({
         gameStatus: 'async',
         resuming: true
@@ -236,6 +291,7 @@ class GameModal extends Component {
               timeouts: [...prevState.timeouts, playNahNahTimeout]
           }));
         } else {
+          debugger;
           this.setState({
             gameStatus: 'paused',
             shuffleCountdown: ''
