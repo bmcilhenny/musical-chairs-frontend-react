@@ -4,7 +4,7 @@ import Loading from '../loading/Loading';
 import PlaylistCounter from '../playlist/PlaylistCounter';
 import PlaylistFilter from '../playlist/PlaylistFilter';
 import GameModal from '../game_modal/GameModal';
-import MainNavbar from '../navbars/MainNavbar';
+import HomeNavbar from '../navbars/HomeNavbar';
 import ErrorMessage from './ErrorMessage';
 import * as Util from '../../util/Spotify';
 import {genRandomNumber} from '../../helpers';
@@ -107,7 +107,7 @@ class Home extends Component {
          playlist.name.toLowerCase().includes(filterString.toLowerCase())) : [];
       return (
         <Segment inverted>
-            <MainNavbar handleRandomize={this.handleRandomize} handleLogout={this.handleLogout} loading={!(!!playlists.length)}/>
+            <HomeNavbar handleRandomize={this.handleRandomize} handleLogout={this.handleLogout} loading={!(!!playlists.length)}/>
             {this.renderErrorMessage()}
             {user.display_name ? 
                 <Fragment>
