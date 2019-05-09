@@ -5,7 +5,7 @@ import PlaylistCounter from '../playlist/PlaylistCounter';
 import PlaylistFilter from '../playlist/PlaylistFilter';
 import GameModal from '../game_modal/GameModal';
 import HomeNavbar from '../navbars/HomeNavbar';
-import ErrorMessage from './ErrorMessage';
+import ErrorMessage from '../errors/ErrorMessage';
 import * as Util from '../../util/Spotify';
 import {genRandomNumber} from '../../helpers';
 import withAuth from '../hocs/withAuth';
@@ -43,9 +43,12 @@ class Home extends Component {
         if (playlists.length === 0) {
           throw new Error("You have no playlists. Create a playlist on your Spotify account to play.");
         }
+        if (devices.length === 0) {
+          throw new Error("You have no devices with Spotify open. Keep your devices on and Spotify open for the entirety of the game.");
+        }
         localStorage.setItem('user', JSON.stringify(user));
        })
-       .catch(this.handleSpotifyError)
+       .catch(this.handleSpotifyDataError)
     }, 1000)
   }
 
@@ -54,12 +57,12 @@ class Home extends Component {
   }
   
   getDevices = () => {
-    this.props.spotify.getMyDevices().then(devices => this.setState({devices: devices.devices})).catch(this.handleSpotifyError);
+    this.props.spotify.getMyDevices().then(devices => this.setState({devices: devices.devices})).catch(this.handleSpotifyDataError);
   };
 
-  handleSpotifyError = error => {
+  handleSpotifyDataError = error => {
     if (JSON.parse(error.response).error.status === 401) {
-      Util.setUpSpotifyAuthorization();
+      this.handleLogout();
     } else {
       this.setState({error})
     }
@@ -100,7 +103,7 @@ class Home extends Component {
    render() {
      const {user, playlists, devices, filterString, selectedDevice, numPlayers, randomPlaylist } = this.state;
      const { spotify } = this.props;
-      let playlistsToRender = user && 
+      const playlistsToRender = user && 
       playlists &&
       devices ? 
         playlists.filter(playlist => 
@@ -158,4 +161,4 @@ class Home extends Component {
    }
 }
 
-export default withAuth(Home );
+export default withAuth(Home);
