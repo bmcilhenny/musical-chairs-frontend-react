@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Label, Transition, Modal, Image, Header, Container } from 'semantic-ui-react';
+import { Modal, Container } from 'semantic-ui-react';
 import { times } from 'lodash';
 import PlaylistCard from '../playlist/PlaylistCard';
 import * as Helper from '../../helpers';
 import GameModalActions from './GameModalActions';
+import GameModalBody from './GameModalBody';
+import GameModalHeader from './GameModalHeader';
 import GameModalDropdowns from './GameModalDropdowns';
 import {NAH_NAH_NAH_NAH_URI} from '../../constants';
 import { sleep } from '../../helpers';
@@ -13,43 +15,35 @@ class GameModal extends Component {
         super(props)
         this.state = {
             modalOpen: false,
-            loadingGame: false,
-            duration: 6000,
             shuffleCountdown: '',
             shuffleCountdownInterval: '',
             roundCountdown: '',
             roundCountdownInterval: '',
-            modalMessage: 'Set up your game',
             shuffleAnimation: true,
-            playing: false,
             gameStatus: null,
             roundsLeft: undefined,
             error: '',
-            resuming: false,
             timeouts: [],
             lastTrackURI: '',
-            currentTrackURI: ''
+            currentTrack: {},
+            action: false
         }
     }
 
     defaultState = () => ({
         modalOpen: false,
-        loadingGame: false,
-        duration: 6000,
         shuffleCountdown: '',
         shuffleCountdownInterval: '',
         roundCountdown: '',
         roundCountdownInterval: '',
-        modalMessage: 'Set up your game',
         shuffleAnimation: true,
-        playing: false,
         gameStatus: null,
         roundsLeft: undefined,
         error: '',
-        resuming: false,
         timeouts: [],
         lastTrackURI: '',
-        currentTrackURI: ''
+        currentTrack: {},
+        action: false
     })
 
     componentWillUnmount() {
@@ -57,7 +51,9 @@ class GameModal extends Component {
       clearInterval(this.state.roundCountdownInterval);
     }
     
-    handleOpen = () => this.setState({ modalOpen: true })
+    handleOpen = () => {
+      this.setState({ modalOpen: true })
+    }
 
     handleClose = () => {
       this.clearAllTimeouts();
@@ -72,10 +68,7 @@ class GameModal extends Component {
     setShuffleState = () => {
       this.setState({
         shuffleAnimation: !this.state.shuffleAnimation,
-        modalMessage:  'Shuffling...',
-        playing: false,
-        gameStatus: 'shuffle',
-        loadingGame: true
+        gameStatus: 'shuffle'
       })
     }
 
@@ -109,8 +102,6 @@ class GameModal extends Component {
     setPlayState = (currentTrack, artistsNames) => {
       this.setState({
         modalMessage: `Now playing "${currentTrack.item.name}" by ${artistsNames}`,
-        loadingGame: false,
-        playing: true,
         shuffleCountdown: 'GO!',
         gameStatus: 'play',
         currentTrackURI: currentTrack.item.uri
@@ -130,9 +121,7 @@ class GameModal extends Component {
 
     handleErrorState = (modalMessage) => {
       this.setState({
-          loadingGame: false,
-          modalMessage: modalMessage,
-          playing: false 
+          modalMessage: modalMessage, 
       })
     }
 
@@ -161,6 +150,7 @@ class GameModal extends Component {
       if (err) {
         this.handleSpotifyPlaybackError(err, 'There was an error getting your playback, try again');
       } else {
+        debugger;
         const artists = currentTrack.item.artists;
         const artistsNames = artists.reduce((string, artist, i ) => {
           return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
@@ -183,18 +173,9 @@ class GameModal extends Component {
             this.setCountdown('roundCountdown', this.state.resuming ? this.state.roundCountdown : Helper.genRandomNumber(20, 10));
             this.setState({
               resuming: false,
-              loadingGame: false,
-              playing: true,
               shuffleCountdown: 'GO!',
               gameStatus: 'play'
-            });
-          // const artists = success.item.artists;
-          // const artistsNames = artists.reduce((string, artist, i ) => {
-          //   return string += artist.name + ((artists.length !== 1) && ((artists.length - 1) !== i) ? ', ' : '')
-          // }, '');
-          // this.setPlayState(success, artistsNames);
-          // set play state, set countdown, make sure resuming state is false
-          
+            });    
         }  else {
             await sleep(1000);
             // while the current playing track is not different than the last played track, getMyCurrentPlayingTrack()
@@ -218,7 +199,6 @@ class GameModal extends Component {
                 })
               }
             });
-            debugger;
         }
       }
     }
@@ -302,7 +282,7 @@ class GameModal extends Component {
   
     render() {
       const {playlist, index, handlePlayersChange, handleDeviceChange, numPlayers, selectedDevice} = this.props;
-      const { modalOpen, modalMessage, gameStatus, loadingGame, roundsLeft, shuffleCountdown, duration, shuffleAnimation, playing} = this.state;
+      const { modalOpen, modalMessage, gameStatus, roundsLeft, shuffleCountdown, shuffleAnimation, currentTrack, error, actionShuffle} = this.state;
       return (
         <Modal 
           size='tiny'
@@ -311,27 +291,19 @@ class GameModal extends Component {
           trigger={<PlaylistCard
                       handleOpen={this.handleOpen}      
                       key={`${playlist.name}_${index}`} 
-                      playlist={playlist} 
-                    />} 
-        >
-          <Modal.Header as='h2'>{modalMessage}</Modal.Header>
-          {shuffleCountdown ? <Label circular color='green' size='massive' floating>{shuffleCountdown}</Label> : null}
+                      playlist={playlist} />}>
+          <GameModalHeader 
+            gameStatus={gameStatus} 
+            shuffleCountdown={shuffleCountdown} 
+            currentTrack={currentTrack} 
+            action={action}
+            error={error} />
+          {/* {shuffleCountdown ? <Label circular color='green' size='massive' floating>{shuffleCountdown}</Label> : null} */}
           <Modal.Content>
             <Container textAlign='center'>
-              <Transition animation='shake' duration={duration} visible={shuffleAnimation}>
-                <Image 
-                  centered 
-                  size='small' 
-                  src={playlist.imageUrl} 
-                  label={playing ? { as: 'a', color: 'green', corner: 'left', icon: 'music' } : null}
-                />
-              </Transition>
-              <Header as='h3'>
-                <Header.Content>
-                  {playlist.name}
-                  <Header.Subheader>Your selected Playlist</Header.Subheader>
-                </Header.Content>
-              </Header>
+              <GameModalBody playlist={playlist} 
+                gameStatus={gameStatus} 
+                shuffleAnimation={shuffleAnimation} />
               <GameModalDropdowns
                 gameStatus={gameStatus}
                 numPlayers={numPlayers}
@@ -340,21 +312,18 @@ class GameModal extends Component {
                 deviceOptions={this.deviceOptions()}
                 handlePlayersChange={handlePlayersChange}
                 selectedDevice={selectedDevice}
-                handleDeviceChange={handleDeviceChange}
-              />
+                handleDeviceChange={handleDeviceChange} />
             </Container>
           </Modal.Content>
           <GameModalActions
             gameStatus={gameStatus} 
             numPlayers={numPlayers}
             selectedDevice={selectedDevice}
-            loadingGame={loadingGame}
             handleClose={this.handleClose}
             handleSkip={this.handleSkip}
             handlePause={this.handlePause}
             startRound={this.startRound}
-            handleResume={this.handleResume}
-          />
+            handleResume={this.handleResume} />
         </Modal>
       )
     }
