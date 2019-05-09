@@ -10,3 +10,7 @@ export const cleanPlaylistData = playlists => {
     ))
     return cleanedPlaylists;
 }
+
+export const cleanArtistNames = track => track.item.artists.reduce((string, artist, i ) => {
+    return string += artist.name + ((track.item.artists.length !== 1) && ((track.item.artists.length - 1) !== i) ? ', ' : '')
+  }, '');
