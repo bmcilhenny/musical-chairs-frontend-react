@@ -22,6 +22,7 @@ export const getPaginatedPlaylists = async (spotify, playlists, limit=50, offset
       return cleanPlaylistData(retrievedPlaylists);
     }
   } catch (err) {
+    // throw error to the function calling this function, which handles catch
     throw new Error('Could not fetch playlist data, refresh and try again.')
   }
 }
