@@ -4,7 +4,7 @@ import { Image, Header, Divider, Container, Grid, Segment  } from 'semantic-ui-r
 import Loading from '../loading/Loading';
 import PlaylistCounter from '../playlist/PlaylistCounter';
 import PlaylistFilter from '../playlist/PlaylistFilter';
-import GameModal from '../game_modal/GameModal';
+import GameModalContainer from '../game_modal/GameModalContainer';
 import HomeNavbar from '../navbars/HomeNavbar';
 import ErrorMessage from '../errors/ErrorMessage';
 import * as Util from '../../util/Spotify';
@@ -142,7 +142,7 @@ class Home extends Component {
                     <Grid doubling columns={6} style={{width: '90%'}} container>       
                         {playlistsToRender.map((playlist, i) =>
                           <Grid.Column key={`${playlist.name}_${i}xx`} >
-                            <GameModal
+                            <GameModalContainer
                               ref={i === randomPlaylist ? this.randomPlaylist : null} 
                               spotify={spotify}
                               playlist={playlist} 
