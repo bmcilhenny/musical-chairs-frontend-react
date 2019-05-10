@@ -1,4 +1,5 @@
 import React, {Component, Fragment} from 'react';
+import Proptypes from 'prop-types';
 import { Image, Header, Divider, Container, Grid, Segment  } from 'semantic-ui-react';
 import Loading from '../loading/Loading';
 import PlaylistCounter from '../playlist/PlaylistCounter';
@@ -11,6 +12,11 @@ import {genRandomNumber} from '../../helpers';
 import withAuth from '../hocs/withAuth';
 
 class Home extends Component {
+
+  static propTypes = {
+    spotify: Proptypes.object.isRequired
+  };
+
   constructor(props) {
     super(props);
     this.state = { 

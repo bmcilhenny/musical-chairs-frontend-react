@@ -11,24 +11,34 @@ import {NAH_NAH_NAH_NAH_URI} from '../../constants';
 import { sleep } from '../../helpers';
 
 class GameModal extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            modalOpen: false,
-            shuffleCountdown: '',
-            shuffleCountdownInterval: '',
-            roundCountdown: '',
-            roundCountdownInterval: '',
-            shuffleAnimation: true,
-            gameStatus: null,
-            roundsLeft: undefined,
-            error: '',
-            timeouts: [],
-            lastTrackURI: '',
-            currentTrack: {},
-            action: false
-        }
-    }
+
+  static propTypes = {
+    playlist: Proptypes.object.isRequired,
+    index: Proptypes.number.isRequired,
+    numPlayers: Proptypes.number.isRequired,
+    handlePlayersChange: Proptypes.func.isRequired,
+    handleDeviceChange: Proptypes.func.isRequired,
+    selectedDevice: Proptypes.string.isRequired
+  };
+
+  constructor(props) {
+      super(props)
+      this.state = {
+          modalOpen: false,
+          shuffleCountdown: '',
+          shuffleCountdownInterval: '',
+          roundCountdown: '',
+          roundCountdownInterval: '',
+          shuffleAnimation: true,
+          gameStatus: null,
+          roundsLeft: undefined,
+          error: '',
+          timeouts: [],
+          lastTrackURI: '',
+          currentTrack: {},
+          action: false
+      }
+  }
 
     defaultState = () => ({
         modalOpen: false,
