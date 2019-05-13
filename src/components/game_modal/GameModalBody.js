@@ -86,7 +86,6 @@ const GameModalBody = ({playlist, shuffleAnimation, gameStatus, currentTrack, ac
                             </Header.Content>
                         </Header>
                     </Transition>
-                    
                 </Fragment>
             )
         case 'gameOver':
