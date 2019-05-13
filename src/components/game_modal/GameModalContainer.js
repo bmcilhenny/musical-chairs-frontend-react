@@ -307,35 +307,3 @@ class GameModalContainer extends Component {
   }
 
   export default GameModalContainer;
-
-  // <GameModalHeader 
-  //           gameStatus={gameStatus} 
-  //           shuffleCountdown={shuffleCountdown} 
-  //           currentTrack={currentTrack} 
-  //           action={action}
-  //           error={error} />
-  //         <Modal.Content>
-  //           <Container textAlign='center'>
-  //             <GameModalBody playlist={playlist} 
-  //               gameStatus={gameStatus} 
-  //               shuffleAnimation={shuffleAnimation} />
-  //             <GameModalDropdowns
-  //               gameStatus={gameStatus}
-  //               numPlayers={numPlayers}
-  //               roundsLeft={roundsLeft}
-  //               numPlayerOptions={this.numPlayerOptions()} 
-  //               deviceOptions={this.deviceOptions()}
-  //               handlePlayersChange={handlePlayersChange}
-  //               selectedDevice={selectedDevice}
-  //               handleDeviceChange={handleDeviceChange} />
-  //           </Container>
-  //         </Modal.Content>
-  //         <GameModalActions
-  //           gameStatus={gameStatus} 
-  //           numPlayers={numPlayers}
-  //           selectedDevice={selectedDevice}
-  //           handleClose={this.handleClose}
-  //           handleSkip={this.handleSkip}
-  //           handlePause={this.handlePause}
-  //           startRound={this.startRound}
-  //           handleResume={this.handleResume} />
