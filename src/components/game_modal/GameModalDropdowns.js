@@ -3,8 +3,8 @@ import {Label} from 'semantic-ui-react';
 import DropdownWithOptions from './DropdownWithOptions';
 
 const GameModalDropdowns = ({gameStatus, roundsLeft, numPlayers, selectedDevice, handlePlayersChange, handleDeviceChange, numPlayerOptions, deviceOptions}) => {
-    let lastRound = <Label size='large' color='red'>The Last Round</Label>
-    let roundsRemaining = (
+    const lastRound = <Label size='large' color='red'>The Last Round</Label>
+    const roundsRemaining = (
         <Fragment>
             <Label circular color='green'>{roundsLeft}</Label>
             <span>rounds remaining</span>
