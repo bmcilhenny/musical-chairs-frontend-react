@@ -1,8 +1,13 @@
 import React, {Fragment} from 'react';
-import {Transition, Modal, Container, Icon, Header, Button} from 'semantic-ui-react';
-import ErrorMessage from '../../errors/ErrorMessage';
+import {Transition, Modal, Container, Label, Icon, Header, Button} from 'semantic-ui-react';
 
-const ErrorGameModal = ({handleClose, error, action}) => {
+const DrinkGameModal = ({playlist, roundsLeft, action, numPlayerOptions, handlePlayersChange, numPlayers, deviceOptions, handleDeviceChange, selectedDevice, handleClose, startRound, loadingGame}) => {
+    const roundsRemaining = roundsLeft === 1 ? <Label size='large' color='red'>The Last Round</Label> : (
+        <Fragment>
+            <Label circular color='green'>{roundsLeft}</Label>
+            <span>rounds remaining</span>
+        </Fragment>
+    )
     
     return (
         <Fragment>
@@ -13,10 +18,11 @@ const ErrorGameModal = ({handleClose, error, action}) => {
                     <Transition animation='fly down' duration={1000} visible={action}>
                         <Header as='h1'>
                             <Header.Content>
-                                <ErrorMessage error={error} />
+                                DRINK
                             </Header.Content>
                         </Header>
                     </Transition>
+                    {roundsRemaining}
                 </Container>
             </Modal.Content>
             <Modal.Actions>
@@ -30,7 +36,7 @@ const ErrorGameModal = ({handleClose, error, action}) => {
                     icon 
                     labelPosition='right'
                     disabled={true}
-                    loading={true}
+                    loading={loadingGame}
                 >
                 Skip
                 <Icon name='angle double right' />
@@ -40,4 +46,4 @@ const ErrorGameModal = ({handleClose, error, action}) => {
     )
 }
 
-export default ErrorGameModal;
+export default DrinkGameModal;
