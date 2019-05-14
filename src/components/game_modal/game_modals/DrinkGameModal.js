@@ -15,7 +15,7 @@ const DrinkGameModal = ({playlist, roundsLeft, action, numPlayerOptions, handleP
             <Modal.Header as='h2'></Modal.Header>
             <Modal.Content>
                 <Container textAlign='center' verticalAlign='center' >
-                    <Transition animation='fly down' duration={1000} visible={action}>
+                    <Transition animation='fly down' duration={1000} visible={true}>
                         <Header as='h1'>
                             <Header.Content>
                                 DRINK

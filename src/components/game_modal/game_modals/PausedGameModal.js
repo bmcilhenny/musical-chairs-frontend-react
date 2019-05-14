@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {Transition, Modal, Container, Image, Icon, Header, Button, Label} from 'semantic-ui-react';
 
-const PausedGameModal = ({playlist, currentTrack, handleResume, handleSkip, action, roundsLeft, numPlayers, selectedDevice, handleClose, loadingGame}) => {
+const PausedGameModal = ({playlist, currentTrack, handleResume, handleSkip, animation, roundsLeft, numPlayers, selectedDevice, handleClose, loadingGame}) => {
     const roundsRemaining = roundsLeft === 1 ? <Label size='large' color='red'>The Last Round</Label> : (
         <Fragment>
             <Label circular color='green'>{roundsLeft}</Label>
@@ -11,19 +11,17 @@ const PausedGameModal = ({playlist, currentTrack, handleResume, handleSkip, acti
 
     return (
         <Fragment>
-            <Transition animation='horizontal flip' duration={1000} visible={action} >
-                <Header as='h1'>
-                    <Header.Content>
-                        Paused
-                    </Header.Content>
-                </Header>
-            </Transition>
+            <Modal.Header >
+                <Transition animation='horizontal flip' duration={600}>
+                    {animation && <Header as='h1' textAlign='center'>Paused</Header>}
+                </Transition>
+            </Modal.Header>
             <Modal.Content>
                 <Container textAlign='center' verticalAlign='center' >
                     <Image 
                         centered 
                         size='small' 
-                        src={currentTrack.item.imageUrl} 
+                        src={currentTrack.item.album.images[1].url} 
                     />
                     <Header as='h3'>
                         <Header.Content>

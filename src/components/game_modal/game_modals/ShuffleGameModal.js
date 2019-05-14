@@ -1,18 +1,20 @@
 import React, {Fragment} from 'react';
-import {Transition, Modal, Container, Label, Image, Icon, Header, Button} from 'semantic-ui-react';
+import {Transition, Modal, Container, Image, Icon, Header, Button} from 'semantic-ui-react';
 import DropdownWithOptions from '../DropdownWithOptions';
 
-const ShuffleGameModal = ({playlist, numPlayerOptions, action, shuffleCountdown, deviceOptions, numPlayers, selectedDevice, handleClose, animation}) => {
+const ShuffleGameModal = ({playlist, numPlayerOptions, shuffleCountdown, deviceOptions, numPlayers, selectedDevice, handleClose, animation}) => {
     return (
         <Fragment>
-            <Transition animation='jiggle' duration={1000} visible={animation} >
-                <Modal.Header as='h2'>
-                    {shuffleCountdown}
-                </Modal.Header>
-            </Transition>
+            <Modal.Header >
+                <Transition animation='bounce' duration={900} visible={true} >
+                    <Header textAlign='center'>
+                        {shuffleCountdown}
+                    </Header>
+                </Transition>
+            </Modal.Header>
             <Modal.Content>
                 <Container textAlign='center' verticalAlign='center' >
-                  <Transition animation='shake' duration={6000} visible={action}>
+                  <Transition animation='shake' duration={6000} visible={animation}>
                     <Image 
                         centered 
                         size='small' 

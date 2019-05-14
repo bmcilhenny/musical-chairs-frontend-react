@@ -67,6 +67,7 @@ class Home extends Component {
   };
 
   handleSpotifyDataError = error => {
+    debugger;
     if (JSON.parse(error.response).error.status === 401) {
       this.handleLogout();
     } else {

@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import {Transition, Modal, Label, Container, Image, Icon, Header, Button} from 'semantic-ui-react';
 import { cleanArtistNames} from '../../../util/DataCleaner';
 
-const DanceBeforeGameModal = ({roundsLeft, handlePause, playlist, action, currentTrack, handleSkip, numPlayers, selectedDevice, handleClose, loadingGame}) => {
+const DanceBeforeGameModal = ({playlist, roundsLeft, handlePause, currentTrack, action, handleSkip, numPlayers, selectedDevice, handleClose, loadingGame}) => {
     const roundsRemaining = roundsLeft === 1 ? <Label size='large' color='red'>The Last Round</Label> : (
         <Fragment>
             <Label circular color='green'>{roundsLeft}</Label>
@@ -12,8 +12,8 @@ const DanceBeforeGameModal = ({roundsLeft, handlePause, playlist, action, curren
 
     return (
         <Fragment>
-            <Transition animation='horizontal flip' duration={1000} visible={action} >
-                <Header as='h3'>
+            <Transition animation='horizontal flip' duration={1000} visible={true} >
+                <Header as='h1' textAlign='center'>
                     <Header.Content>
                         Now Playing {currentTrack.item.name}
                         <Header.Subheader>by {cleanArtistNames(currentTrack)}</Header.Subheader>
@@ -22,11 +22,11 @@ const DanceBeforeGameModal = ({roundsLeft, handlePause, playlist, action, curren
             </Transition>
             <Modal.Content>
                 <Container textAlign='center'>
-                    <Transition animation='swing up' duration={1000} visible={action}>
+                    <Transition animation='swing up' duration={1000} visible={true}>
                         <Image 
                             centered 
                             size='small' 
-                            src={currentTrack.item.imageUrl} 
+                            src={currentTrack.item.album.images[1].url} 
                             label={{ as: 'a', color: 'green', corner: 'left', icon: 'music' }}
                         />
                     </Transition>

@@ -2,15 +2,17 @@ import React, {Fragment} from 'react';
 import {Transition, Modal, Container, Image, Icon, Header, Button} from 'semantic-ui-react';
 import DropdownWithOptions from '../DropdownWithOptions';
 
-const BeforeGameModal = ({playlist, numPlayerOptions, handlePlayersChange, numPlayers, deviceOptions, handleDeviceChange, selectedDevice, handleClose, startRound, loadingGame}) => {
+const BeforeGameModal = ({playlist, numPlayerOptions, handlePlayersChange, numPlayers, deviceOptions, handleDeviceChange, selectedDevice, handleClose, startRound, loadingGame, animation}) => {
 
     return (
         <Fragment>
-            <Transition animation='jiggle' duration={1000} visible={true} >
-                <Modal.Header as='h2'>
-                    Set up your game below
-                </Modal.Header>
-            </Transition>
+            <Modal.Header>
+                <Transition animation='jiggle' duration={1000} visible={animation} >
+                    <Header textAlign='center'>
+                        Set up your game below
+                    </Header>
+                </Transition>
+            </Modal.Header>
             <Modal.Content>
                 <Container textAlign='center'>
                     <Image centered size='small' src={playlist.imageUrl} />
