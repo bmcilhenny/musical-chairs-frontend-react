@@ -1,27 +1,26 @@
 import React, {Fragment} from 'react';
 import {Transition, Modal, Container, Image, Icon, Header, Button, Label} from 'semantic-ui-react';
+import { cleanArtistNames} from '../../../util/DataCleaner';
 
 const PausedGameModal = ({playlist, currentTrack, handleResume, handleSkip, animation, roundsLeft, numPlayers, selectedDevice, handleClose, loadingGame}) => {
-    const roundsRemaining = roundsLeft === 1 ? <Label size='large' color='red'>The Last Round</Label> : (
-        <Fragment>
-            <Label circular color='green'>{roundsLeft}</Label>
-            <span>rounds remaining</span>
-        </Fragment>
-    )
-
+    const roundsRemaining = roundsLeft === 1 ? <Label size='large' color='red'>The Last Round</Label> : <Fragment><Label circular color='green'>{roundsLeft}</Label><span>rounds remaining</span></Fragment>
     return (
         <Fragment>
             <Modal.Header >
-                <Transition animation='horizontal flip' duration={600}>
-                    {animation && <Header as='h1' textAlign='center'>Paused</Header>}
-                </Transition>
+                <Header as='h1' textAlign='center'>
+                    <Header.Content>
+                        {currentTrack.item.name}
+                        <Header.Subheader>by {cleanArtistNames(currentTrack)}</Header.Subheader>
+                    </Header.Content>
+                </Header>
             </Modal.Header>
             <Modal.Content>
-                <Container textAlign='center' verticalAlign='center' >
+                <Container textAlign='center' >
                     <Image 
                         centered 
                         size='small' 
                         src={currentTrack.item.album.images[1].url} 
+                        label={{ as: 'a', color: 'green', corner: 'left', icon: 'pause' }}
                     />
                     <Header as='h3'>
                         <Header.Content>
