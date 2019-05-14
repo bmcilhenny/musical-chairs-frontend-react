@@ -22,13 +22,14 @@ class Home extends Component {
     this.state = { 
        user: {},
        playlists: [],
+       lastTrack: {},
        randomPlaylist: '',
        filterString: '',
        numPlayers: '',
        devices: [],
        selectedDevice: '',
        loading: false,
-       error: '',
+       error: {},
        getDevicesIntervalID: ''
     }
     this.randomPlaylist = React.createRef();
@@ -43,9 +44,10 @@ class Home extends Component {
     setTimeout(() => {
       this.makeInitialFetch(this.props.spotify)
        .then(resp => {
-        const [user, playlists, {devices}] = resp;
+        const [user, playlists, {devices}, lastTrack] = resp;
         const getDevicesIntervalID = setInterval(() => this.getDevices(), 5000);
-        this.setState({user, playlists, devices, getDevicesIntervalID});
+        const getLastTrackIntervalID = setInterval(() => this.getLastTrack(), 5000);
+        this.setState({user, playlists, devices, lastTrack, getDevicesIntervalID, getLastTrackIntervalID});
         if (playlists.length === 0) {
           throw new Error("You have no playlists. Create a playlist on your Spotify account to play.");
         }
@@ -59,11 +61,16 @@ class Home extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.state.getDevicesIntervalID)
+    clearInterval(this.state.getDevicesIntervalID);
+    clearInterval(this.state.getLastTrackIntervalID);
   }
   
   getDevices = () => {
     this.props.spotify.getMyDevices().then(devices => this.setState({devices: devices.devices})).catch(this.handleSpotifyDataError);
+  };
+
+  getLastTrack = () => {
+    this.props.spotify.getMyCurrentPlayingTrack().then(lastTrack => this.setState({lastTrack})).catch(this.handleSpotifyDataError);
   };
 
   handleSpotifyDataError = error => {
@@ -79,12 +86,13 @@ class Home extends Component {
     return Promise.all([
       this.props.spotify.getMe(), 
       Util.getPaginatedPlaylists(spotify, []), 
-      this.props.spotify.getMyDevices()
+      this.props.spotify.getMyDevices(),
+      this.props.spotify.getMyCurrentPlayingTrack()
    ])
   }
 
   renderErrorMessage() {
-      if (this.state.error) {
+      if (this.state.error.keys) {
         return <ErrorMessage error={this.state.error}/>
       }
   }
@@ -108,7 +116,7 @@ class Home extends Component {
   }
 
    render() {
-     const {user, playlists, devices, filterString, selectedDevice, numPlayers, randomPlaylist } = this.state;
+     const {user, playlists, lastTrack, devices, filterString, selectedDevice, numPlayers, randomPlaylist } = this.state;
      const { spotify } = this.props;
       const playlistsToRender = user && 
       playlists &&
@@ -144,9 +152,10 @@ class Home extends Component {
                         {playlistsToRender.map((playlist, i) =>
                           <Grid.Column key={`${playlist.name}_${i}xx`} >
                             <GameModalContainer
-                              ref={i === randomPlaylist ? this.randomPlaylist : null} 
+                              ref={i === randomPlaylist && this.randomPlaylist} 
                               spotify={spotify}
                               playlist={playlist} 
+                              lastTrack={lastTrack}
                               devices={devices}  
                               handleDeviceChange={this.handleDeviceChange}
                               handlePlayersChange={this.handlePlayersChange}
