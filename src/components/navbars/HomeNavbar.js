@@ -17,7 +17,7 @@ const MainNavbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
                 name='github'
                 href={GITHUB_URL}
             />
-            {loggedIn ?  
+            {loggedIn &&  
                 (<Menu.Menu position='right'>
                     <Popup
                         trigger={<Button onClick={handleRandomize} loading={loading ? true : false} color='green'>Randomize</Button>}
@@ -25,7 +25,7 @@ const MainNavbar = ({handleRandomize, handleLogout, loading, loggedIn}) => {
                         position='bottom right'
                     />
                     <Button secondary disabled={loading ? true : false} onClick={handleLogout}>Log out</Button>
-                </Menu.Menu>) : null}
+                </Menu.Menu>)}
             
         </Menu>
     )

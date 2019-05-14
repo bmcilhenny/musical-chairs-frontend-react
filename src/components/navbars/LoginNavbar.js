@@ -6,7 +6,6 @@ import { setUpSpotifyAuthorization } from '../../util/Spotify';
 
 
 const LoginNavbar = ({user, handleLogout}) => {
-    debugger;
     return (
         <Menu attached='top' style={{backgroundColor: 'transparent'}} borderless inverted >
             <Menu.Item position='left' >
