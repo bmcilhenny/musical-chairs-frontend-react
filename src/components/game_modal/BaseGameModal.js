@@ -5,7 +5,6 @@ import DanceGameModal from './game_modals/DanceGameModal';
 import DrinkGameModal from './game_modals/DrinkGameModal';
 import PausedGameModal from './game_modals/PausedGameModal';
 import GameOverGameModal from './game_modals/GameOverGameModal';
-import ErrorGameModal from './game_modals/ErrorGameModal';
 import AsyncGameModal from './game_modals/AsyncGameModal';
 
 
@@ -17,12 +16,12 @@ const BaseGameModal = ({gameStatus, ...props}) => {
         drink: DrinkGameModal,
         paused: PausedGameModal,
         gameOver: GameOverGameModal,
-        error: ErrorGameModal,
         async: AsyncGameModal
 
     }
 
     if (!gameStatus) {
+        debugger;
         return null;
     }
 
