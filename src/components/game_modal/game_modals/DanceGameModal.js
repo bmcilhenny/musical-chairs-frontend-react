@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import {Transition, Modal, Label, Container, Image, Icon, Header, Button} from 'semantic-ui-react';
 import { cleanArtistNames} from '../../../util/DataCleaner';
 
-const DanceBeforeGameModal = ({playlist, roundsLeft, handlePause, currentTrack, action, handleSkip, numPlayers, selectedDevice, handleClose, loadingGame}) => {
+const DanceBeforeGameModal = ({playlist, roundsLeft, handlePause, currentTrack, handleSkip, numPlayers, selectedDevice, handleClose, loadingGame}) => {
     const roundsRemaining = roundsLeft === 1 ? <Label size='large' color='red'>The Last Round</Label> : (
         <Fragment>
             <Label circular color='green'>{roundsLeft}</Label>
@@ -12,14 +12,14 @@ const DanceBeforeGameModal = ({playlist, roundsLeft, handlePause, currentTrack, 
 
     return (
         <Fragment>
-            <Transition animation='horizontal flip' duration={1000} visible={true} >
+            {/* <Transition animation='horizontal flip' duration={1000} visible={true} > */}
                 <Header as='h1' textAlign='center'>
                     <Header.Content>
-                        Now Playing {currentTrack.item.name}
+                        {currentTrack.item.name}
                         <Header.Subheader>by {cleanArtistNames(currentTrack)}</Header.Subheader>
                     </Header.Content>
                 </Header>
-            </Transition>
+            {/* </Transition> */}
             <Modal.Content>
                 <Container textAlign='center'>
                     <Transition animation='swing up' duration={1000} visible={true}>
@@ -27,7 +27,7 @@ const DanceBeforeGameModal = ({playlist, roundsLeft, handlePause, currentTrack, 
                             centered 
                             size='small' 
                             src={currentTrack.item.album.images[1].url} 
-                            label={{ as: 'a', color: 'green', corner: 'left', icon: 'music' }}
+                            label={{ as: 'a', color: 'green', corner: 'left', icon: 'play' }}
                         />
                     </Transition>
                     <Header as='h3'>
