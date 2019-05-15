@@ -3,17 +3,18 @@ import {Transition, Modal, Container, Image, Icon, Header, Button} from 'semanti
 import DropdownWithOptions from '../DropdownWithOptions';
 
 const ShuffleGameModal = ({playlist, numPlayerOptions, shuffleCountdown, deviceOptions, numPlayers, selectedDevice, handleClose, animation}) => {
+    
     return (
         <Fragment>
             <Modal.Header >
                 <Transition animation='bounce' duration={900} visible={true} >
-                    <Header textAlign='center'>
+                    <Header textAlign='center' as='h1'>
                         {shuffleCountdown}
                     </Header>
                 </Transition>
             </Modal.Header>
             <Modal.Content>
-                <Container textAlign='center' verticalAlign='center' >
+                <Container textAlign='center' >
                   <Transition animation='shake' duration={6000} visible={animation}>
                     <Image 
                         centered 

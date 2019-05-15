@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {Transition, Modal, Container, Label, Icon, Header, Button} from 'semantic-ui-react';
 
-const DrinkGameModal = ({playlist, roundsLeft, action, numPlayerOptions, handlePlayersChange, numPlayers, deviceOptions, handleDeviceChange, selectedDevice, handleClose, startRound, loadingGame}) => {
+const DrinkGameModal = ({currentTrack, roundsLeft, handleClose, loadingGame}) => {
     const roundsRemaining = roundsLeft === 1 ? <Label size='large' color='red'>The Last Round</Label> : (
         <Fragment>
             <Label circular color='green'>{roundsLeft}</Label>
@@ -14,7 +14,7 @@ const DrinkGameModal = ({playlist, roundsLeft, action, numPlayerOptions, handleP
             {/* will need to add styling here to keep same size */}
             <Modal.Header as='h2'></Modal.Header>
             <Modal.Content>
-                <Container textAlign='center' verticalAlign='center' >
+                <Container textAlign='center' >
                     <Transition animation='fly down' duration={1000} visible={true}>
                         <Header as='h1'>
                             <Header.Content>

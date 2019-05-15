@@ -5,14 +5,14 @@ const GameOverGameModal = ({numPlayers, selectedDevice, handleClose, startRound,
     return (
         <Fragment>
             <Transition animation='horizontal flip' duration={1000} visible={action} >
-                <Header as='h1'>
+                <Header as='h1' textAlign='center'>
                     <Header.Content>
                         Thanks for guzzling
                     </Header.Content>
                 </Header>
             </Transition>
             <Modal.Content>
-                <Container textAlign='center' verticalAlign='center' >
+                <Container textAlign='center' >
                     <Transition animation='fly down' duration={1000} visible={action}>
                         <Header as='h1'>
                             <Header.Content>
