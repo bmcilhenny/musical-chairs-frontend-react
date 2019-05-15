@@ -6,7 +6,6 @@ import PlaylistCard from '../playlist/PlaylistCard';
 import BaseGameModal from './BaseGameModal';
 import * as Helper from '../../helpers';
 import {NAH_NAH_NAH_NAH_URI} from '../../constants';
-import { sleep } from '../../helpers';
 
 class GameModalContainer extends Component {
 
