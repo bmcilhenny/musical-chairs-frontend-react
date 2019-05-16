@@ -216,8 +216,7 @@ class GameModalContainer extends Component {
       if ((this.state.roundsLeft - 1) === 0) {
         this.setState({
           gameStatus: 'gameOver',
-          roundsLeft: undefined,
-          shuffleCountdown: 'GAME OVER'
+          roundsLeft: undefined
         })
       } else {
         this.props.spotify.setShuffle(true, {device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri})
