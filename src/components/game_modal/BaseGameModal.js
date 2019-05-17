@@ -8,6 +8,7 @@ const BaseGameModal = ({ gameStatus, ...props }) => {
     const components = {
         before: {
             header: 'Set up your game below',
+            headerAnimation: { name: 'jiggle', duration: 1000, visible: props.animation },
             imageUrl: props.playlist.imageUrl ? props.playlist.imageUrl : null,
             body: (
                 <Fragment>
@@ -54,7 +55,7 @@ const BaseGameModal = ({ gameStatus, ...props }) => {
         shuffle: {
             header: props.shuffleCountdown,
             imageUrl: props.playlist.imageUrl ? props.playlist.imageUrl : null,
-            imageAnimation: {name: 'shake', duration: 6000, visible: props.shuffleAnimation},
+            imageAnimation: { name: 'shake', duration: 6000, visible: props.shuffleAnimation },
             body: (
                 <Fragment>
                     <Header.Subheader>Shuffling Your Selected Playlist</Header.Subheader>
@@ -133,14 +134,16 @@ const BaseGameModal = ({ gameStatus, ...props }) => {
             )
         },
         drink: {
-            header: 
-            (<Fragment>
-                DRINK
+            header:
+                (<Fragment>
+                    DRINK
                 < Header.Subheader >Last one to flip their cup bites the dust</Header.Subheader >
-            </Fragment >
-            ),
+                </Fragment >
+                ),
+            headerAnimation: { name: 'tada', duration: 1000, visible: props.animation },
             // i erase current track in handleNextRoundResponse, when that happens use the lastTrack's image 
             imageUrl: props.currentTrack.item ? props.currentTrack.item.album.images[1].url : props.lastTrack.item ? props.lastTrack.item.album.images[1].url : null,
+            imageAnimation: { name: 'tada', duration: 1000, visible: props.animation },
             imageLabel: { as: 'a', color: 'green', corner: 'left', icon: 'beer' },
             body: (
                 <Fragment>
@@ -224,7 +227,7 @@ const BaseGameModal = ({ gameStatus, ...props }) => {
         gameOver: {
             header: (
                 <Fragment>
-                    'Cheers to the Guzzler'
+                    Cheers to the Guzzler
                     < Header.Subheader >Game Over</Header.Subheader >
                 </Fragment >
             ),
@@ -276,14 +279,13 @@ const BaseGameModal = ({ gameStatus, ...props }) => {
     }
 
     const component = components[gameStatus];
-    const componentImageAnimation = component.imageAnimation ? component.imageAnimation : {name: undefined, duration: undefined, visible: undefined}
-
-
+    const componentHeaderAnimation = component.headerAnimation ? component.headerAnimation : { name: undefined, duration: undefined, visible: undefined }
+    const componentImageAnimation = component.imageAnimation ? component.imageAnimation : { name: undefined, duration: undefined, visible: undefined }
 
     return (
         <Fragment>
             <Modal.Header>
-                <Transition animation='jiggle' duration={1000} visible={props.animation} >
+                <Transition animation={componentHeaderAnimation.name} duration={componentHeaderAnimation.duration} visible={componentHeaderAnimation.visible} >
                     <Header textAlign='center' as='h1'>
                         {component.header}
                     </Header>
@@ -292,16 +294,17 @@ const BaseGameModal = ({ gameStatus, ...props }) => {
             <Modal.Content>
                 <Container textAlign='center'>
                     {props.imageLoaded ? null :
-                        (<Placeholder style={{ height: 150, width: 150, margin: 'auto '}}>
+                        (<Placeholder style={{ height: 150, width: 150, margin: 'auto ' }}>
                             <Placeholder.Image />
                         </Placeholder>)
                     }
                     <div style={props.imageLoaded ? {} : { display: 'none' }}>
-                    <Transition animation={componentImageAnimation.name} duration={componentImageAnimation.duration} visible={componentImageAnimation.visible}>
-                        <Image centered size='small' 
-                            src={component.imageUrl} 
-                            onLoad={() => setTimeout(() => props.setImageLoaded(), 1000)} 
-                            label={component.imageLabel ? component.imageLabel : null} />
+                        <Transition animation={componentImageAnimation.name} duration={componentImageAnimation.duration} visible={componentImageAnimation.visible}>
+                            <Image centered size='small'
+                                style={{ boxShadow: ' 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)' }}
+                                src={component.imageUrl}
+                                onLoad={props.setImageLoaded}
+                                label={component.imageLabel ? component.imageLabel : null} />
                         </Transition>
                     </div>
                     <Header as='h3'>
@@ -321,8 +324,3 @@ const BaseGameModal = ({ gameStatus, ...props }) => {
 }
 
 export default BaseGameModal;
-
-{/* <Transition animation='shake' duration={6000} visible={props.shuffleAnimation}> */}
-
-// {<Transition animation={component.imageAnimation ? component.imageAnimation.animation : undefined} duration={component.imageAnimation ? component.imageAnimation.duration: undefined} visible={component.imageAnimation ? component.imageAnimation.visible : undefined}>
-{/* imageAnimation: {animation: 'shuffle', duration: 6000, visible: props.shuffleAnimation}, */}
