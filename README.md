@@ -12,6 +12,8 @@ Best with 5+ players. However many players will be playing, place that many solo
 
 ##Features to add
 - error handling for when automatically logged out
+    - show user confirmation message showing them they logged out on purpose
+        - another good reason to look into context, with the hack below there's no way to differentiate without context
     - look into react context
         - currently logs out user without message, should present message on login screen
             - hack would be to look at react router, see if the last url was /home and localStorage is empty meaning they were loggedout by the system
