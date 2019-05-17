@@ -74,8 +74,7 @@ class Home extends Component {
   };
 
   handleSpotifyDataError = error => {
-    debugger;
-    if (JSON.parse(error.response).error.status === 401) {
+    if (error.response && JSON.parse(error.response).error.status === 401) {
       this.handleLogout();
     } else {
       this.setState({error})
@@ -92,8 +91,8 @@ class Home extends Component {
   }
 
   renderErrorMessage() {
-      if (this.state.error.keys) {
-        return <ErrorMessage error={this.state.error}/>
+      if (this.state.error.message) {
+        return <ErrorMessage error={this.state.error.message}/>
       }
   }
 
