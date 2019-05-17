@@ -110,6 +110,7 @@ class GameModalContainer extends Component {
     }
 
     handleSpotifyPlaybackError = (error, modalMessage) => {
+      debugger
       let parsedError = JSON.parse(error.response).error;
       if (parsedError.status === 401) {
         this.handleErrorState('Your Spotify token has expired. Refresh the page.');
@@ -131,7 +132,7 @@ class GameModalContainer extends Component {
         shuffleCountdown: 5,
         shuffleCountdownInterval: shuffleCountdownInterval
       }, () => {
-        this.setState(prevState => ({shuffleAnimation: !prevState.shuffleAnimation}));
+        this.setState(prevState => ({shuffleAnimation: !prevState.shuffleAnimation, animation: !prevState.animation}));
         let playTunesTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri})
           .then(this.handlePlayResponse)
           .catch(err => this.handleSpotifyPlaybackError(err, 'There was an unforseen error playing your chune. Close this modal and try again.')), 6000);
@@ -239,6 +240,7 @@ class GameModalContainer extends Component {
         if (shouldDrink) {
           this.setState(prevState => ({
               gameStatus: 'drink',
+              animation: !prevState.animation,
               timeouts: [...prevState.timeouts, playNahNahTimeout]
           }));
           let playNahNahTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]})
