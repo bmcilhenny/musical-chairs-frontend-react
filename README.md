@@ -11,6 +11,10 @@ App will automatically prompt you to accept permissions for changing your spotif
 Best with 5+ players. However many players will be playing, place that many solo cups around the table. Then pour about a 1/5 of beer into each cup. Choose your playlist, your players, your device (make sure spotify is open on either your laptop or phone at all times, otherwise those devices won't appear in the set up game screen), and begin round. Users ~~walk~~ dance around the table till the music stops, then it's flip cup time. The last person to flip their cup is out. Remove that cup from the table. Refill, then play the next round until one guzzler remains standing. Rinse. Repeat. Enjoy.
 
 ##Features to add
+- error handling for when automatically logged out
+    - look into react context
+        - currently logs out user without message, should present message on login screen
+            - hack would be to look at react router, see if the last url was /home and localStorage is empty meaning they were loggedout by the system
 - [ ] FUTURE
     - [ ] add a backend that saves a user’s settings (how many players they want to play with, preferred duration of max and min for rounds”
         - [ ] perhaps eventually add a favorite playlist
