@@ -111,18 +111,20 @@ class GameModalContainer extends Component {
 
     handleSpotifyPlaybackError = (error, modalMessage) => {
       debugger
-      let parsedError = JSON.parse(error.response).error;
-      if (parsedError.status === 401) {
-        this.handleErrorState('Your Spotify token has expired. Refresh the page.');
-      } else if (parsedError.status === 404) {
-        this.handleErrorState(`${parsedError.message}! Make sure your device stays open for the duration of the game.`);
+      if (error.response) {
+        const parsedError = JSON.parse(error.response).error;
+        if (parsedError.status === 401) {
+          this.setState({error: new Error(`${parsedError.message}! Your Spotify token has expired. Refresh the page.`)});
+        } else if (parsedError.status === 404) {
+          this.setState({error: new Error(`${parsedError.message}! Make sure your device stays open for the duration of the game.`)});
+        }  else if (parsedError.status === 429) {
+            this.setState({error: new Error(`${parsedError.message}! Unfortunately Spotify limits the number of API calls, wait a few seconds and try again.`)});
+        } else {
+            this.setState({error: new Error(modalMessage)});
+          }
       } else {
-          this.handleErrorState(modalMessage);
-        }
-    }
-
-    handleErrorState = (message) => {
-      this.setState(prevState => ({error: {...prevState.error, message: prevState.concat(` ${message}`)}}))
+        this.setState({error: new Error(modalMessage)})
+      }
     }
 
     handleShuffle = (resp) => {
@@ -133,7 +135,7 @@ class GameModalContainer extends Component {
         shuffleCountdownInterval: shuffleCountdownInterval
       }, () => {
         this.setState(prevState => ({shuffleAnimation: !prevState.shuffleAnimation, animation: !prevState.animation}));
-        let playTunesTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri})
+        const playTunesTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, context_uri: this.props.playlist.uri})
           .then(this.handlePlayResponse)
           .catch(err => this.handleSpotifyPlaybackError(err, 'There was an unforseen error playing your chune. Close this modal and try again.')), 6000);
         this.setState(prevState => ({
@@ -182,16 +184,22 @@ class GameModalContainer extends Component {
     }
 
     handleSpotifyDataError = error => {
-      debugger;
-      if (JSON.parse(error.response).error.status === 401) {
-        this.props.handleLogout();
+      if (error.response) {
+        const parsedError = JSON.parse(error.response).error;
+        if (parsedError.status === 401) {
+          this.props.handleLogout();
+        } else if (parsedError.status === 429) {
+          this.setState({error: new Error(`${parsedError.message}! Unfortunately Spotify limits the number of API calls, wait a few seconds and try again.`)}); 
+        } else {
+          this.setState({error})
+        }
       } else {
         this.setState({error})
       }
     } 
 
     handleNextRoundResponse = (resp) => {
-      let startRoundTimeout = setTimeout(this.startRound, 11000);
+      const startRoundTimeout = setTimeout(this.startRound, 11000);
       this.setState(prevState => {
         return ({
           timeouts: [...prevState.timeouts, startRoundTimeout],
@@ -235,7 +243,7 @@ class GameModalContainer extends Component {
     }
 
     handlePause = (shouldDrink) => {
-      this.props.spotify.pause().catch((error) => this.handleErrorState(error, 'There was an error pausing, try again')).then(resp => {
+      this.props.spotify.pause().catch((error) => this.handleSpotifyPlaybackError(error, 'There was an error pausing, try again')).then(resp => {
         clearInterval(this.state.roundCountdownInterval)
         if (shouldDrink) {
           this.setState(prevState => ({
@@ -243,7 +251,7 @@ class GameModalContainer extends Component {
               animation: !prevState.animation,
               timeouts: [...prevState.timeouts, playNahNahTimeout]
           }));
-          let playNahNahTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]})
+          const playNahNahTimeout = setTimeout(() => this.props.spotify.play({device_id: this.props.selectedDevice, uris: [NAH_NAH_NAH_NAH_URI]})
           .then(this.handleNextRoundResponse)
           .catch(err => this.handleSpotifyPlaybackError(err, 'There was an error setting up the next round, close this modal and try again.')), 15000);
         } else {
