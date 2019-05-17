@@ -46,7 +46,7 @@ class Home extends Component {
        .then(resp => {
         const [user, playlists, {devices}, lastTrack] = resp;
         const getDevicesIntervalID = setInterval(() => this.getDevices(), 5000);
-        const getLastTrackIntervalID = setInterval(() => this.getLastTrack(), 5000);
+        const getLastTrackIntervalID = setInterval(() => this.getLastTrack(), 10000);
         this.setState({user, playlists, devices, lastTrack, getDevicesIntervalID, getLastTrackIntervalID});
         if (playlists.length === 0) {
           throw new Error("You have no playlists. Create a playlist on your Spotify account to play.");
