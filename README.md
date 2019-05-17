@@ -10,3 +10,13 @@ App will automatically prompt you to accept permissions for changing your spotif
 ## How to play musical cheers
 Best with 5+ players. However many players will be playing, place that many solo cups around the table. Then pour about a 1/5 of beer into each cup. Choose your playlist, your players, your device (make sure spotify is open on either your laptop or phone at all times, otherwise those devices won't appear in the set up game screen), and begin round. Users ~~walk~~ dance around the table till the music stops, then it's flip cup time. The last person to flip their cup is out. Remove that cup from the table. Refill, then play the next round until one guzzler remains standing. Rinse. Repeat. Enjoy.
 
+##Features to add
+- [ ] FUTURE
+    - [ ] add a backend that saves a user’s settings (how many players they want to play with, preferred duration of max and min for rounds”
+        - [ ] perhaps eventually add a favorite playlist
+        - [ ] add a leaderboard for playlists getting the most amount of plays to the home page
+        - [ ] disable or enable hey hey hey
+            - [ ] or add a custom song to be played in between rounds
+        - [ ] time in between rounds
+
+
