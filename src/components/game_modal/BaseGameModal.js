@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
 import { Modal, Button, Header, Transition, Placeholder, Icon, Image, Container, Label } from 'semantic-ui-react';
-import DropdownWithOptions from './DropdownWithOptions';
+import DropdownWithOptions from '../pure/DropdownWithOptions';
 import { cleanArtistNames } from '../../util/DataCleaner';
+import ErrorMessage from '../errors/ErrorMessage';
 
 const BaseGameModal = ({ gameStatus, ...props }) => {
 
@@ -286,9 +287,7 @@ const BaseGameModal = ({ gameStatus, ...props }) => {
         <Fragment>
             <Modal.Header>
                 <Transition animation={componentHeaderAnimation.name} duration={componentHeaderAnimation.duration} visible={componentHeaderAnimation.visible} >
-                    <Header textAlign='center' as='h1'>
-                        {component.header}
-                    </Header>
+                    {props.error.message ? <ErrorMessage error={props.error.message}/> : <Header textAlign='center' as='h1'>{component.header} </Header>}
                 </Transition>
             </Modal.Header>
             <Modal.Content>
