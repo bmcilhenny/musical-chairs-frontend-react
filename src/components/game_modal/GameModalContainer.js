@@ -110,7 +110,6 @@ class GameModalContainer extends Component {
     }
 
     handleSpotifyPlaybackError = (error, modalMessage) => {
-      debugger
       if (error.response) {
         const parsedError = JSON.parse(error.response).error;
         if (parsedError.status === 401) {
@@ -126,7 +125,7 @@ class GameModalContainer extends Component {
         this.setState({error: new Error(modalMessage)})
       }
     }
-
+ 
     handleShuffle = (resp) => {
       const shuffleCountdownInterval = setInterval(() => this.tick('shuffleCountdown'), 1000);
       this.setState({

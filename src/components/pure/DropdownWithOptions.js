@@ -1,20 +1,18 @@
-import React, {Fragment } from 'react';
+import React from 'react';
 import {Dropdown} from 'semantic-ui-react';
 
-const DropdownWithOptions = (props) => {
+const DropdownWithOptions = React.memo(({disabled, handleChange, placeholder, options, value}) => {
     return (
-      <Fragment>
         <Dropdown
-          disabled={props.disabled}  
-          onChange={props.handleChange}
-          placeholder={props.placeholder} 
           fluid 
           selection 
-          options={props.options}
-          value={props.value}
+          disabled={disabled}  
+          onChange={handleChange}
+          placeholder={placeholder} 
+          options={options}
+          value={value}
         />
-      </Fragment>
     )
-}
+})
 
 export default DropdownWithOptions;
