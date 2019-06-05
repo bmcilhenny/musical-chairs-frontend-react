@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dropdown} from 'semantic-ui-react';
 
-const DropdownWithOptions = React.memo(({disabled, handleChange, placeholder, options, value}) => {
+const DropdownWithOptions = ({disabled, handleChange, placeholder, options, value}) => {
     return (
         <Dropdown
           fluid 
@@ -13,6 +13,6 @@ const DropdownWithOptions = React.memo(({disabled, handleChange, placeholder, op
           value={value}
         />
     )
-})
+}
 
-export default DropdownWithOptions;
+export default React.memo(DropdownWithOptions);

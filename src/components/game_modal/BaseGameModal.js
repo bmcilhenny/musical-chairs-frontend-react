@@ -4,7 +4,7 @@ import DropdownWithOptions from '../pure/DropdownWithOptions';
 import { cleanArtistNames } from '../../util/DataCleaner';
 import ErrorMessage from '../errors/ErrorMessage';
 
-const BaseGameModal = ({ gameStatus, ...props }) => {
+const BaseGameModal = React.memo(({ gameStatus, ...props }) => {
 
     const components = {
         before: {
@@ -320,6 +320,6 @@ const BaseGameModal = ({ gameStatus, ...props }) => {
             </Modal.Actions>
         </Fragment>
     );
-}
+})
 
 export default BaseGameModal;
