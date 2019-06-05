@@ -16,4 +16,4 @@ export const cleanArtistNames = track => track.item.artists.reduce((string, arti
   }, '');
 
 
-export const cleanTrackData = track => track.item;
+export const cleanTrackData = track => ({...track.item});
