@@ -7,12 +7,13 @@ import BaseGameModal from './BaseGameModal';
 import * as Helper from '../../helpers';
 import {NAH_NAH_NAH_NAH_URI} from '../../constants';
 
-class GameModalContainer extends Component {
+class GameModalContainer extends React.PureComponent {
 
   static propTypes = {
     spotify: Proptypes.object.isRequired,
     devices: Proptypes.array.isRequired,
     playlist: Proptypes.object.isRequired,
+    lastTrack: Proptypes.object.isRequired,
     handlePlayersChange: Proptypes.func.isRequired,
     handleDeviceChange: Proptypes.func.isRequired,
     selectedDevice: Proptypes.string.isRequired,
@@ -32,7 +33,6 @@ class GameModalContainer extends Component {
           resuming: false,
           error: {},
           timeouts: [],
-          lastTrack: {},
           currentTrack: {},
           animation: false,
           shuffleAnimation: true,
@@ -52,7 +52,6 @@ class GameModalContainer extends Component {
         resuming: false,
         error: {},
         timeouts: [],
-        lastTrack: {},
         currentTrack: {},
         animation: false,
         shuffleAnimation: true,
@@ -154,8 +153,7 @@ class GameModalContainer extends Component {
           resuming: false
         })
       }
-      else if (lastTrack && lastTrack.item && currentTrack.item && lastTrack.item.uri !== currentTrack.item.uri) {
-        debugger;
+      else if (lastTrack.uri && currentTrack.uri && lastTrack.uri !== currentTrack.uri) {
           const roundCountdownInterval = setInterval(() => this.tick('roundCountdown'), 1000);
           this.setState({
             gameStatus: 'dance',
@@ -166,7 +164,7 @@ class GameModalContainer extends Component {
           })  
       }  else {
           this.props.spotify.getMyCurrentPlayingTrack({device_id: selectedDevice}).then(currentTrack => {
-            if (currentTrack.item.uri !== lastTrack.item.uri) {
+            if (currentTrack.uri !== lastTrack.uri) {
               const roundCountdownInterval = setInterval(() => this.tick('roundCountdown'), 1000);
               this.setState({
                 gameStatus: 'dance',
@@ -264,9 +262,9 @@ class GameModalContainer extends Component {
       const { modalOpen, gameStatus} = this.state;
       const numPlayerOptions = this.numPlayerOptions();
       const deviceOptions = this.deviceOptions();
-      // console.log('GAME STATUS', gameStatus);
+      
       return (
-        <Modal size='tiny'open={modalOpen}onClose={this.handleClose} trigger={<PlaylistCard handleOpen={this.handleOpen} key={`${playlist.name}-${index}`} playlist={playlist} />}>
+        <Modal size='tiny'open={modalOpen} onClose={this.handleClose} trigger={<PlaylistCard handleOpen={this.handleOpen} key={`${playlist.name}-${index}`} playlist={playlist} />}>
           <BaseGameModal 
             gameStatus={gameStatus}
             handleOpen={this.handleOpen}

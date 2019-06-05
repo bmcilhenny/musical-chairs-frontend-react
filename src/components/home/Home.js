@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import Proptypes from 'prop-types';
-import { Image, Header, Divider, Container, Grid, Segment, List } from 'semantic-ui-react';
+import { Image, Header, Divider, Container, Grid, Segment } from 'semantic-ui-react';
 import Loading from '../loading/Loading';
 import About from './About';
 import PlaylistCounter from '../playlist/PlaylistCounter';
@@ -9,6 +9,7 @@ import GameModalContainer from '../game_modal/GameModalContainer';
 import HomeNavbar from '../navbars/HomeNavbar';
 import ErrorMessage from '../errors/ErrorMessage';
 import * as Util from '../../util/Spotify';
+import { cleanTrackData } from '../../util/DataCleaner';
 import { genRandomNumber } from '../../helpers';
 import withAuth from '../hocs/withAuth';
 
@@ -44,6 +45,15 @@ class Home extends Component {
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
+  makeInitialFetch = (spotify) => {
+    return Promise.all([
+      this.props.spotify.getMe(),
+      Util.getPaginatedPlaylists(spotify, []),
+      this.props.spotify.getMyDevices(),
+      this.props.spotify.getMyCurrentPlayingTrack()
+    ])
+  }
+
   componentDidMount() {
     setTimeout(() => {
       this.makeInitialFetch(this.props.spotify)
@@ -70,11 +80,31 @@ class Home extends Component {
   }
 
   getDevices = () => {
-    this.props.spotify.getMyDevices().then(devices => this.setState({ devices: devices.devices })).catch(this.handleSpotifyDataError);
+    this.props.spotify.getMyDevices()
+    .then(devices => {
+      this.setState(prevState => {
+        if (JSON.stringify(prevState.devices) === JSON.stringify(devices.devices)) {
+          return null;
+        } 
+        return { devices: devices.devices }
+      })
+    })
+    .catch(this.handleSpotifyDataError);
   };
 
   getLastTrack = () => {
-    this.props.spotify.getMyCurrentPlayingTrack().then(lastTrack => this.setState({ lastTrack })).catch(this.handleSpotifyDataError);
+    this.props.spotify.getMyCurrentPlayingTrack()
+    .then(lastTrack => cleanTrackData(lastTrack))
+    .then(lastTrack => {
+      debugger;
+      this.setState(prevState => {
+        if (JSON.stringify(prevState.lastTrack) === JSON.stringify(lastTrack)) {
+          return null;
+        } 
+        return { lastTrack };
+      })
+    })
+    .catch(this.handleSpotifyDataError);
   };
 
   handleSpotifyDataError = error => {
@@ -83,15 +113,6 @@ class Home extends Component {
     } else {
       this.setState({ error })
     }
-  }
-
-  makeInitialFetch = (spotify) => {
-    return Promise.all([
-      this.props.spotify.getMe(),
-      Util.getPaginatedPlaylists(spotify, []),
-      this.props.spotify.getMyDevices(),
-      this.props.spotify.getMyCurrentPlayingTrack()
-    ])
   }
 
   renderErrorMessage() {
