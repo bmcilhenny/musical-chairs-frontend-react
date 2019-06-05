@@ -5,6 +5,7 @@ import { times } from 'lodash';
 import PlaylistCard from '../playlist/PlaylistCard';
 import BaseGameModal from './BaseGameModal';
 import * as Helper from '../../helpers';
+import { cleanTrackData } from '../../util/DataCleaner';
 import {NAH_NAH_NAH_NAH_URI} from '../../constants';
 
 class GameModalContainer extends React.PureComponent {
@@ -163,7 +164,9 @@ class GameModalContainer extends React.PureComponent {
             imageLoaded: false
           })  
       }  else {
-          this.props.spotify.getMyCurrentPlayingTrack({device_id: selectedDevice}).then(currentTrack => {
+          this.props.spotify.getMyCurrentPlayingTrack({device_id: selectedDevice})
+          .then(currentTrack => cleanTrackData(currentTrack))
+          .then( currentTrack => {
             if (currentTrack.uri !== lastTrack.uri) {
               const roundCountdownInterval = setInterval(() => this.tick('roundCountdown'), 1000);
               this.setState({
