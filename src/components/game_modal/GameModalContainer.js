@@ -8,7 +8,7 @@ import * as Helper from '../../helpers';
 import { cleanTrackData } from '../../util/DataCleaner';
 import {NAH_NAH_NAH_NAH_URI} from '../../constants';
 
-class GameModalContainer extends React.PureComponent {
+class GameModalContainer extends Component {
 
   static propTypes = {
     spotify: Proptypes.object.isRequired,
