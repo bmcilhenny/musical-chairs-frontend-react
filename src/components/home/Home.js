@@ -51,6 +51,7 @@ class Home extends Component {
       Util.getPaginatedPlaylists(spotify, []),
       this.props.spotify.getMyDevices(),
       this.props.spotify.getMyCurrentPlayingTrack()
+      .then(lastTrack => lastTrack ? cleanTrackData(lastTrack) : lastTrack)
     ])
   }
 
@@ -61,7 +62,7 @@ class Home extends Component {
           const [user, playlists, { devices }, lastTrack] = resp;
           const getDevicesIntervalID = setInterval(() => this.getDevices(), 5000);
           const getLastTrackIntervalID = setInterval(() => this.getLastTrack(), 10000);
-          this.setState({ user, playlists, devices, lastTrack, getDevicesIntervalID, getLastTrackIntervalID });
+          this.setState({ user, playlists, devices, getDevicesIntervalID, getLastTrackIntervalID, lastTrack });
           if (playlists.length === 0) {
             throw new Error("You have no playlists. Create a playlist on your Spotify account to play.");
           }
@@ -94,9 +95,8 @@ class Home extends Component {
 
   getLastTrack = () => {
     this.props.spotify.getMyCurrentPlayingTrack()
-    .then(lastTrack => cleanTrackData(lastTrack))
+    .then(lastTrack => lastTrack ? cleanTrackData(lastTrack) : lastTrack)
     .then(lastTrack => {
-      debugger;
       this.setState(prevState => {
         if (JSON.stringify(prevState.lastTrack) === JSON.stringify(lastTrack)) {
           return null;
