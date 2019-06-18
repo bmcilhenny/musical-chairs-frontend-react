@@ -15,4 +15,4 @@ const DropdownWithOptions = ({disabled, handleChange, placeholder, options, valu
     )
 }
 
-export default React.memo(DropdownWithOptions);
+export default DropdownWithOptions;

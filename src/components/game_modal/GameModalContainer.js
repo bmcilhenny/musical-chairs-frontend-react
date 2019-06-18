@@ -75,9 +75,7 @@ class GameModalContainer extends Component {
     }
 
     setImageLoaded = () => {
-      this.setState({
-        imageLoaded: true
-      })
+      this.setState({imageLoaded: true})
     }
 
     handleClose = () => {
@@ -155,6 +153,7 @@ class GameModalContainer extends Component {
         })
       }
       else if (lastTrack.uri && currentTrack.uri && lastTrack.uri !== currentTrack.uri) {
+        debugger;
           const roundCountdownInterval = setInterval(() => this.tick('roundCountdown'), 1000);
           this.setState({
             gameStatus: 'dance',
@@ -168,6 +167,7 @@ class GameModalContainer extends Component {
           .then(currentTrack => cleanTrackData(currentTrack))
           .then( currentTrack => {
             if (currentTrack.uri !== lastTrack.uri) {
+              debugger;
               const roundCountdownInterval = setInterval(() => this.tick('roundCountdown'), 1000);
               this.setState({
                 gameStatus: 'dance',
@@ -264,8 +264,7 @@ class GameModalContainer extends Component {
       const { playlist, index} = this.props;
       const { modalOpen, gameStatus} = this.state;
       const numPlayerOptions = this.numPlayerOptions();
-      const deviceOptions = this.deviceOptions();
-      
+      const deviceOptions = this.deviceOptions(); 
       return (
         <Modal size='tiny'open={modalOpen} onClose={this.handleClose} trigger={<PlaylistCard handleOpen={this.handleOpen} key={`${playlist.name}-${index}`} playlist={playlist} />}>
           <BaseGameModal 

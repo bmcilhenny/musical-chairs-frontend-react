@@ -1,7 +1,7 @@
 import React, { Fragment} from 'react';
 import { Image, Icon, Reveal, Header, Placeholder} from 'semantic-ui-react';
 
-class PlaylistCard extends React.PureComponent {
+class PlaylistCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

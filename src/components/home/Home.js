@@ -95,10 +95,11 @@ class Home extends Component {
 
   getLastTrack = () => {
     this.props.spotify.getMyCurrentPlayingTrack()
-    .then(lastTrack => lastTrack ? cleanTrackData(lastTrack) : lastTrack)
+    .then(lastTrack => cleanTrackData(lastTrack))
     .then(lastTrack => {
       this.setState(prevState => {
         if (JSON.stringify(prevState.lastTrack) === JSON.stringify(lastTrack)) {
+          debugger;
           return null;
         } 
         return { lastTrack };
