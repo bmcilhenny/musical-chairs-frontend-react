@@ -122,15 +122,11 @@ class Home extends Component {
   }
 
   handleDeviceChange = (_, { value }) => {
-    this.setState({
-      selectedDevice: value
-    })
+    this.setState({selectedDevice: value})
   }
 
   handlePlayersChange = (_, { value }) => {
-    this.setState({
-      numPlayers: value
-    })
+    this.setState({numPlayers: value})
   }
 
   handleRandomize = () => {
