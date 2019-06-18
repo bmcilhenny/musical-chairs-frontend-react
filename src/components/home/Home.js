@@ -67,7 +67,7 @@ class Home extends Component {
             throw new Error("You have no playlists. Create a playlist on your Spotify account to play.");
           }
           if (devices.length === 0) {
-            throw new Error("You have no devices with Spotify open. Keep your devices on and Spotify open for the entirety of the game.");
+            throw new Error("You have no devices with Spotify open. Keep your devices on and Spotify open for the entirety of the game, then refresh the page.");
           }
           localStorage.setItem('user', JSON.stringify(user));
         })
@@ -144,7 +144,7 @@ class Home extends Component {
       playlists.filter(playlist =>
         playlist.name.toLowerCase().includes(filterString.toLowerCase())) : [];
     return (
-      <Segment inverted>
+      <Segment inverted style={{minHeight: '100vh', backgroundColor: '#1C1D1E'}}>
         <HomeNavbar activeItem={activeItem} handleItemClick={this.handleItemClick} handleRandomize={this.handleRandomize} handleLogout={this.handleLogout} loading={!(!!playlists.length)} />
         {this.renderErrorMessage()}
         {user.display_name ?

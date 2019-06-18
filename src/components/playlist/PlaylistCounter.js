@@ -1,13 +1,13 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
 
-const PlaylistCounter = (props) => {
+const PlaylistCounter = ({playlists}) => {
     return (
         <div style={{display: 'inline-block'}}>
-          {props.playlists.length} total playlists
+          {playlists.length} total playlists
           <Icon name='bolt' />
         </div>
     )
 }
 
-export default PlaylistCounter;
+export default React.memo(PlaylistCounter);
