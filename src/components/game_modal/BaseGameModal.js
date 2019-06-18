@@ -99,15 +99,15 @@ const BaseGameModal = React.memo(({ gameStatus, ...props }) => {
             )
         },
         dance: {
-            header: props.currentTrack.item ?
+            header: props.currentTrack.name ?
                 (
                     <Fragment>
-                        {props.currentTrack.item.name}
+                        {props.currentTrack.name}
                         <Header.Subheader>by {cleanArtistNames(props.currentTrack)}</Header.Subheader>
                     </Fragment>
                 ) : null
             ,
-            imageUrl: props.currentTrack.item ? props.currentTrack.item.album.images[1].url : null,
+            imageUrl: props.currentTrack.album ? props.currentTrack.album.images[1].url : null,
             imageLabel: { as: 'a', color: 'green', corner: 'left', icon: 'pause' },
             body: (
                 <Fragment>
@@ -143,7 +143,7 @@ const BaseGameModal = React.memo(({ gameStatus, ...props }) => {
                 ),
             headerAnimation: { name: 'tada', duration: 1000, visible: props.animation },
             // i erase current track in handleNextRoundResponse, when that happens use the lastTrack's image 
-            imageUrl: props.currentTrack.item ? props.currentTrack.item.album.images[1].url : props.lastTrack.item ? props.lastTrack.item.album.images[1].url : null,
+            imageUrl: props.currentTrack.album ? props.currentTrack.album.images[1].url : props.lastTrack.album ? props.lastTrack.album.images[1].url : null,
             imageAnimation: { name: 'tada', duration: 1000, visible: props.animation },
             imageLabel: { as: 'a', color: 'green', corner: 'left', icon: 'beer' },
             body: (
@@ -182,13 +182,13 @@ const BaseGameModal = React.memo(({ gameStatus, ...props }) => {
 
         },
         paused: {
-            header: props.currentTrack.item ? (
+            header: props.currentTrack.name ? (
                 <Fragment>
-                    {props.currentTrack.item.name}
+                    {props.currentTrack.name}
                     < Header.Subheader > by {cleanArtistNames(props.currentTrack)}</Header.Subheader >
                 </Fragment >
             ) : null,
-            imageUrl: props.currentTrack.item ? props.currentTrack.item.album.images[1].url : null,
+            imageUrl: props.currentTrack.album ? props.currentTrack.album.images[1].url : null,
             imageLabel: { as: 'a', color: 'green', corner: 'left', icon: 'play' },
             roundsRemaining: props.roundsLeft === 1 ?
                 <Label size='large' color='red'>The Last Round</Label> :
@@ -232,7 +232,7 @@ const BaseGameModal = React.memo(({ gameStatus, ...props }) => {
                     < Header.Subheader >Game Over</Header.Subheader >
                 </Fragment >
             ),
-            imageUrl: props.lastTrack.item ? props.lastTrack.item.album.images[1].url : null,
+            imageUrl: props.lastTrack.album ? props.lastTrack.album.images[1].url : null,
             imageLabel: { as: 'a', color: 'green', corner: 'left', icon: 'beer' },
             body: (
                 <Fragment>
